@@ -1,0 +1,31 @@
+<p>
+<!--   <strong>Member:</strong>
+  <%#= @inventory_internal_transfer_voucher.member.custom_object_label %> -->
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @inventory_internal_transfer_voucher.currency.custom_object_label %>
+</p>
+
+<p>
+  <strong>Created by user:</strong>
+  <%= @inventory_internal_transfer_voucher.created_by.custom_object_label %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @inventory_internal_transfer_voucher.remarks %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @inventory_internal_transfer_voucher.total_amount %>
+</p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @inventory_internal_transfer_voucher.voucher_number %>
+</p>
+
+<%= link_to 'New Invoice', new_inventory_internal_transfer_voucher_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(@inventory_internal_transfer_voucher) %> | <%= link_to 'Invoices Listing', inventory_internal_transfer_vouchers_path %>

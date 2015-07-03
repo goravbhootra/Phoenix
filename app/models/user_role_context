@@ -1,0 +1,14 @@
+class UserRoleContext < MyActiveRecord
+  belongs_to :user_role, inverse_of: :user_role_contexts
+  belongs_to :business_entity, inverse_of: :user_role_contexts
+  belongs_to :business_entity_location, inverse_of: :user_role_contexts
+
+  validates :user_role, presence: true
+  validate :business_entity_xor_location
+  validates :active, inclusion: { in: [true, false] }
+
+  def business_entity_xor_location
+    # if [month_day, week_day, hour].compact.count =! 1 - Can handle more than two attributes
+    errors.add(:base, "Business Entity or Location must be entered") if !(business_entity.present? ^ business_entity_location.present?)
+  end
+end

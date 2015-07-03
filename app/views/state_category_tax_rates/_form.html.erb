@@ -1,0 +1,47 @@
+<%= form_for(@state_category_tax_rate) do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+
+  <div class="field">
+    <%= f.label :state_id %><br>
+    <%= f.text_field :state_id %>
+  </div>
+  <div class="field">
+    <%= f.label :category_id %><br>
+    <%= f.text_field :category_id %>
+  </div>
+  <div class="field">
+    <%= f.label :classification %><br>
+    <%= f.text_field :classification %>
+  </div>
+  <div class="field">
+    <%= f.label :interstate_label %><br>
+    <%= f.text_field :interstate_label %>
+  </div>
+  <div class="field">
+    <%= f.label :interstate_rate %><br>
+    <%= f.text_field :interstate_rate %>
+  </div>
+  <div class="field">
+    <%= f.label :intrastate_label %><br>
+    <%= f.text_field :intrastate_label %>
+  </div>
+  <div class="field">
+    <%= f.label :intrastate_rate %><br>
+    <%= f.text_field :intrastate_rate %>
+  </div>
+  <div class="field">
+    <%= f.label :valid_from %><br>
+    <%= f.text_field :valid_from %>
+  </div>
+  <div class="field">
+    <%= f.label :valid_till %><br>
+    <%= f.text_field :valid_till %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br>
+    <%= f.text_field :active %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

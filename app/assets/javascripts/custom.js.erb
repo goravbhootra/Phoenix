@@ -1,0 +1,76 @@
+function null_values_replaced_with_not_defined (option_value) {
+  if (option_value.text.length > 0)
+  {
+    return option_value.text;
+  }
+  else {
+    return '<i>no prefix</i>';
+  }
+}
+
+$(document).on('ready page:load', function() {
+  $(".selectme").select2({
+      formatResult: null_values_replaced_with_not_defined,
+      formatSelection: null_values_replaced_with_not_defined
+      // allowClear: true
+  });
+
+  setTimeout(function(){
+    $('.flash_success_message').slideUp('slow');
+  }, 4000);
+
+  setTimeout(function(){
+    $('.flash_non_success_message').slideUp('slow');
+  }, 8000);
+
+  // gem 'bootstrap3-datetimepicker-rails'
+  $('.datetimepicker').datetimepicker({
+    format: 'DD/MM/YYYY',
+    extraFormats: [ 'DD/MM/YY', 'DD-MM-YY', 'DD-MM-YYYY' ],
+    showTodayButton: true,
+    showClose: true
+  });
+  $('.datetimepickerfrom').datetimepicker({
+    format: 'DD/MM/YYYY',
+    extraFormats: [ 'DD/MM/YY', 'DD-MM-YY', 'DD-MM-YYYY' ],
+    showTodayButton: true,
+    showClose: true
+  });
+  $('.datetimepickerto').datetimepicker({
+    format: 'DD/MM/YYYY',
+    extraFormats: [ 'DD/MM/YY', 'DD-MM-YY', 'DD-MM-YYYY' ],
+    showTodayButton: true,
+    showClose: true
+  });
+  $(".datetimepickerfrom").on("dp.change", function (e) {
+      $('.datetimepickerto').data("DateTimePicker").minDate(e.date);
+  });
+  $(".datetimepickerto").on("dp.change", function (e) {
+      $('.datetimepickerfrom').data("DateTimePicker").maxDate(e.date);
+  });
+  // end gem 'bootstrap3-datetimepicker-rails'
+
+  // $('.best_in_place').best_in_place();
+
+  $('.DataTable').DataTable({
+    // "sDom": 'lC<"H"TCfr>t<"F"ip>',
+    // "sDom": 'flt<ip>',
+    // "sDom": "<lfr>Tt<ip>",
+    // "tableTools": {
+    //         "sSwfPath": '<%= asset_path "dataTables/copy_csv_xls_pdf.swf" %>'
+    //     },
+    "aLengthMenu": [[12, 25, 50, 100, -1], [12, 25, 50, 100, "All"]],
+    "iDisplayLength": 12,
+    "order": [[ 1, "desc" ]],
+    // ajax: ...,
+    // autoWidth: false,
+    pagingType: 'full_numbers',
+    "sPaginationType": "bootstrap",
+    // processing: true,
+    // serverSide: true,
+    responsive: true
+    // Optional, if you want full pagination controls.
+    // Check dataTables documentation to learn more about available options.
+    // http://datatables.net/reference/option/pagingType
+  });
+});

@@ -1,0 +1,14 @@
+branch-defaults:
+  centre_to_city:
+    environment: shpt-production
+  master:
+    environment: shpt-production
+  refactoring:
+    environment: shpt-production
+global:
+  application_name: SHPT-production
+  default_ec2_keyname: SHPT_apse1
+  default_platform: 64bit Amazon Linux 2015.03 v1.4.1 running Ruby 2.2 (Puma)
+  default_region: ap-southeast-1
+  profile: eb-cli
+  sc: git

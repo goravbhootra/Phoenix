@@ -1,0 +1,66 @@
+<br>
+<br>
+<%= form_for @voucher_sequence, html: { class: 'form-horizontal' }  do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+
+  <div class='col-md-6 col-md-offset-2'>
+    <div class='form-group'>
+      <%= f.label :business_entity_id, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.collection_select :business_entity_id, BusinessEntity.active_n_current(f.object.business_entity_id), :id, :alias_name,
+          { include_blank: true }, { class: 'form-control selectme' } %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :classification, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.select :classification, VoucherSequence.classifications.keys.map { |k| [k, k] }, {}, { class: 'form-control selectme' } %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :number_prefix, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.text_field :number_prefix, class: 'form-control' %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :starting_number, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.text_field :starting_number, class: 'form-control' %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :valid_from, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.text_field :valid_from, class: 'form-control datetimepickerfrom' %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :valid_till, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.text_field :valid_till, class: 'form-control datetimepickerto' %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :terms_conditions, class: "col-md-4 control-label" %>
+      <div class='col-md-8'>
+        <%= f.text_area :terms_conditions, class: 'form-control' %>
+      </div>
+    </div>
+    <div class='form-group'>
+      <%= f.label :active, class: "col-md-4 control-label" %>
+      <div class='col-md-8 pull-left'>
+        <%= f.check_box :active, { class: 'form-control'  } %>
+      </div>
+    </div>
+    <div class="actions text-center col-md-offset-4">
+      <div class='text-center'>
+        <%= f.submit 'Save', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+    <br>
+    <div class='col-md-6 col-md-offset-5 text-center'>
+      <h4><%= link_to 'Voucher Sequence listing', voucher_sequences_url %></h4>
+    </div>
+  </div>
+<% end %>

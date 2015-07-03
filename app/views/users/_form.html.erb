@@ -1,0 +1,46 @@
+<%= form_for(@user) do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+
+  <div class="col-md-2 text-center">
+    <div class="form-group">
+      <%= f.label :name %><br>
+      <%= f.text_field :name %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= f.label :membership_number %><br>
+    <%= f.text_field :membership_number %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br>
+    <%= f.text_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %><br>
+    <%= f.text_field :password_confirmation %>
+  </div>
+  <div class="field">
+    <%= f.label :contact_number_primary %><br>
+    <%= f.text_field :contact_number_primary %>
+  </div>
+  <div class="field">
+    <%= f.label :contact_number_secondary %><br>
+    <%= f.text_field :contact_number_secondary %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br>
+    <%= f.text_field :address %>
+  </div>
+  <!-- <div class="field">
+    <%#= f.label :active %><br>
+    <%#= f.text_field :active %>
+  </div> -->
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

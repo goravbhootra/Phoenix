@@ -1,0 +1,39 @@
+<% provide(:title, 'Voucher Sequences listing') %>
+
+<%= link_to 'New Voucher sequence', new_voucher_sequence_path %>
+<br>
+<br>
+<div class="display responsive no-wrap">
+  <table class='DataTable'>
+  <thead>
+    <tr>
+      <th class='col-md-3 text-center'>Business entity</th>
+      <th class='col-md-1 text-center'>Classification</th>
+      <th class='col-md-1 text-center'>Number prefix</th>
+      <th class='col-md-1 text-center'>Starting number</th>
+      <th class='col-md-1 text-center'>Valid from</th>
+      <th class='col-md-1 text-center'>Valid till</th>
+      <th class='col-md-2 text-center'>Terms conditions</th>
+      <th class='col-md-1 text-center'>Active</th>
+      <th class='col-md-1 text-center'>Operations</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @voucher_sequences.each do |voucher_sequence| %>
+      <tr>
+        <td><%= voucher_sequence.business_entity_alias_name %></td>
+        <td><%= voucher_sequence.classification %></td>
+        <td class='text-center'><%= voucher_sequence.number_prefix %></td>
+        <td class='text-center'><%= voucher_sequence.starting_number %></td>
+        <td class='text-center'><%= voucher_sequence.valid_from.strftime('%d/%m/%Y') %></td>
+        <td class='text-center'><%= voucher_sequence.valid_till %></td>
+        <td><%= voucher_sequence.terms_conditions %></td>
+        <td class='text-center'><%= voucher_sequence.active %></td>
+        <td class='text-center'><%#= link_to 'Show', voucher_sequence %>
+        <%= link_to 'Edit', edit_voucher_sequence_path(voucher_sequence) %>
+        <%#= link_to 'Destroy', voucher_sequence, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

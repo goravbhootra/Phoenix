@@ -1,0 +1,19 @@
+<% if flash.present? %>
+  <div class='container'>
+    <% flash.each do |key, value| %>
+      <% if value.present? %>
+        <% if flash[:success].present? %>
+          <div class='alert alert-success fade in flash_success_message'>
+            <a class="close" data-dismiss="alert">×</a>
+            <%= content_tag(:div, value.html_safe, class: "flash #{key}") %>
+          </div>
+        <% else %>
+          <div class='alert alert-danger fade in flash_non_success_message'>
+            <a class="close" data-dismiss="alert">×</a>
+            <%= content_tag(:div, value.html_safe, class: "flash #{key}") %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

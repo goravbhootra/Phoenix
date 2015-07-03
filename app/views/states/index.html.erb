@@ -1,0 +1,33 @@
+<% provide(:title, 'States listing') %>
+
+<div class="display responsive no-wrap voucher_line_items">
+  <table id='voucher_line_items' class='DataTable'>
+    <thead>
+      <tr>
+        <th class='col-md-3 text-center'>Name</th>
+        <th class='col-md-2 text-center'>Region</th>
+        <th class='col-md-2 text-center'>Code</th>
+        <th class='col-md-1 text-center'>Active</th>
+        <th class='col-md-2 text-center'>Count of Tax Slabs</th>
+        <th class='col-md-2 text-center'>Operations</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @states.each do |state| %>
+        <tr>
+          <td><%= state.name %></td>
+          <td class='text-center'><%= state.region_name %></td>
+          <td class='text-center'><%= state.code %></td>
+          <td class='text-center'><%= state.active %></td>
+          <td class='text-center'></td>
+          <td class='text-center'><%= link_to 'Show', state %> | <%= link_to 'Edit', edit_state_path(state) %></td>
+          <!-- <td><%#= link_to 'Destroy', state, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<br>
+
+<%= link_to 'New State', new_state_path %>

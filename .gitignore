@@ -11,3 +11,11 @@
 /log/*
 !/log/.keep
 /tmp
+*.orig
+.DS_Store
+/doc
+
+.gorav-junk
+/import_data
+*.rdb
+/app/lib/import_data/*.xls

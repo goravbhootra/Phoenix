@@ -1,0 +1,16 @@
+%ul.nav.navbar-nav.navbar-right.root_links
+  %li
+    = link_to('Main App','/')
+  - actions(:root).each do |action|
+    %li{:class => "#{action.action_name}_root_link"}
+      = link_to wording_for(:menu, action), { action: action.action_name, controller: 'rails_admin/main' }, class: "pjax"
+  - if main_app_root_path = (main_app.root_path rescue false)
+    %li
+      = link_to t('admin.home.name'), main_app_root_path
+  - if user_link = edit_user_link
+    %li
+      = user_link
+    %li
+      = link_to content_tag('span', t('admin.misc.log_out'), class: 'label label-danger'), logout_path, method: logout_method
+  %li
+    = link_to('Logout','/logout')

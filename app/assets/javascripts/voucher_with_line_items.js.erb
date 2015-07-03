@@ -1,0 +1,201 @@
+function populate_voucher_sequence() {
+  if ($('#primary_location').select2('val').length)
+  {
+    $.ajax({
+      url: "/"+$(location).attr('pathname').split('/')[1]+"/get-voucher-sequences",
+      dataType: 'json',
+      type: 'GET',
+      data: {
+              business_entity_location_id: $('#primary_location').select2('val'),
+              voucher_sequence_id: $('#_voucher_sequence').val()
+            },
+      success: function (response) {
+        $('#voucher_sequence').find('option')
+          .prop('disabled', true)
+          .addClass('hidden');
+        $.each(response, function(key, value) {
+          $('#voucher_sequence').find('option[value='+value+']')
+            .prop('disabled', false)
+            .removeClass('hidden');
+        });
+        $('#voucher_sequence').trigger('change');
+      }
+    });
+  }
+  else
+  {
+    $('#voucher_sequence').find('option')
+      .prop('disabled', true)
+      .addClass('hidden');
+  }
+}
+
+function populate_amount_for_all_rows() {
+  $('#voucher_line_items tr').each(function() {
+     calc_amount($(this));
+  });
+}
+
+function calc_amount(tr_row) {
+  quantity = tr_row.find($(".voucher_line_item_quantity")).val();
+  rate = tr_row.find($(".voucher_line_item_rate")).val();
+  if ($.isNumeric(quantity) && $.isNumeric(rate)) {
+    amount = rate*quantity;
+  } else {
+    amount = 0;
+  }
+  tr_row.find($('.voucher_line_item_amount')).val(parseFloat(amount).toFixed(2));
+  update_voucher_total_amount();
+}
+
+function update_voucher_total_amount() {
+  var amount = 0, total_amount = 0;
+  var line_item_amounts = $('.voucher_line_item_amount');
+  $.each(line_item_amounts, function(i) {
+    amount = $(line_item_amounts[i]).val();
+    if ($.isNumeric(amount)) {
+      total_amount += parseFloat(amount)
+    }
+  });
+  $('#voucher_amount').text(parseFloat(total_amount).toFixed(2));
+}
+
+function update_count_of_products() {
+  var count = 0, products_count = 0;
+  var line_item_quantities = $('.voucher_line_item_quantity');
+  $.each(line_item_quantities, function(i) {
+    var tr_row = $(line_item_quantities[i]).closest('tr');
+    var prodct = tr_row.find($(".voucher_line_item_product"));
+    if(prodct.select2('data') != null && prodct.select2('data').text.length > 0) {
+      count = $(line_item_quantities[i]).val();
+      if ($.isNumeric(count)) {
+        products_count += parseFloat(count);
+      }
+    }
+  });
+  $('.products_count').text(products_count.toFixed(0));
+}
+
+function populate_prices_and_sku_for_all_rows() {
+  $('.voucher_line_item_product').each(function() {
+     populate_sku_or_product($(this),'product');
+  });
+}
+
+function populate_sku_or_product(available_object, object_type) {
+  if(available_object.select2('val').length) {
+    var tr_row = available_object.closest('tr');
+
+    if (object_type == 'product') { // available_object is product
+      product_object = available_object
+      tr_row.find($('.voucher_line_item_sku')).select2('val', available_object.select2('val'));
+    } else {
+      product_object = tr_row.find($('.voucher_line_item_product'))
+      product_object.select2('val', available_object.select2('val'));
+    }
+  }
+}
+
+function update_price_on_sku_or_product_change(available_object) {
+  var rate = extract_rate(available_object);
+  var tr_row = available_object.closest('tr');
+  if ($.isNumeric(rate)) {
+    tr_row.find($(".voucher_line_item_rate")).val(rate);
+  }
+}
+
+function extract_rate(product_object) {
+  return parseFloat(product_object.select2('data').text.split(" : ").slice(-1));
+}
+
+function clear_row(this_object) {
+  var tr_row = this_object.closest('tr');
+  var sku_field = tr_row.find($(".voucher_line_item_sku"));
+  sku_field.select2('val', '');
+  sku_field.select2('focus');
+  tr_row.find($(".voucher_line_item_product")).select2('val', '').change();
+  tr_row.find($(".voucher_line_item_quantity")).val(0).change();
+  tr_row.find($('.voucher_line_item_rate')).val(null);
+}
+
+// function populate_product_field(this_object) {
+//   var sku = this_object.select2('val');
+//   if($.isNumeric(sku)) {
+//     var tr_row = this_object.closest('tr');
+//     var prodct = tr_row.find($(".voucher_line_item_product"));
+//     if(prodct.find('option[value="' + sku + '"]').length)
+//     {
+//       prodct.select2('val', sku).change();
+//       tr_row.find($(".voucher_line_item_quantity")).focus();
+//     } else {
+//       prodct.select2('val', '');
+//       tr_row.find($(".voucher_line_item_rate")).val = 0;
+//     }
+//   }
+// }
+function populate_values_on_page_reload() {
+  populate_prices_and_sku_for_all_rows();
+  populate_amount_for_all_rows();
+  update_voucher_total_amount();
+  update_count_of_products();
+}
+
+
+$(document).on('ready page:load', function() {
+  populate_values_on_page_reload();
+  populate_voucher_sequence();
+
+  $('#voucher_line_items').on('click', '.voucher_line_item_remove', function() {
+    $(this).closest('tr').hide().find('.line_item_destroy').val('1');
+    clear_row($(this));
+    // quantity_field.css({'background-color':'red'});
+    // tr_row.contents('td').css('border', '2px dashed red');
+  });
+
+  $('#primary_location').on('change', function() {
+    populate_voucher_sequence();
+  });
+
+  $('#voucher_line_items').on('change', '.voucher_line_item_sku', function() {
+    product = $(this).closest('tr').find($('.voucher_line_item_product'))
+    product.select2('val', $(this).select2('val'));
+    if($(this).select2('val').length) {
+      populate_sku_or_product($(this),'sku');
+      update_price_on_sku_or_product_change(product);
+
+      calculate_current_row_amount_and_total_number_of_products($(this));
+      $(this).closest('tr').find('.line_item_destroy').val('0');
+    }
+  });
+
+  $('#voucher_line_items').on('select2-blur', '.voucher_line_item_sku', function(event) {
+    if($(this).select2('val').length) {
+      $(this).closest('tr').find($('.voucher_line_item_quantity')).focus();
+    }
+  });
+
+  $('#voucher_line_items').on('select2-close', '.voucher_line_item_sku', function(event) {
+    if($(this).select2('val').length) {
+      event.preventDefault();
+      $(this).closest('tr').find($('.voucher_line_item_quantity')).focus();
+    }
+  });
+
+  $('#voucher_line_items').on('change', '.voucher_line_item_product', function() {
+    $(this).closest('tr').find($('.voucher_line_item_sku')).select2('val', $(this).select2('val'));
+    if($(this).select2('val').length) {
+      populate_sku_or_product($(this),'product');
+      update_price_on_sku_or_product_change($(this));
+      calculate_current_row_amount_and_total_number_of_products($(this));
+      $(this).closest('tr').find('.line_item_destroy').val('0');
+    }
+  });
+
+  $('#voucher_line_items').on('change', '.voucher_line_item_quantity', function() {
+    if($(this).val() > 0) {
+      $(this).css({'background-color':'white'});
+      $(this).closest('tr').find('.line_item_destroy').val(false);
+    };
+    calculate_current_row_amount_and_total_number_of_products($(this));
+  });
+});

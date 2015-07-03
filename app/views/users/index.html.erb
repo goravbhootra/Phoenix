@@ -1,0 +1,42 @@
+<% provide(:title, 'Users listing') %>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Member</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th>Password confirmation</th>
+      <th>Contact number primary</th>
+      <th>Contact number secondary</th>
+      <th>Address</th>
+      <th>Active</th>
+      <th>Confirmed</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.membership_number %></td>
+        <td><%= user.email %></td>
+        <td><%= user.password %></td>
+        <td><%= user.password_confirmation %></td>
+        <td><%= user.contact_number_primary %></td>
+        <td><%= user.contact_number_secondary %></td>
+        <td><%= user.address %></td>
+        <td><%= user.active %></td>
+        <td><%= user.confirmed_at %></td>
+        <td><%= link_to 'Show', user %></td>
+        <td><%= link_to 'Edit', edit_user_path(user) %></td>
+        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User', new_user_path %>

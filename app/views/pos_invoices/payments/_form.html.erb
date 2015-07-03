@@ -1,0 +1,95 @@
+<div class="table-responsive table-striped table-hover voucher_payment">
+  <table id="voucher_payments" class="nested_form_rows">
+    <thead>
+      <tr style='height:30px;'>
+        <th class="col-md-6 text-center">Payment Mode</th>
+        <th class="col-md-6 text-center">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% payment_modes = [] %>
+      <%= f.fields_for :payments do |ff| %>
+        <% if payment_modes.exclude? (ff.object.mode_id) %>
+          <tr>
+            <td>
+              <%= ff.hidden_field :mode_id, class: 'form-control text-center', tabindex: '-1', min: 0, readonly: true %>
+              <%= text_field_tag ff.object.mode_id, ff.object.mode.name, disabled:  true, class: 'form-control' %>
+            </td>
+            <% if ff.object.mode_id == 5 %> <!-- ID 5 - change tendered -->
+              <td>
+                <div class="input-group">
+                  <div class="input-group-addon">-</div>
+                  <%= ff.text_field :amount,
+                                value: (-ff.object.amount if ff.object.amount),
+                                class: 'form-control change_tendered',
+                                id: "payment_mode_#{ff.object.mode_id}_amount" %>
+                </div>
+              </td>
+            <% else %>
+              <td>
+                <%= ff.text_field :amount,
+                                  class: 'form-control payment_amount',
+                                  id: "payment_mode_#{ff.object.mode_id}_amount" %>
+              </td>
+            <% end %>
+            <td>
+              <%= ff.hidden_field :_destroy, size: '5x5', class: 'payment_destroy' %>
+            </td>
+          </tr>
+          <% if ff.object.mode_id == 2 %> <!-- Credit Card payment -->
+            <tr>
+              <td colspan='2'>
+                <div id='payment_details' style='margin-bottom:10px;'>
+                  <div class='row' style='border-spacing:0 0;'>
+                    <div class='col-md-8' style='padding-right:0px;'>
+                      <%= ff.text_field :bank_name, value: (ff.object.additional_details['bank_name'] if ff.object.additional_details.present? && ff.object.additional_details['bank_name'].present?), id: 'bank_name', class: 'form-control', placeholder: 'Bank Name' %>
+                    </div>
+                    <div class='col-md-4'>
+                      <%= ff.text_field :card_last_digits, value: (ff.object.additional_details['card_last_digits'] if ff.object.additional_details.present? && ff.object.additional_details['card_last_digits'].present?), class: 'form-control', placeholder: 'Last 4 digits', minlength: 4, maxlength: 4 %>
+                    </div>
+                  </div>
+                  <div class='row' style='border-spacing:0 1px;'>
+                    <div class='col-md-3' style='padding-right:0px;'>
+                      <%= ff.text_field :expiry_month, value: (ff.object.additional_details['expiry_month'] if ff.object.additional_details.present? && ff.object.additional_details['expiry_month'].present?), class: 'form-control', placeholder: 'MM', type: 'number', min: 1, max: 12 %>
+                    </div>
+                    <div class='col-md-3' style='padding-left:0px;padding-right:0px;'>
+                      <%= ff.text_field :expiry_year, value: (ff.object.additional_details['expiry_year'] if ff.object.additional_details.present? && ff.object.additional_details['expiry_year'].present?), class: 'form-control', placeholder: 'YYYY', type: 'number', min: 2015, max: 2040 %>
+                    </div>
+                    <div class='col-md-6'>
+                      <%= ff.text_field :mobile_number, value: (ff.object.additional_details['mobile_number'] if ff.object.additional_details.present? && ff.object.additional_details['mobile_number'].present?), class: 'form-control', placeholder: 'Mobile Number', type: 'number', min: 1000000000, max: 9999999999 %>
+                    </div>
+                  </div>
+                    <%= ff.text_field :card_holder_name, value: (ff.object.additional_details['card_holder_name'] if ff.object.additional_details.present? && ff.object.additional_details['card_holder_name'].present?), class: 'form-control', placeholder: "Card Holder's Name" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% payment_modes << ff.object.mode_id %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+  <div class='form-group text-center margin-bottom-0'>
+    <h4>
+      <%= label nil, 'Total Payment Received:' %>
+      <%= label_tag '0.00', nil, id: 'payment_total', class: 'form-control text-center', disabled: true %>
+    </h4>
+  </div>
+  <!-- <div class='col-md-6'> -->
+    <div class='form-group text-center margin-bottom-0'>
+      <h4>
+        <%= label nil, 'Change due:' %>
+        <%= label_tag '0.00', nil, id: 'change_due', class: 'form-control text-center', disabled: true %>
+      </h4>
+    </div>
+  <!-- </div> -->
+  <!-- <div class='col-md-6'> -->
+    <div class='form-group text-center margin-bottom-0'>
+      <h4>
+        <%= label nil, 'Cash Change Tendered:' %>
+        <%= label_tag '0.00', nil, id: 'change_tendered_label', class: 'form-control text-center', disabled: true %>
+      </h4>
+    </div>
+  <!-- </div> -->
+</div>
+<br>

@@ -1,0 +1,31 @@
+<%= form_for(@order) do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+
+  <!-- <div class="field">
+    <%#= f.label :member %><br>
+    <%#= f.text_field :member %>
+  </div> -->
+  <!-- <div class="field">
+    <%#= f.label :currency %><br>
+    <%#= f.text_field :currency %>
+  </div> -->
+  <!-- <div class="field">
+    <%#= f.label :booked_by %><br>
+    <%#= f.text_field :booked_by %>
+  </div> -->
+  <div class="field">
+    <%= f.label :remarks %><br>
+    <%= f.text_field :remarks %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount %>
+  </div>
+  <div class="field">
+    <%= f.label :number %><br>
+    <%= f.text_field :number %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

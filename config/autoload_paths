@@ -1,0 +1,1 @@
+config.autoload_paths += %w(pos_invoice inventory_out_voucher)

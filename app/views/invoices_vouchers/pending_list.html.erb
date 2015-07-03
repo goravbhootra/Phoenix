@@ -1,0 +1,36 @@
+<% provide(:title, 'Pending invoices list') %>
+
+<div class="display responsive no-wrap">
+  <table class='DataTable'>
+    <thead>
+      <tr>
+        <th class='col-md-1 text-center'>Date</th>
+        <th class='col-md-1 text-center'>Voucher #</th>
+        <th class='col-md-2 text-center'>Entity :: Location</th>
+        <th class='col-md-2 text-center'>Secondary Entity</th>
+        <th class='col-md-1 text-center'>Amount</th>
+        <th class='col-md-2 text-center'>Remarks</th>
+        <th class='col-md-1 text-center'>Created by</th>
+        <th class='col-md-2 text-center'>Operations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_vouchers_list.each do |voucher| %>
+        <tr>
+          <td class='text-center'><%= voucher.voucher_date.strftime('%d/%m/%Y') %></td>
+          <td class='text-center'><%= voucher.voucher_number %></td>
+          <td class='text-center'><%= voucher.primary_entity_name_with_location %></td>
+          <td class='text-center'><%= voucher.secondary_entity_alias_name %></td>
+          <td class='text-center'><%= voucher.total_amount %></td>
+          <td><%= voucher.remarks %></td>
+          <td class='text-center'><%= voucher.created_by.custom_object_label %></td>
+          <td class='text-center'>
+            <%#= link_to 'Edit', edit_voucher_path(voucher) %>
+            Raise Invoice |
+            <%= link_to 'View', voucher %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

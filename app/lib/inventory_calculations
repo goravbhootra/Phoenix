@@ -1,0 +1,38 @@
+class InventoryCalculations
+
+  def self.business_entity_location_closing_balances(business_entity_location_ids=[])
+    if business_entity_location_ids.present?
+      primary_qty_in = InventoryTxnLineItem.joins(:inventory_txn, :product).where(inventory_txns: {secondary_location_id: nil, primary_location_id: Array(business_entity_location_ids)}).group(:sku).sum(:quantity_in)
+      secondary_qty_in = InventoryTxnLineItem.joins(:inventory_txn, :product).where("secondary_location_id IS NOT null AND secondary_location_id IN (?)", Array(business_entity_location_ids)).group(:sku).sum(:quantity_in)
+      qty_in = primary_qty_in.merge(secondary_qty_in) { |key, pri_in, sec_in| pri_in + sec_in }
+      qty_out = InventoryTxnLineItem.joins(:inventory_txn, :product).where(inventory_txns: {primary_location_id: Array(business_entity_location_ids)}).group(:sku).sum(:quantity_out)
+      qty_closing = qty_in.merge(qty_out) { |key, val_in, val_out| val_in - val_out }
+    else
+      global_closing_balances
+    end
+  end
+
+  def self.business_entity_closing_balances(business_entity_ids=[])
+    if business_entity_ids.present?
+      primary_qty_in = InventoryTxnLineItem.joins(:inventory_txn, :product).where(inventory_txns: {secondary_location_id: nil, primary_entity_id: Array(business_entity_ids)}).group(:sku).sum(:quantity_in)
+      secondary_qty_in = InventoryTxnLineItem.joins(:inventory_txn, :product).where(inventory_txns: {"secondary_location_id IS NOT null AND primary_entity_id IN (?)", Array(business_entity_ids)}).group(:sku).sum(:quantity_in)
+      qty_in = primary_qty_in.merge(secondary_qty_in) { |key, pri_in, sec_in| pri_in + sec_in }
+      qty_out = InventoryTxnLineItem.joins(:inventory_txn, :product).where(inventory_txns: {primary_entity_id: Array(business_entity_ids)}).group(:sku).sum(:quantity_out)
+      qty_closing = qty_in.merge(qty_out) { |key, val_in, val_out| val_in - val_out }
+    else
+      global_closing_balances
+    end
+  end
+
+  def self.global_closing_balances
+    primary_qty_in = InventoryTxnLineItem.joins(:product, :inventory_txn).where(inventory_txns: {secondary_location_id: nil}).group(:sku).sum(:quantity_in)
+    secondary_qty_in = InventoryTxnLineItem.joins(:product, :inventory_txn).where("inventory_txns.secondary_location_id IS NOT null").group(:sku).sum(:quantity_in)
+    qty_in = primary_qty_in.merge(secondary_qty_in) { |key, pri_in, sec_in| pri_in + sec_in }
+    qty_out = InventoryTxnLineItem.joins(:product).all.group(:sku).sum(:quantity_out)
+    qty_closing = qty_in.merge(qty_out) { |key, val_in, val_out| val_in - val_out }
+  end
+
+  def self.adjustment_transactions
+    InventoryTxnLineItem.joins(:product, :inventory_txn).where(inventory_txns: { secondary_entity_id: BusinessEntity.reverved_and_active })
+  end
+end

@@ -1,0 +1,142 @@
+<%= form_for @pos_invoice do |f| %>
+  <div class='row'>
+    <%= render 'layouts/error_messages', object: f.object %>
+    <div class='col-md-9'>
+
+      <div class='row'>
+        <div>
+          <div class="col-md-2 text-center">
+            <div class="form-group">
+              <%= f.label :invoice_date, 'Date' %>
+              <%= f.text_field :invoice_date, value: (f.object.invoice_date.strftime('%d/%m/%Y') if f.object.invoice_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class='form-group text-center'>
+              <%= f.label :primary_location_id, 'Entity :: Location' %>
+              <% if @current_user.role?(['admins','power_user']) %>
+                <%= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                { include_blank: true },
+                { class: 'form-control selectme', id: 'primary_location' } %>
+              <% else %>
+                <%= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id).where(id: 150).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                  { readonly: true }, { class: 'form-control selectme', id: 'primary_location' } %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class='col-md-2'>
+            <div class="form-group text-center">
+              <%= f.label :customer_membership_number, 'ID Card #' %><br>
+              <%= f.text_field :customer_membership_number, class: 'form-control', id: 'customer_membership_number', autofocus: true %>
+            </div>
+          </div>
+
+          <div class='col-md-2'>
+            <div class="form-group text-center">
+              <%= f.label :number %><br>
+              <%= f.text_field :number,
+                  value: ((f.object.number == 0 || f.object.blank?) ? 'New' : f.object.number),
+                  class: 'form-control text-center', tabindex: '-1', readonly: true %>
+            </div>
+          </div>
+
+          <div class="col-md-1 text-center">
+            <div class="form-group">
+              <%= label_tag 'Tot. Qty.' %>
+              <%= label_tag '0', nil, class: 'form-control text-center products_count', disabled: true %>
+            </div>
+          </div>
+
+          <div class='col-md-2 text-center'>
+            <div class='form-group'>
+            <%= f.label :amount %>
+            <%#= f.text_field :amount, id: 'voucher_amount', class: 'form-control', readonly: true %>
+            <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='col-md-3'>
+      <h2 class='text-center' style='margin-bottom:5px;'>
+        Payment Details
+      </h2>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-9'>
+      <hr style='margin-top:0px;margin-bottom:5px;border-color:black'>
+    </div>
+    <div class='col-md-3'>
+      <hr style='margin-top:0px;margin-bottom:5px;border-color:black'>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-9'>
+      <%# cache [@pos_invoice, "pos_invoice_line_items"] do %>
+        <div class="table-responsive table-striped table-hover">
+          <table id='voucher_line_items' class='voucher_line_items_table'>
+            <thead>
+              <tr style='height:30px;'>
+                <th class="col-md-2 text-center">SKU</th>
+                <th class="col-md-5 text-center">Product</th>
+                <th class="col-md-1 text-center">Qty</th>
+                <th class="col-md-1 text-center">Rate</th>
+                <th class="col-md-2 text-center">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= f.fields_for :line_items do |f_line_item| %>
+                <tr class="fields">
+                  <!-- <td><%#= text_field_tag "#{f_line_item.object_name}[sku]", nil, maxlength: 4, class: 'form-control text-center voucher_line_item_sku' %></td> -->
+                  <td><%= select "#{f_line_item.object_name}", 'sku', @products.map { |x| [x.sku.to_i, x.id] }, {include_blank: true}, class: 'form-control selectme text-center voucher_line_item_sku' %></td>
+                  <td><%= f_line_item.collection_select :product_id, @products, :id, :voucher_label,
+                            { include_blank: true }, { class: 'form-control selectme voucher_line_item_product' } %></td>
+                  <td>
+                    <%= f_line_item.text_field :quantity,
+                          value: (-f_line_item.object.quantity if f_line_item.object.quantity),
+                          class: 'form-control text-center voucher_line_item_quantity',
+                          type: 'number', min: 0 %>
+                  </td>
+                  <td><%= f_line_item.text_field :price, class: 'form-control text-center voucher_line_item_rate', tabindex: '-1', min: 0, readonly: true %></td>
+                  <td style='padding-right:0px;'>
+                    <%= f_line_item.text_field :amount, class: 'form-control text-center voucher_line_item_amount', tabindex: '-1', min: 0, readonly: true, style: 'width:80%;float:left;' %>
+                    <%= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                    <%= f_line_item.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <%# end %>
+      <div class="form-group" style='margin-top:5px;'>
+        <div class='row'>
+          <div class='col-md-3'>
+            <%= f.label :ref_number, 'Ref #' %><br>
+            <%= f.text_field :ref_number, class: 'form-control' %>
+          </div>
+          <div class='col-md-9'>
+            <%= f.text_area :remarks, class: 'form-control', rows: 2, type: 'text',
+                        placeholder: 'Remarks', tabindex: '-1' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-3'>
+      <%= render 'pos_invoices/payments/form', f: f %>
+      <div class='col-md-6'>
+        <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
+      </div>
+      <div class='col-md-6'>
+        <%#= f.submit "Save & Print", name: 'save_and_print', class: 'btn btn-primary' %>
+        <%= link_to 'List of invoices', pos_invoices_url, :class => 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+  </div>
+<% end %>

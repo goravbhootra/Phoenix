@@ -11,7 +11,11 @@ Rails.application.configure do
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
+
+  #Default false
   config.action_controller.perform_caching = false
+  # config.action_controller.perform_caching = true
+  # config.cache_store = :dalli_store
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -38,4 +42,16 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.log_level = :debug
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = false
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.rails_logger = true
+    Bullet.airbrake = false
+    Bullet.add_footer = true
+  end
 end

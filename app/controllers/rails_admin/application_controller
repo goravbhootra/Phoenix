@@ -1,0 +1,8 @@
+require 'rails_admin/application_controller'
+
+module RailsAdmin
+  class ApplicationController < ::ApplicationController
+    # power :rails_admin_application_controller
+    skip_power_check
+  end
+end

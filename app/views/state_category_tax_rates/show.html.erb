@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>State:</strong>
+  <%= @state_category_tax_rate.state_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @state_category_tax_rate.category_id %>
+</p>
+
+<p>
+  <strong>Classification:</strong>
+  <%= @state_category_tax_rate.classification %>
+</p>
+
+<p>
+  <strong>Interstate label:</strong>
+  <%= @state_category_tax_rate.interstate_label %>
+</p>
+
+<p>
+  <strong>Interstate rate:</strong>
+  <%= @state_category_tax_rate.interstate_rate %>
+</p>
+
+<p>
+  <strong>Intrastate label:</strong>
+  <%= @state_category_tax_rate.intrastate_label %>
+</p>
+
+<p>
+  <strong>Intrastate rate:</strong>
+  <%= @state_category_tax_rate.intrastate_rate %>
+</p>
+
+<p>
+  <strong>Valid from:</strong>
+  <%= @state_category_tax_rate.valid_from %>
+</p>
+
+<p>
+  <strong>Valid till:</strong>
+  <%= @state_category_tax_rate.valid_till %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @state_category_tax_rate.active %>
+</p>
+
+<%= link_to 'Edit', edit_state_category_tax_rate_path(@state_category_tax_rate) %> |
+<%= link_to 'Back', state_category_tax_rates_path %>

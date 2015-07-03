@@ -1,0 +1,42 @@
+<% provide(:title, 'State Category Tax Rates') %>
+<table>
+  <thead>
+    <tr>
+      <th>State</th>
+      <th>Category</th>
+      <th>Classification</th>
+      <th>Interstate label</th>
+      <th>Interstate rate</th>
+      <th>Intrastate label</th>
+      <th>Intrastate rate</th>
+      <th>Valid from</th>
+      <th>Valid till</th>
+      <th>Active</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @state_category_tax_rates.each do |state_category_tax_rate| %>
+      <tr>
+        <td><%= state_category_tax_rate.state_id %></td>
+        <td><%= state_category_tax_rate.category_id %></td>
+        <td><%= state_category_tax_rate.classification %></td>
+        <td><%= state_category_tax_rate.interstate_label %></td>
+        <td><%= state_category_tax_rate.interstate_rate %></td>
+        <td><%= state_category_tax_rate.intrastate_label %></td>
+        <td><%= state_category_tax_rate.intrastate_rate %></td>
+        <td><%= state_category_tax_rate.valid_from %></td>
+        <td><%= state_category_tax_rate.valid_till %></td>
+        <td><%= state_category_tax_rate.active %></td>
+        <td><%= link_to 'Show', state_category_tax_rate %></td>
+        <td><%= link_to 'Edit', edit_state_category_tax_rate_path(state_category_tax_rate) %></td>
+        <td><%= link_to 'Destroy', state_category_tax_rate, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New State category tax rate', new_state_category_tax_rate_path %>

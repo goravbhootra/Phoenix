@@ -1,0 +1,44 @@
+<% provide(:title, 'Voucher Sequence detail') %>
+
+<p>
+  <strong>Business entity:</strong>
+  <%= @voucher_sequence.business_entity_id %>
+</p>
+
+<p>
+  <strong>Classification:</strong>
+  <%= @voucher_sequence.classification %>
+</p>
+
+<p>
+  <strong>Number prefix:</strong>
+  <%= @voucher_sequence.number_prefix %>
+</p>
+
+<p>
+  <strong>Starting number:</strong>
+  <%= @voucher_sequence.starting_number %>
+</p>
+
+<p>
+  <strong>Valid from:</strong>
+  <%= @voucher_sequence.valid_from %>
+</p>
+
+<p>
+  <strong>Valid till:</strong>
+  <%= @voucher_sequence.valid_till %>
+</p>
+
+<p>
+  <strong>Terms conditions:</strong>
+  <%= @voucher_sequence.terms_conditions %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @voucher_sequence.active %>
+</p>
+
+<%= link_to 'Edit', edit_voucher_sequence_path(@voucher_sequence) %> |
+<%= link_to 'Back', voucher_sequences_path %>

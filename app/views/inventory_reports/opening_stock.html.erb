@@ -1,0 +1,14 @@
+<% provide(:title, 'Locationwise Opening Stock') %>
+
+<div class='col-md-8 col-md-offset-1'>
+  <h4 class='col-md-3 text-center'><br>Select One:</h4>
+  <div class='col-md-4 text-center'>
+    <%= label 'Business Entity', "Business Entity" %>
+    <%= select 'select', 'business_entities', BusinessEntity.all.pluck(:id, :alias_name).map { |x| [x[1], x[0]] }, {include_blank: true}, class: 'form-control selectme text-left' %>
+  </div>
+  <h4 class='col-md-1 text-center'><br>OR</h4>
+  <div class='col-md-4 text-center'>
+    <%= label 'Business Entity Location', "Business Entity Location" %>
+    <%= select 'select', 'entity_locations', BusinessEntityLocation.includes(:business_entity).map { |x| [x.entity_name_with_location, x.id] }, {include_blank: true}, class: 'form-control selectme text-left' %>
+  </div>
+</div>

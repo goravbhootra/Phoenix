@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Orders Listing</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Member ID</th>
+      <th>Currency</th>
+      <th>Booked By</th>
+      <th>Remarks</th>
+      <th>Amount</th>
+      <th>Number</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%#= order.user.custom_object_label %></td>
+        <td><%= order.currency.custom_object_label %></td>
+        <td><%= order.booked_by.custom_object_label %></td>
+        <td><%= order.remarks %></td>
+        <td><%= order.amount %></td>
+        <td><%= order.number %></td>
+        <td><%= link_to 'Show', order %></td>
+        <td><%= link_to 'Edit', edit_order_path(order) %></td>
+        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Order', new_order_path %>

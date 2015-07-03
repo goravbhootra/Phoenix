@@ -1,0 +1,31 @@
+<p>
+  <!-- <strong>Member:</strong> -->
+  <%#= @pos_invoice.member.custom_object_label %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @pos_invoice.currency.custom_object_label %>
+</p>
+
+<p>
+  <strong>Created by user:</strong>
+  <%= @pos_invoice.created_by.custom_object_label %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @pos_invoice.remarks %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @pos_invoice.total_amount %>
+</p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @pos_invoice.voucher_number %>
+</p>
+
+<%= link_to "Printable Receipt (PDF)", pos_invoice_path(@pos_invoice.id, format: "pdf"), target: :_blank, id: 'pdf_print' %> | <%= link_to 'New Invoice', new_pos_invoice_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_pos_invoice_path(@pos_invoice) %> | <%= link_to 'Invoices Listing', pos_invoices_path %>

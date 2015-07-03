@@ -1,0 +1,106 @@
+<%= form_for @inventory_out_voucher do |f| %>
+<%= render 'layouts/error_messages', object: f.object %>
+  <div class='row'>
+    <div class="col-md-10 text-center">
+      <div class='col-md-2 form-group text-center'>
+        <%= f.label :voucher_date, 'Date' %>
+        <%= f.text_field :voucher_date, value: (f.object.voucher_date.strftime('%d/%m/%Y') if f.object.voucher_date), class: 'datetimepicker text-center form-control', required: 'true', type: 'date' %>
+      </div>
+      <div class='col-md-3'>
+        <div class='form-group text-center'>
+          <%= label nil, 'Consignor :: Location' %>
+          <%= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location, { include_blank: true },
+            { class: 'form-control selectme', id: 'primary_location' } %>
+        </div>
+        <div class='form-group text-center'>
+          <div id='secondary_business_entity_div' class='form-group text-center'>
+            <%= label nil, 'Consignee' %>
+            <%= f.collection_select :secondary_entity_id, BusinessEntity.anc_with_reserved_inventory_out_vouchers(f.object.secondary_entity_id).order(:alias_name), :id, :alias_name,
+                    { include_blank: true },
+                    { class: 'form-control selectme', id: 'secondary_business_entity' } %>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class='form-group text-center'>
+          <%= f.label :voucher_sequence_id, 'Sequence' %>
+          <%= hidden_field  '', 'voucher_sequence', value: f.object.voucher_sequence_id %>
+          <%= f.collection_select :voucher_sequence_id, VoucherSequence.anc_inventory_out_vouchers(f.object.voucher_sequence_id), :id, :number_prefix,
+            { include_blank: true },
+            { class: 'form-control selectme', id: 'voucher_sequence' } %>
+        </div>
+        <div class='form-group text-center'>
+          <div class='form-group text-center'>
+            <%= f.label :number %>
+            <%= f.text_field :number, value: ((f.object.number == 0 || f.object.number.blank?) ? 'New' : f.object.number), class: 'form-control text-center', disabled: true %>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class='form-group text-center'>
+          <%= label_tag '# of products' %>
+          <%= label_tag '0', nil, class: 'form-control text-center products_count', disabled: true %>
+        </div>
+        <div class='form-group text-center'>
+          <%= f.label :amount %>
+          <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+        </div>
+      </div>
+      <div class="col-md-3 form-group" style='margin-top:20px;'>
+        <%= f.text_area :remarks, class: 'form-control', rows: 5, type: 'text',
+                        placeholder: 'Remarks', tabindex: '-1' %>
+      </div>
+    </div>
+    <div class="col-md-2 text-center">
+      <div class="text-center">
+        <div class='form-group text-center'>
+          <br>
+          <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
+        </div>
+        <div class='form-group text-center'>
+          <br>
+          <%= link_to 'List of invoices', inventory_out_vouchers_url, :class => 'btn btn-primary btn-block' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr style='margin-top:0px;margin-bottom:5px;border-color:black'>
+
+  <%# cache [f.object, "inventory_out_voucher_line_items"] do %>
+    <div class="table-responsive table-striped table-hover">
+      <table id='voucher_line_items' class='voucher_line_items_table'>
+        <thead>
+          <tr style='height:30px;'>
+            <th class="col-md-2 text-center">SKU</th>
+            <th class="col-md-6 text-center">Product</th>
+            <th class="col-md-1 text-center">Qty</th>
+            <th class="col-md-1 text-center">Rate</th>
+            <th class="col-md-2 text-center">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= f.fields_for :line_items do |f_line_item| %>
+            <tr class="fields">
+              <!-- <td><%#= text_field_tag "#{f_line_item.object_name}[sku]", nil, maxlength: 4, class: 'form-control text-center voucher_line_item_sku' %></td> -->
+              <td><%= select "#{f_line_item.object_name}", 'sku', @products.map { |x| [x.sku.to_i, x.id] }, {include_blank: true}, class: 'form-control selectme text-center voucher_line_item_sku' %></td>
+              <td><%= f_line_item.collection_select :product_id, @products, :id, :voucher_label,
+                        { include_blank: true }, { class: 'form-control selectme voucher_line_item_product' } %></td>
+              <td><%= f_line_item.text_field :quantity_out, class: 'form-control text-center voucher_line_item_quantity', type: 'number', min: 0 %></td>
+              <td>
+                <%= f_line_item.text_field :price,
+                        class: 'form-control text-center voucher_line_item_rate',
+                        tabindex: '-1', min: 0, readonly: true %>
+              </td>
+              <td style='padding-right:0px;'>
+                <%= f_line_item.text_field :amount, class: 'form-control text-center voucher_line_item_amount', tabindex: '-1', min: 0, readonly: true, style: 'width:80%;float:left;' %>
+                <%= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                <%= f_line_item.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <%# end %>
+<% end %>

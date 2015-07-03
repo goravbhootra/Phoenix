@@ -1,0 +1,26 @@
+<p>
+<!--   <strong>Member:</strong>
+  <%#= @inventory_out_voucher.member.custom_object_label %> -->
+</p>
+
+<p>
+  <strong>Created by user:</strong>
+  <%= @inventory_out_voucher.created_by.custom_object_label %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @inventory_out_voucher.remarks %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @inventory_out_voucher.total_amount %>
+</p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @inventory_out_voucher.voucher_number %>
+</p>
+
+<%= link_to 'New Invoice', new_inventory_out_voucher_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_inventory_out_voucher_path(@inventory_out_voucher) %> | <%= link_to 'Invoices Listing', inventory_out_vouchers_path %>

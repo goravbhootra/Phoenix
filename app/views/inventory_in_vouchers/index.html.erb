@@ -1,0 +1,38 @@
+<% provide(:title, 'InventoryIn Vouchers listing') %>
+
+<!-- <div class="table-responsive table-striped table-hover "> -->
+<div class="display responsive no-wrap voucher_line_items">
+  <table id='voucher_line_items' class='DataTable'>
+    <thead>
+      <tr>
+        <th class='col-md-1 text-center'>Date</th>
+        <th class='col-md-1 text-center'>Invoice #</th>
+        <th class='col-md-1 text-center'>Vendor/Source</th>
+        <th class='col-md-3 text-center'>Entity Location</th>
+        <th class='col-md-1 text-center'>Amount</th>
+        <th class='col-md-2 text-center'>Remarks</th>
+        <th class='col-md-1 text-center'>Created by</th>
+        <th class='col-md-1 text-center'>Operations</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @inventory_in_vouchers.each do |inventory_in_voucher| %>
+        <tr>
+          <td class='text-center'><%= inventory_in_voucher.voucher_date.strftime('%d/%m/%Y') %></td>
+          <td class='text-center'><%= inventory_in_voucher.voucher_number %></td>
+          <td class='text-center'><%= inventory_in_voucher.secondary_entity_alias_name %></td>
+          <td class='text-center'><%= inventory_in_voucher.primary_entity_name_with_location %></td>
+          <td class='text-center'><%= inventory_in_voucher.total_amount %></td>
+          <td><%= inventory_in_voucher.remarks %></td>
+          <td class='text-center'><%= inventory_in_voucher.created_by.custom_object_label %></td>
+          <td class='text-center'>
+            <%= link_to 'View', inventory_in_voucher %> | <%= link_to 'Edit', edit_inventory_in_voucher_path(inventory_in_voucher) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<br>
+
+<%= link_to 'New InventoryIn Voucher', new_inventory_in_voucher_path %>

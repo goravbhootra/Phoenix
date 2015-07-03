@@ -1,4 +1,71 @@
 Rails.application.routes.draw do
+  mount RailsAdmin::Engine => '/masters', as: 'rails_admin'
+
+  # root :to => redirect('/masters')
+  root :to => "sessions#new"
+  get '/login' => 'sessions#new'
+  get '/logout' => 'sessions#destroy'
+  delete '/logout' => 'sessions#destroy'
+  # get 'current-business-entity' => 'application#current_business_entity'
+
+  resources :sessions, only: [:new, :create, :destroy]
+
+  get '/pos-invoices/get-voucher-sequences' => 'pos_invoices#get_voucher_sequences'
+
+  get '/inventory-out-vouchers/get-voucher-sequences' => 'inventory_out_vouchers#get_voucher_sequences'
+  get '/inventory-out-vouchers/get-business-entities' => 'inventory_out_vouchers#get_business_entities'
+
+  get '/inventory-in-vouchers/get-voucher-sequences' => 'inventory_in_vouchers#get_voucher_sequences'
+  get '/inventory-in-vouchers/get-business-entities' => 'inventory_in_vouchers#get_business_entities'
+  get '/inventory-internal-transfer-vouchers/get-voucher-sequences' => 'inventory_internal_transfer_vouchers#get_voucher_sequences'
+  get '/inventory-internal-transfer-vouchers/get-entity-locations' => 'inventory_internal_transfer_vouchers#get_entity_locations'
+
+  get '/pos-invoice-payments' => 'pos_invoices#payment'
+
+  resources :pos_invoices, path: 'pos-invoices'
+  resources :inventory_out_vouchers, path: 'inventory-out-vouchers'
+  resources :inventory_in_vouchers, path: 'inventory-in-vouchers'
+  resources :inventory_internal_transfer_vouchers, path: 'inventory-internal-transfer-vouchers'
+
+  resources :users
+
+  get '/sales-report' => 'reports#sales'
+  get '/payment-collection' => 'reports#payment_collection'
+  get '/stock-summary' => 'reports#stock_summary'
+  get '/stock-summary-xls' => 'inventory_reports#stock_summary'
+  get '/opening-stock' => 'inventory_reports#opening_stock'
+  get '/invoices-pending' => 'invoices_vouchers#pending_list'
+
+  resources :states
+  resources :voucher_sequences, path: 'voucher-sequences', except: :show
+
+  # AWS health check
+  get '/ping' => 'ping#show'
+  # get '/sales' => 'reports#index'
+  # resources :authors
+  # resources :business_entities
+  # resources :categories
+  # resources :cities
+  # resources :core_levels
+  # resources :currencies
+  # resources :distribution_types
+  # resources :languages
+  # resources :orders
+  # resources :payment_modes
+  # resources :products
+  # resources :product_groups
+  # resources :publishers
+  # resources :regions
+  # resources :states
+  # resources :state_category_tax_rates, path: 'tax-rates'
+  # resources :uoms
+  # resources :users
+  # resources :zones
+  #   collection do
+  #     get 'get_product_details'
+  #   end
+  # end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

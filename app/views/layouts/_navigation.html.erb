@@ -1,0 +1,94 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class='container-fluid'>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">
+          <%= content_for?(:title) ? "Phoenix ERP :: #{yield(:title)}" : 'Phoenix ERP' %>
+      </span>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="menu-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <% if current_user %>
+          <!-- <li><%#= select 'current_business_entity', 'current_business_entity', @business_entities, {include_blank: true}, class: 'form-control', id: 'current_business_entity' %></li> -->
+          <% if current_user.role?(['admin','power_user']) %>
+            <li class="dropdown">
+              <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
+                Accounts <b class="caret"></b>
+              </p>
+              <ul class="dropdown-menu">
+                <li><a href=<%= invoices_pending_url %>>Invoices pending</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
+                Vouchers <b class="caret"></b>
+              </p>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">Inventory Out Vouchers</li>
+                <li><a href=<%= new_inventory_out_voucher_url %> style="text-indent:10px;">New</a></li>
+                <li><a href=<%= inventory_out_vouchers_url %> style="text-indent:10px;">Listing</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Inventory In Vouchers</li>
+                <li><a href=<%= new_inventory_in_voucher_url %> style="text-indent:10px;">New</a></li>
+                <li><a href=<%= inventory_in_vouchers_url %> style="text-indent:10px;">Listing</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Inventory Internal Transfer Vouchers</li>
+                <li><a href=<%= new_inventory_internal_transfer_voucher_url %> style="text-indent:10px;">New</a></li>
+                <li><a href=<%= inventory_internal_transfer_vouchers_url %> style="text-indent:10px;">Listing</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">POS Invoices</li>
+                <li><a href=<%= new_pos_invoice_url %> style="text-indent:10px;">New</a></li>
+                <li><a href=<%= pos_invoices_url %> style="text-indent:10px;">Listing</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
+                Reports <b class="caret"></b>
+              </p>
+              <ul class="dropdown-menu">
+                <li><a href='/pos-invoices.xls'>POS Sales Transaction Details (Excel)</a></li>
+                <li><a href='/pos-invoice-payments.xls'>Sale Payments Details (Excel)</a></li>
+                <li><a href='/stock-summary-xls.xls'>Stock Summary (Excel)</a></li>
+                <li><a href='/payment-collection.pdf'>Payment Collection Summary (PDF)</a></li>
+                <!-- <li><a href='/stock-summary.pdf'>Stock Summary (PDF)</a></li> -->
+                <li><a href='/sales-report.pdf'>Sales Report (PDF)</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
+                Configuration <b class="caret"></b>
+              </p>
+              <ul class="dropdown-menu">
+                <li><a href='/voucher-sequences'>Voucher Sequences</a></li>
+                <li><a href='/masters'>Admin Panel</a></li>
+              </ul>
+            </li>
+          <% else %>
+            <li class="dropdown">
+              <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
+                POS Invoices <b class="caret"></b>
+              </p>
+              <ul class="dropdown-menu">
+                <li><a href=<%= new_pos_invoice_url %> style="text-indent:10px;">New</a></li>
+                <li><a href=<%= pos_invoices_url %> style="text-indent:10px;">Listing</a></li>
+                <% if current_user.role?('pos_manager') %>
+                  <li><a href='/payment-collection.pdf' style="text-indent:10px;">Payment Collection Summary (PDF)</a></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <li><%= link_to current_user.email, edit_user_path(current_user.id) %></li>
+          <li><%= link_to('Logout', logout_path, :method=>'delete') %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

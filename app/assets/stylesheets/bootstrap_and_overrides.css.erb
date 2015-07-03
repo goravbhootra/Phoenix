@@ -1,0 +1,121 @@
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src:url('<%= asset_path "glyphicons-halflings-regular.eot" %>');
+  src:url('<%= asset_path "glyphicons-halflings-regular.eot" %>?#iefix') format('embedded-opentype'),
+    url('<%= asset_path "glyphicons-halflings-regular.woff" %>') format('woff'),
+    url('<%= asset_path "glyphicons-halflings-regular.ttf" %>') format('truetype'),
+    url('<%= asset_path "glyphicons-halflings-regular.svg" %>#glyphicons-halflingsregular') format('svg');
+}
+
+html,
+body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+.container-fluid {
+  min-height:100%;
+  position:relative;
+}
+/*#header {
+  background:#ff0;
+  padding:10px;
+}*/
+#body {
+  /*padding:10px;*/
+  padding-top:70px;  /* Height of the header */
+  padding-bottom:50px;  /* Height of the footer */
+}
+
+.footer {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height: 40px;      /* Height of the footer */
+  /*background:#6cf;*/
+}
+.footer p {
+  margin:0;
+  padding: 10px;
+  margin-right: 30px;
+}
+.footer hr {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
+
+.margin-bottom-20 { margin-bottom:20px;}
+.margin-top-15 { margin-top:15px;}
+.margin-bottom-0 { margin-bottom:0px; }
+.dropdown-header { font-size: 110%; }
+.bigdrop{ width: 15% !important; }
+
+.alert-error { color: red; }
+.hidden { display: none; }
+
+table.voucher_line_items_table {
+  border-collapse: separate;
+  border-spacing: 0 3px;
+}
+
+table.voucher_payment {
+  border-spacing: 0 4px;
+}
+
+table.voucher_line_items_table > thead > tr > th {
+  background-color: #006DCC;
+  color: white;
+}
+
+table.voucher_line_items_table > tbody > tr > td:first-child, table.voucher_line_items_table > thead > tr > th:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+table.voucher_line_items_table > tbody > tr > td:last-child, table.voucher_line_items_table > thead > tr > th:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+table.voucher_line_items_table > tbody > tr > td {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+
+/*==================================================================================
+                            DataTable overrides here
+==================================================================================*/
+table.DataTable {
+    width: 100%;
+}
+
+table.DataTable tbody tr:nth-child(odd) td{
+    background-color: #E9E9E9;
+}
+table.DataTable tbody tr:nth-child(odd) td.add{
+    background-color: #FFFFFF;
+}
+
+table.DataTable thead th{
+    background: url(image_tag("sort_both.png")) no-repeat center right;
+}
+
+table.DataTable > thead > tr > th, table.DataTable > tbody > tr > th, table.DataTable > tfoot > tr > th, table.DataTable > thead > tr > td, table.DataTable > tbody > tr > td, table.DataTable > tfoot > tr > td {
+        border: 1px solid #4B4276 !important;
+        line-height: 1.42857;
+        padding: 8px;
+        vertical-align: top;
+}
+/*==================================================================================
+                            End of DataTable overrides
+==================================================================================*/
+
+@media only screen and (min-width : 768px) {
+    /* Make Navigation Toggle on Desktop Hover */
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+}

@@ -1,14 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Phoenix</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+  <head>
+    <title><%= content_for?(:title) ? "#{yield(:title)} :: Phoenix ERP" : 'Phoenix ERP' %></title>
 
-<%= yield %>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SHPT' %>">
+    <meta name="keyword" content="<%= content_for?(:keyword) ? yield(:keyword) : "SHPT" %>">
+    <meta name="author" content="Gorav Bhootra">
+    <!-- Favicon -->
+    <!-- <link rel="shortcut icon" href="favicon.ico"> -->
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <!-- <link rel="stylesheet" type="text/css" media="print" href="print.css"> -->
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag controller_name, 'data-turbolinks-track' => true if %w(pos_invoices inventory_out_vouchers inventory_in_vouchers inventory_internal_transfer_vouchers).include?(controller_name) %>
+    <%= csrf_meta_tags %>
+  </head>
 
-</body>
+  <body>
+    <div class='container-fluid'>
+      <div id="body">
+        <%= render 'layouts/navigation' %>
+        <%= render 'layouts/flash_messages' %>
+        <%= yield %>
+      </div>
+    </div>
+    <!-- <footer class="footer navbar-static-bottom">
+        <hr style='border-color:brown;'>
+        <p class="text-muted pull-right"><a href='http://solutionize.in'>Solutionize</a></p>
+    </footer> -->
+  </body>
 </html>
