@@ -3,9 +3,10 @@ class Ability
 
   def initialize(user)
     user ||= User.new # guest user (not logged in)
-    if (user.roles & [:admin]).present?
+    power = Power.new(user)
+    if power.global_role?
       can :manage, :all
-    elsif (user.roles & [:power_user]).present?
+    elsif power.global_role? && power.role?('power_user')
       can :access, :rails_admin
       can :dashboard
       # Performed checks for `collection` scoped actions:

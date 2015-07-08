@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :current_ability
 
   helper_method :current_user
-  # helper_method :current_business_entity
+  helper_method :current_business_entity
 
   # require_power_check
   current_power do
@@ -36,18 +36,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # def current_business_entity
-  #   @current_business_entity = BusinessEntity.where(id: params[:current_business_entity_id].to_i).first if params[:current_business_entity_id].present?
-  #   render text: ''
-  # end
+  def current_business_entity
+    @current_business_entity = BusinessEntity.where(id: params[:current_business_entity_id].to_i).first if params[:current_business_entity_id].present?
+    render text: ''
+  end
 
   private
 
   def current_user
     @current_user ||= User.active.find_by(auth_token: (cookies[:auth_token])) if cookies[:auth_token]
-    # @business_entities ||= BusinessEntity.active.pluck(:id, :alias_name).to_h.invert if @current_user.present?
-    #   # @entity_locations ||= BusinessEntityLocation.active.map { |location| [location.business_entity_name_with_location, location.id] }
-    # @current_user
+    if @current_user.present?
+      current_power = Power.new(@current_user)
+      @business_entities ||= current_power.get_my_business_entities.pluck(:id, :alias_name).to_h.invert
+    end
+      # @entity_locations ||= BusinessEntityLocation.active.map { |location| [location.business_entity_name_with_location, location.id] }
+    @current_user
   end
 
   # def rails_admin_authenticate

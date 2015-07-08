@@ -15,7 +15,10 @@ RailsAdmin.config do |config|
                             'SignIn', 'InventoryReport', 'LocationInventoryLevel',
                             'BusinessEntityUser', 'VoucherSequence',
                             'Account', 'Account::Asset', 'Account::Liability',
-                            'Account::SundryDebtor', 'Account::SundryCreditor'
+                            'Account::SundryDebtor', 'Account::SundryCreditor',
+                            'Account::CurrentAsset', 'Account::CashAccount',
+                            'Account::CurrentLiability', 'Account::SalesAccount',
+                            'AccountTxn', 'AccountTxnDetail', 'PosInvoic'
                           ]
 
   config.actions do

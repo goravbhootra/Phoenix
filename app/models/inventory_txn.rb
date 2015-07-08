@@ -9,6 +9,7 @@ class InventoryTxn < MyActiveRecord
 
   validates :created_by, :voucher_sequence_id, presence: true
   validates :primary_location_id, :primary_entity_id, presence: true
+  validates :type, presence: true
   validate :secondary_entity_xor_location
   validates :total_amount, :tax_amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
   validates :number_prefix, length: { maximum: 8 }

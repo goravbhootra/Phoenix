@@ -143,7 +143,6 @@ class AccountsRelated < ActiveRecord::Migration
     add_foreign_key :accounts, :business_entities, on_delete: :restrict
     # add_foreign_key :accounts, :account_types, on_delete: :restrict
 
-
     create_table :account_txns do |t|
       t.belongs_to :business_entity,            null: false
       t.belongs_to :currency,                   null: false

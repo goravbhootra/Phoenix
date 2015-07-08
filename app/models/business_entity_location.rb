@@ -13,6 +13,8 @@ class BusinessEntityLocation < MyActiveRecord
   validates :business_entity, presence: true, uniqueness: { scope: :name, case_sensitive: false }
   # validates :default, inclusion: { in: [true, false] }
   validates :active, inclusion: { in: [true, false] }
+  validate :valid_cash_account
+  validate :valid_bank_account
 
   # bitmask :status, :as => [:storage, :sales], null: false
 
@@ -31,5 +33,13 @@ class BusinessEntityLocation < MyActiveRecord
 
   def entity_name_with_location
     "#{business_entity_alias_name} :: #{name}"
+  end
+
+  def valid_cash_account
+    errors.add(:base, 'Invalid cash account selected') and return false if self.cash_account_id.present? && !Account.where(type: 'Account::CashAccount', business_entity_id: self.business_entity_id, id: self.cash_account_id).exists?
+  end
+
+  def valid_bank_account
+    errors.add(:base, 'Invalid bank account selected') and return false if self.bank_account_id.present? && !Account.where(type: 'Account::BankAccount', business_entity_id: self.business_entity_id, id: self.bank_account_id).exists?
   end
 end

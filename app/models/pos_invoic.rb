@@ -1,9 +1,12 @@
-class PosInvoice < AccountTxn
+class PosInvoic < Invoice
+
+  validates :customer_membership_number, length: { is: 9 }, allow_nil: true, allow_blank: true
 
   before_validation :consolidate_payments_on_mode
   before_validation :invoice_amount_and_payment_reconciliation
 
   def set_defaults
+    # self.primary_location_id = 150 if self.primary_location_id.blank? # Chennai Bookstall
     self.secondary_entity_id = 105 if self.secondary_entity_id.blank?
     self.voucher_sequence_id = 6 if self.voucher_sequence_id.blank? # Chennai POS
     self.goods_value = self.total_amount if self.goods_value.blank?

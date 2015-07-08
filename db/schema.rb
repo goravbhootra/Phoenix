@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150620200735) do
+ActiveRecord::Schema.define(version: 20150706012753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,13 +32,16 @@ ActiveRecord::Schema.define(version: 20150620200735) do
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree
 
   create_table "account_txn_details", force: :cascade do |t|
-    t.integer  "account_txn_id",                       null: false
+    t.integer  "account_txn_id",                        null: false
     t.text     "address"
     t.hstore   "legal_details"
-    t.string   "customer_membership_number", limit: 9
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.string   "customer_membership_number",  limit: 9
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "business_entity_location_id",           null: false
   end
+
+  add_index "account_txn_details", ["business_entity_location_id"], name: "index_account_txn_details_on_business_entity_location_id", using: :btree
 
   create_table "account_txn_line_items", force: :cascade do |t|
     t.integer  "account_txn_id",                          null: false
@@ -66,7 +69,7 @@ ActiveRecord::Schema.define(version: 20150620200735) do
     t.string   "number_prefix",       limit: 8
     t.integer  "number",                         null: false
     t.text     "remarks"
-    t.datetime "txn_date"
+    t.datetime "txn_date",                       null: false
     t.integer  "status",                         null: false
     t.string   "ref_number",          limit: 30
     t.datetime "created_at",                     null: false
@@ -133,9 +136,13 @@ ActiveRecord::Schema.define(version: 20150620200735) do
     t.integer  "position"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
+    t.integer  "cash_account_id"
+    t.integer  "bank_account_id"
   end
 
+  add_index "business_entity_locations", ["bank_account_id"], name: "index_business_entity_locations_on_bank_account_id", using: :btree
   add_index "business_entity_locations", ["business_entity_id", "name"], name: "index_business_entity_locations_on_business_entity_id_and_name", unique: true, using: :btree
+  add_index "business_entity_locations", ["cash_account_id"], name: "index_business_entity_locations_on_cash_account_id", using: :btree
 
   create_table "categories", force: :cascade do |t|
     t.string   "name",       limit: 100,                null: false
@@ -568,6 +575,7 @@ ActiveRecord::Schema.define(version: 20150620200735) do
   add_foreign_key "account_entries", "account_txns", on_delete: :cascade
   add_foreign_key "account_entries", "accounts", on_delete: :cascade
   add_foreign_key "account_txn_details", "account_txns", on_delete: :cascade
+  add_foreign_key "account_txn_details", "business_entity_locations", on_delete: :cascade
   add_foreign_key "account_txn_line_items", "account_txns", on_delete: :cascade
   add_foreign_key "account_txn_line_items", "products", on_delete: :cascade
   add_foreign_key "account_txns", "business_entities", on_delete: :restrict
@@ -576,6 +584,8 @@ ActiveRecord::Schema.define(version: 20150620200735) do
   add_foreign_key "account_txns", "voucher_sequences", on_delete: :restrict
   add_foreign_key "accounts", "business_entities", on_delete: :restrict
   add_foreign_key "business_entities", "cities", on_delete: :restrict
+  add_foreign_key "business_entity_locations", "accounts", column: "bank_account_id", on_delete: :restrict
+  add_foreign_key "business_entity_locations", "accounts", column: "cash_account_id", on_delete: :restrict
   add_foreign_key "business_entity_locations", "business_entities", on_delete: :restrict
   add_foreign_key "cities", "states", on_delete: :restrict
   add_foreign_key "cities", "zones", on_delete: :restrict

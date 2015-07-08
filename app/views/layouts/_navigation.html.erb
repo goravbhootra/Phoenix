@@ -17,7 +17,6 @@
     <div class="collapse navbar-collapse" id="menu-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
-          <!-- <li><%#= select 'current_business_entity', 'current_business_entity', @business_entities, {include_blank: true}, class: 'form-control', id: 'current_business_entity' %></li> -->
           <% if current_user.role?(['admin','power_user']) %>
             <li class="dropdown">
               <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
@@ -85,6 +84,9 @@
               </ul>
             </li>
           <% end %>
+          <li>
+            <li><%= select 'current_business_entity', 'current_business_entity', @business_entities, {}, class: 'form-control', id: 'current_business_entity' %></li>
+          </li>
           <li><%= link_to current_user.email, edit_user_path(current_user.id) %></li>
           <li><%= link_to('Logout', logout_path, :method=>'delete') %></li>
         <% end %>
