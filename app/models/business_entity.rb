@@ -11,6 +11,7 @@ class BusinessEntity < MyActiveRecord
   has_many :invoices, class_name: 'Invoice', inverse_of: :secondary_entity,
             dependent: :restrict_with_exception
   has_many :accounts, inverse_of: :business_entity, dependent: :restrict_with_exception
+  has_many :account_txns, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_many :user_roles, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_one :publisher, inverse_of: :business_entity, dependent: :restrict_with_exception
 

@@ -1,6 +1,7 @@
 class VoucherSequence < MyActiveRecord
   belongs_to :business_entity, inverse_of: :voucher_sequences
   has_many :inventory_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
+  has_many :account_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :invoices, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :inventory_vouchers, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
 

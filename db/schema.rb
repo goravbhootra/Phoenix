@@ -18,15 +18,13 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   enable_extension "hstore"
 
   create_table "account_entries", force: :cascade do |t|
-    t.integer  "account_txn_id",                                         null: false
-    t.integer  "account_id",                                             null: false
-    t.string   "type",                                                   null: false
-    t.decimal  "amount",         precision: 10, scale: 2,                null: false
-    t.integer  "order",                                                  null: false
+    t.integer  "account_txn_id",                          null: false
+    t.integer  "account_id",                              null: false
+    t.string   "type",                                    null: false
+    t.decimal  "amount",         precision: 10, scale: 2, null: false
     t.text     "remarks"
-    t.boolean  "active",                                  default: true, null: false
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree
@@ -41,6 +39,7 @@ ActiveRecord::Schema.define(version: 20150706012753) do
     t.integer  "business_entity_location_id",           null: false
   end
 
+  add_index "account_txn_details", ["account_txn_id"], name: "index_account_txn_details_on_account_txn_id", unique: true, using: :btree
   add_index "account_txn_details", ["business_entity_location_id"], name: "index_account_txn_details_on_business_entity_location_id", using: :btree
 
   create_table "account_txn_line_items", force: :cascade do |t|
@@ -138,11 +137,13 @@ ActiveRecord::Schema.define(version: 20150706012753) do
     t.datetime "updated_at",                        null: false
     t.integer  "cash_account_id"
     t.integer  "bank_account_id"
+    t.integer  "sales_account_id"
   end
 
   add_index "business_entity_locations", ["bank_account_id"], name: "index_business_entity_locations_on_bank_account_id", using: :btree
   add_index "business_entity_locations", ["business_entity_id", "name"], name: "index_business_entity_locations_on_business_entity_id_and_name", unique: true, using: :btree
   add_index "business_entity_locations", ["cash_account_id"], name: "index_business_entity_locations_on_cash_account_id", using: :btree
+  add_index "business_entity_locations", ["sales_account_id"], name: "index_business_entity_locations_on_sales_account_id", using: :btree
 
   create_table "categories", force: :cascade do |t|
     t.string   "name",       limit: 100,                null: false
@@ -586,6 +587,7 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   add_foreign_key "business_entities", "cities", on_delete: :restrict
   add_foreign_key "business_entity_locations", "accounts", column: "bank_account_id", on_delete: :restrict
   add_foreign_key "business_entity_locations", "accounts", column: "cash_account_id", on_delete: :restrict
+  add_foreign_key "business_entity_locations", "accounts", column: "sales_account_id", on_delete: :restrict
   add_foreign_key "business_entity_locations", "business_entities", on_delete: :restrict
   add_foreign_key "cities", "states", on_delete: :restrict
   add_foreign_key "cities", "zones", on_delete: :restrict

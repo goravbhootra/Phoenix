@@ -9,6 +9,7 @@ class Product < ActiveRecord::Base
   belongs_to :uom, inverse_of: :products
   belongs_to :focus_group, inverse_of: :products
   has_many :inventory_txn_line_items, inverse_of: :product, dependent: :restrict_with_exception
+  has_many :account_txn_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :invoice_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :order_line_items, class_name: 'Order::LineItem', inverse_of: :product, dependent: :restrict_with_exception
   has_many :inventory_voucher_line_items, class_name: 'InventoryVoucherLineItem', inverse_of: :product, dependent: :restrict_with_exception

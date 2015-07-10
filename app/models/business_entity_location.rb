@@ -1,6 +1,9 @@
 class BusinessEntityLocation < MyActiveRecord
   belongs_to :business_entity, inverse_of: :locations
   belongs_to :user_role, inverse_of: :business_entity_locations
+  belongs_to :cash_account, class_name: 'Account::CashAccount', inverse_of: :location_cash_account
+  belongs_to :bank_account, class_name: 'Account::BankAccount', inverse_of: :location_bank_account
+  belongs_to :sales_account, class_name: 'Account::SalesAccount', inverse_of: :location_sales_account
   has_many :inventory_vouchers, inverse_of: :business_entity_location, dependent: :restrict_with_exception
   has_many :receiving_inventory_vouchers, class_name: 'InventoryVoucher', inverse_of: :receiving_business_entity_location, dependent: :restrict_with_exception
   has_many :inventory_txns, class_name: 'InventoryTxn', foreign_key: 'primary_location_id', inverse_of: :primary_location, dependent: :restrict_with_exception

@@ -27,7 +27,7 @@ class Invoice < MyActiveRecord
 
   accepts_nested_attributes_for :payments, allow_destroy: true, reject_if: :payment_mandatory_values_check
 
-  enum status_enum: { 'Active': 1, 'Draft': 2, 'Waiting Approval': 4 }
+  enum status: { 'Active': 1, 'Cancelled': 2, 'Approval Required': 3 }
 
   delegate :name, to: :created_by, prefix: true, allow_nil: true
   delegate :entity_name_with_location, to: :primary_location, allow_nil: true
