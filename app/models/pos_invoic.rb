@@ -74,9 +74,9 @@ class PosInvoic < Invoice
     end
   end
 
-  def consolidate_payments_on_mode
-    VoucherConsolidateLineItems.new({voucher: self, association_name: 'payments', attrib_id: 'mode_id', consolidate: 'amount'}).consolidate_with_same_attribute
-  end
+  # def consolidate_payments_on_mode
+  #   VoucherConsolidateLineItems.new({voucher: self, association_name: 'payments', attrib_id: 'mode_id', consolidate: 'amount'}).consolidate_with_same_attribute
+  # end
 
   def invoice_amount_and_payment_reconciliation
     invoice_amount = line_items.reject(&:marked_for_destruction?).sum(&:amount)

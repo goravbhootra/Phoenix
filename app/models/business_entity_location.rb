@@ -11,6 +11,7 @@ class BusinessEntityLocation < MyActiveRecord
   has_many :invoices, class_name: 'Invoice', foreign_key: 'primary_location_id',
             inverse_of: :primary_location, dependent: :restrict_with_exception
   has_many :user_roles, inverse_of: :business_entity_location, dependent: :restrict_with_exception
+  has_many :invoice_headers, inverse_of: :business_entity_location, dependent: :restrict_with_exception
 
   validates :name, presence: true
   validates :business_entity, presence: true, uniqueness: { scope: :name, case_sensitive: false }

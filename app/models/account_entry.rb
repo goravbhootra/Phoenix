@@ -5,8 +5,4 @@ class AccountEntry < ActiveRecord::Base
   validates :account_txn, :account, presence: true
   validates :type, presence: true
   validates :amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
-
-  def balance
-    sum(:amount)
-  end
 end

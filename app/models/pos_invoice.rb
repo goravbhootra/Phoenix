@@ -1,18 +1,27 @@
 class PosInvoice < AccountTxn
+  before_validation :check_invoice_header
 
-  before_validation :consolidate_payments_on_mode
-  before_validation :invoice_amount_and_payment_reconciliation
-
-  def set_defaults
-    self.secondary_entity_id = 105 if self.secondary_entity_id.blank?
-    self.voucher_sequence_id = 6 if self.voucher_sequence_id.blank? # Chennai POS
-    self.goods_value = self.total_amount if self.goods_value.blank?
+  def check_invoice_header
+    build_invoice_header if invoice_header.blank?
+    invoice_header.business_entity_location_id = account_txn.current_location.id if invoice_header.business_entity_location_id.blank? && account_txn.current_location
   end
 
-  def process_calculations
-    VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).process_invoice_out_totals
-    errors.add(:base, 'No products added! Total amount should be more than 0') and return false if self.total_amount < 1
-    self.goods_value = self.total_amount
+  def has_credit_entries?
+    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.balance <= 0
+  end
+
+  def has_debit_entries?
+    errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.balance <= 0
+  end
+
+  def entries_cancel?
+    errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.balance != debit_entries.balance
+  end
+
+  def create_sales_entry
+    total = VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).calculate_invoice_total
+    credit_entries.clear
+    credit_entries.build(amount: total, account_id: current_location.sales_account_id)
   end
 
   def convert_quantity_to_negative
@@ -71,16 +80,9 @@ class PosInvoice < AccountTxn
     end
   end
 
-  def consolidate_payments_on_mode
-    VoucherConsolidateLineItems.new({voucher: self, association_name: 'payments', attrib_id: 'mode_id', consolidate: 'amount'}).consolidate_with_same_attribute
-  end
-
-  def invoice_amount_and_payment_reconciliation
-    invoice_amount = line_items.reject(&:marked_for_destruction?).sum(&:amount)
-    net_payment = payments.reject(&:marked_for_destruction?).sum(&:amount)
-    puts "invoice_amount: #{invoice_amount}, net_payment: #{net_payment}"
-    errors.add(:base, 'Bill amount and payment do not reconcile! Please check the details') and return false unless invoice_amount == net_payment
-  end
+  # def consolidate_payments_on_mode
+  #   VoucherConsolidateLineItems.new({voucher: self, association_name: 'payments', attrib_id: 'mode_id', consolidate: 'amount'}).consolidate_with_same_attribute
+  # end
 
   def self.payments_to_csv(options = {})
     CSV.generate(options) do |csv|

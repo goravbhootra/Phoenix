@@ -5,9 +5,9 @@ class AccountTxn < MyActiveRecord
   belongs_to :created_by, class_name: 'User', inverse_of: :account_txns
   has_many :line_items, class_name: 'AccountTxnLineItem', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :entries, class_name: 'AccountEntry', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :debit_entries, class_name: 'AccountEntry::Debit', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :credit_entries, class_name: 'AccountEntry::Credit', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_one :detail, class_name: 'AccountTxnDetail', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :debit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Debit', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :credit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Credit', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
+  has_one :invoice_header, inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
 
   validates :business_entity, presence: true
   validates :currency, :voucher_sequence_id, :created_by, presence: true
@@ -21,17 +21,19 @@ class AccountTxn < MyActiveRecord
   validate :has_debit_entries?, unless: :cancelled?
   validate :entries_cancel?, unless: :cancelled?
 
-  accepts_nested_attributes_for :detail
-  # alias_method :detail=, :detail_attributes=
+  before_validation :convert_quantity_to_negative
+  before_validation :create_sales_entry
+
+  accepts_nested_attributes_for :invoice_header
   accepts_nested_attributes_for :line_items
   accepts_nested_attributes_for :debit_entries
-  # accepts_nested_attributes_for :credit_entries
-  # alias_method :credits=, :credit_entries_attributes=
+  accepts_nested_attributes_for :credit_entries
+  alias_method :credits=, :credit_entries_attributes=
   alias_method :debits=, :debit_entries_attributes=
 
   enum status: { 'Active': 1, 'Cancelled': 2, 'Approval Required': 3 }
 
-  attr_accessor :current_user_id
+  attr_accessor :current_user_id, :current_location
 
   scope :active, -> { where status: true }
 
@@ -40,12 +42,18 @@ class AccountTxn < MyActiveRecord
     false
   end
 
+  def create_sales_entry
+  end
+
+  def convert_quantity_to_negative
+  end
+
   def has_credit_entries?
-    errors[:base] << "Transaction must have at least one credit entry" if self.credit_entries.blank?
+    errors[:base] << "Transaction must have at least one valid credit entry" if self.credit_entries.blank? || credit_entries.balance <= 0
   end
 
   def has_debit_entries?
-    errors[:base] << "Transaction must have at least one debit entry" if self.debit_entries.blank?
+    errors[:base] << "Transaction must have at least one valid debit entry" if self.debit_entries.blank? || debit_entries.balance <= 0
   end
 
   def entries_cancel?

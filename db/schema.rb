@@ -29,35 +29,24 @@ ActiveRecord::Schema.define(version: 20150706012753) do
 
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree
 
-  create_table "account_txn_details", force: :cascade do |t|
-    t.integer  "account_txn_id",                        null: false
-    t.text     "address"
-    t.hstore   "legal_details"
-    t.string   "customer_membership_number",  limit: 9
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.integer  "business_entity_location_id",           null: false
-  end
-
-  add_index "account_txn_details", ["account_txn_id"], name: "index_account_txn_details_on_account_txn_id", unique: true, using: :btree
-  add_index "account_txn_details", ["business_entity_location_id"], name: "index_account_txn_details_on_business_entity_location_id", using: :btree
-
   create_table "account_txn_line_items", force: :cascade do |t|
-    t.integer  "account_txn_id",                          null: false
-    t.integer  "product_id",                              null: false
-    t.integer  "quantity",                                null: false
-    t.decimal  "price",          precision: 10, scale: 2, null: false
-    t.decimal  "goods_value",    precision: 12, scale: 2, null: false
-    t.decimal  "tax_rate",       precision: 5,  scale: 2, null: false
-    t.decimal  "tax_amount",     precision: 10, scale: 2, null: false
-    t.decimal  "amount",         precision: 12, scale: 2, null: false
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.integer  "account_txn_id",                                      null: false
+    t.integer  "product_id",                                          null: false
+    t.integer  "quantity",                                            null: false
+    t.decimal  "price",                      precision: 10, scale: 2, null: false
+    t.decimal  "goods_value",                precision: 12, scale: 2, null: false
+    t.decimal  "tax_rate",                   precision: 5,  scale: 2, null: false
+    t.decimal  "tax_amount",                 precision: 10, scale: 2, null: false
+    t.decimal  "amount",                     precision: 12, scale: 2, null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.integer  "state_category_tax_rate_id"
   end
 
   add_index "account_txn_line_items", ["account_txn_id", "product_id"], name: "index_account_txn_line_items_on_account_txn_id_and_product_id", unique: true, using: :btree
   add_index "account_txn_line_items", ["account_txn_id"], name: "index_account_txn_line_items_on_account_txn_id", using: :btree
   add_index "account_txn_line_items", ["product_id"], name: "index_account_txn_line_items_on_product_id", using: :btree
+  add_index "account_txn_line_items", ["state_category_tax_rate_id"], name: "index_account_txn_line_items_on_state_category_tax_rate_id", using: :btree
 
   create_table "account_txns", force: :cascade do |t|
     t.integer  "business_entity_id",             null: false
@@ -263,6 +252,19 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   add_index "inventory_txns", ["primary_location_id"], name: "index_inventory_txns_on_primary_location_id", using: :btree
   add_index "inventory_txns", ["secondary_entity_id"], name: "index_inventory_txns_on_secondary_entity_id", using: :btree
   add_index "inventory_txns", ["secondary_location_id"], name: "index_inventory_txns_on_secondary_location_id", using: :btree
+
+  create_table "invoice_headers", force: :cascade do |t|
+    t.integer  "account_txn_id",                        null: false
+    t.text     "address"
+    t.hstore   "legal_details"
+    t.string   "customer_membership_number",  limit: 9
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "business_entity_location_id",           null: false
+  end
+
+  add_index "invoice_headers", ["account_txn_id"], name: "index_invoice_headers_on_account_txn_id", unique: true, using: :btree
+  add_index "invoice_headers", ["business_entity_location_id"], name: "index_invoice_headers_on_business_entity_location_id", using: :btree
 
   create_table "invoice_line_items", force: :cascade do |t|
     t.integer  "invoice_id",                           null: false
@@ -575,10 +577,9 @@ ActiveRecord::Schema.define(version: 20150706012753) do
 
   add_foreign_key "account_entries", "account_txns", on_delete: :cascade
   add_foreign_key "account_entries", "accounts", on_delete: :cascade
-  add_foreign_key "account_txn_details", "account_txns", on_delete: :cascade
-  add_foreign_key "account_txn_details", "business_entity_locations", on_delete: :cascade
   add_foreign_key "account_txn_line_items", "account_txns", on_delete: :cascade
   add_foreign_key "account_txn_line_items", "products", on_delete: :cascade
+  add_foreign_key "account_txn_line_items", "state_category_tax_rates", on_delete: :restrict
   add_foreign_key "account_txns", "business_entities", on_delete: :restrict
   add_foreign_key "account_txns", "currencies", on_delete: :restrict
   add_foreign_key "account_txns", "users", column: "created_by_id", on_delete: :restrict
@@ -600,6 +601,8 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   add_foreign_key "inventory_txns", "invoices", on_delete: :restrict
   add_foreign_key "inventory_txns", "users", column: "created_by_id", on_delete: :restrict
   add_foreign_key "inventory_txns", "voucher_sequences", on_delete: :restrict
+  add_foreign_key "invoice_headers", "account_txns", on_delete: :cascade
+  add_foreign_key "invoice_headers", "business_entity_locations", on_delete: :cascade
   add_foreign_key "invoice_line_items", "invoices", on_delete: :restrict
   add_foreign_key "invoice_line_items", "products", on_delete: :restrict
   add_foreign_key "invoices", "business_entities", column: "secondary_entity_id", on_delete: :restrict
