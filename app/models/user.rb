@@ -25,7 +25,6 @@ class User < MyActiveRecord
   validates :active, inclusion: { in: [true, false] }
 
   before_validation :set_password
-  # before_create :check_role_presence
   before_create { generate_token(:auth_token) }
   before_validation :downcase_email
 
@@ -42,17 +41,9 @@ class User < MyActiveRecord
     roles.where(name: role).exists?
   end
 
-  # def check_role_presence
-  #   roles << :user if roles.blank?
-  # end
-
   def self.reset_auth_token
     digest(new_auth_token)
   end
-
-  # def user_city
-  #   city_name
-  # end
 
   def generate_token(column)
     begin
@@ -91,20 +82,20 @@ class User < MyActiveRecord
     end
   end
 
-  ############# to be deleted after migration ##############
-  bitmask :old_roles, as: [:user, :admin, :power_user, :pos_manager], null: false
-  # user.roles = [:publisher, :editor]
-  # user.roles << :admin
-  def admin?
-    (self.old_roles & [:admin]).present?
-  end
+  # ############# to be deleted after migration ##############
+  # bitmask :old_roles, as: [:user, :admin, :power_user, :pos_manager], null: false
+  # # user.roles = [:publisher, :editor]
+  # # user.roles << :admin
+  # def admin?
+  #   (self.old_roles & [:admin]).present?
+  # end
 
-  def power_user?
-    (self.old_roles & [:power_user]).present?
-  end
+  # def power_user?
+  #   (self.old_roles & [:power_user]).present?
+  # end
 
-  def pos_manager?
-    (self.old_roles & [:pos_manager]).present?
-  end
-  ############# end to be deleted after migration ##############
+  # def pos_manager?
+  #   (self.old_roles & [:pos_manager]).present?
+  # end
+  # ############# end to be deleted after migration ##############
 end
