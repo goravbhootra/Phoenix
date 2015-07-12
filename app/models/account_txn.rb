@@ -21,6 +21,7 @@ class AccountTxn < MyActiveRecord
   validate :has_debit_entries?, unless: :cancelled?
   validate :entries_cancel?, unless: :cancelled?
 
+  before_validation :set_defaults
   before_validation :convert_quantity_to_negative
   before_validation :create_sales_entry
 
@@ -37,8 +38,15 @@ class AccountTxn < MyActiveRecord
 
   scope :active, -> { where status: true }
 
+  # def initialize
+  # end
+
+  def set_defaults
+    self.voucher_sequence_id = VoucherSequence.find_by(business_entity_id: 1, classification: 1).id if self.voucher_sequence_id.blank?
+  end
+
   def cancelled?
-    return true if status == 2
+    return true if status == 'Cancelled' || status == 2
     false
   end
 
