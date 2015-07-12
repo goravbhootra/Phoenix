@@ -42,7 +42,7 @@ class PosInvoicesController < ApplicationController
   end
 
   def new
-    @pos_invoice = PosInvoice.new({invoice_date: Time.zone.now.in_time_zone.strftime('%d/%m/%Y')})
+    @pos_invoice = PosInvoice.new({txn_date: Time.zone.now.in_time_zone.strftime('%d/%m/%Y')})
     initialize_form
   end
 
@@ -99,7 +99,7 @@ class PosInvoicesController < ApplicationController
   private
     def pos_invoice_params
       params.require(:pos_invoice).permit(:currency_id, :created_by_id, :remarks,
-                                           :tax_amount, :total_amount, :invoice_date,
+                                           :tax_amount, :total_amount, :txn_date,
                                            :ref_number, :status, :voucher_sequence_id,
                                            :goods_value, :primary_location_id, :address,
                                            :tax_details, :customer_membership_number,
