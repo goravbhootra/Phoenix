@@ -45,7 +45,7 @@ GEM
       multi_json
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
-    arel (6.0.1)
+    arel (6.0.2)
     assignable_values (0.11.1)
       activerecord
     ast (2.0.0)
@@ -295,6 +295,7 @@ DEPENDENCIES
   active_type
   airbrake
   ancestry
+  arel (~> 6.0.0)
   assignable_values
   bcrypt
   bitmask_attributes

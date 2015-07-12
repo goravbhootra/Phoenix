@@ -3,7 +3,7 @@ ruby '2.2.2'
 gem 'bundle'
 gem 'rails'
 gem 'pg'
-# gem 'arel'
+gem 'arel'#, '~> 6.0.0'
 # gem 'actionform'
 
 gem 'rails_admin'
