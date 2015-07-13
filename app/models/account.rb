@@ -12,4 +12,8 @@ class Account < MyActiveRecord
   validates :active, inclusion: { in: [true, false] }
 
   class_attribute :normal_credit_balance
+
+  def self.return_types(account_ids=[])
+    where(id: account_ids).pluck(:id, :type).to_h
+  end
 end

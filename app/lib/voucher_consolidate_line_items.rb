@@ -25,10 +25,5 @@ class VoucherConsolidateLineItems
         result_hash[record.send(@attrib_id)] = record
       end
     end
-    # puts result_hash
-    # puts "here"
-    # @associated_collection.select(&:marked_for_destruction?).each { |x| puts x.attributes }
-    # puts "deletions"
-    # puts @associated_collection.map { |x| [x.attributes, x.marked_for_destruction?] }
   end
 end

@@ -3,11 +3,11 @@ class AccountTxn < MyActiveRecord
   belongs_to :currency, inverse_of: :account_txns
   belongs_to :voucher_sequence, inverse_of: :account_txns
   belongs_to :created_by, class_name: 'User', inverse_of: :account_txns
-  has_many :line_items, class_name: 'AccountTxnLineItem', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :entries, class_name: 'AccountEntry', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :debit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Debit', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :credit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Credit', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_one :invoice_header, inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :line_items, class_name: 'InvoiceLineItem', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_one :header, class_name: 'InvoiceHeader', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
 
   validates :business_entity, presence: true
   validates :currency, :voucher_sequence_id, :created_by, presence: true
@@ -21,12 +21,8 @@ class AccountTxn < MyActiveRecord
   validate :has_debit_entries?, unless: :cancelled?
   validate :entries_cancel?, unless: :cancelled?
 
-  before_validation :set_defaults
-  before_validation :convert_quantity_to_negative
-  before_validation :create_sales_entry
+  before_validation :set_voucher_sequence
 
-  accepts_nested_attributes_for :invoice_header
-  accepts_nested_attributes_for :line_items
   accepts_nested_attributes_for :debit_entries
   accepts_nested_attributes_for :credit_entries
   alias_method :credits=, :credit_entries_attributes=
@@ -38,22 +34,13 @@ class AccountTxn < MyActiveRecord
 
   scope :active, -> { where status: true }
 
-  # def initialize
-  # end
-
-  def set_defaults
-    self.voucher_sequence_id = VoucherSequence.find_by(business_entity_id: 1, classification: 1).id if self.voucher_sequence_id.blank?
+  def set_voucher_sequence
+    self.voucher_sequence_id = self.voucher_sequence_id.presence || VoucherSequence.find_by(business_entity_id: current_business_entity.id, classification: 1).id
   end
 
   def cancelled?
     return true if status == 'Cancelled' || status == 2
     false
-  end
-
-  def create_sales_entry
-  end
-
-  def convert_quantity_to_negative
   end
 
   def has_credit_entries?

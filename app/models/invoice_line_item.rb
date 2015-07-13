@@ -1,16 +1,17 @@
-class InvoiceLineItem < MyActiveRecord
-  belongs_to :invoice, inverse_of: :line_items, touch: true
+class InvoiceLineItem < ActiveRecord::Base
+  belongs_to :account_txn, inverse_of: :line_items, touch: true
   belongs_to :product, inverse_of: :invoice_line_items
   belongs_to :state_category_tax_rate, inverse_of: :invoice_line_items
 
-  validates :invoice, presence: true
-  validates :product, presence: true, uniqueness: { scope: :invoice }
+  validates :account_txn, presence: true
+  validates :product, presence: true, uniqueness: { scope: :account_txn }
   validates :tax_rate, presence: true, numericality: { in: 0..100 }
-  validates :quantity, numericality: true, allow_nil: true, allow_blank: true
-  validates :amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
+  validates :quantity, presence: true, numericality: { only_integer: true, less_than_or_equal_to: 9999999 }
   validates :price, presence: true, numericality: { less_than_or_equal_to: 99999999 }
-
-  before_validation :update_amounts
+  validates :goods_value, presence: true, numericality: { less_than_or_equal_to: 99999999 }
+  validates :tax_rate, presence: true, numericality: { in: 0..100 }
+  validates :tax_amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
+  validates :amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
 
   delegate :voucher_print_name, to: :product, allow_nil: true
   delegate :selling_price, to: :product, allow_nil: true
@@ -18,10 +19,6 @@ class InvoiceLineItem < MyActiveRecord
   def initialize(attributes={})
     super
     self.tax_rate = self.tax_rate.presence || BigDecimal('0')
-    self.goods_value = self.amount if self.goods_value.blank?
-  end
-
-  def update_amounts
-    self.tax_amount = self.amount
+    self.tax_amount = self.tax_amount.presence || BigDecimal('0')
   end
 end

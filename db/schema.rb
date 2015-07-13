@@ -11,42 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150706012753) do
+ActiveRecord::Schema.define(version: 20150712035833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
   create_table "account_entries", force: :cascade do |t|
-    t.integer  "account_txn_id",                          null: false
-    t.integer  "account_id",                              null: false
-    t.string   "type",                                    null: false
-    t.decimal  "amount",         precision: 10, scale: 2, null: false
+    t.integer  "account_txn_id",                              null: false
+    t.integer  "account_id",                                  null: false
+    t.string   "type",                                        null: false
+    t.decimal  "amount",             precision: 10, scale: 2, null: false
     t.text     "remarks"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.hstore   "additional_details"
   end
 
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree
-
-  create_table "account_txn_line_items", force: :cascade do |t|
-    t.integer  "account_txn_id",                                      null: false
-    t.integer  "product_id",                                          null: false
-    t.integer  "quantity",                                            null: false
-    t.decimal  "price",                      precision: 10, scale: 2, null: false
-    t.decimal  "goods_value",                precision: 12, scale: 2, null: false
-    t.decimal  "tax_rate",                   precision: 5,  scale: 2, null: false
-    t.decimal  "tax_amount",                 precision: 10, scale: 2, null: false
-    t.decimal  "amount",                     precision: 12, scale: 2, null: false
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.integer  "state_category_tax_rate_id"
-  end
-
-  add_index "account_txn_line_items", ["account_txn_id", "product_id"], name: "index_account_txn_line_items_on_account_txn_id_and_product_id", unique: true, using: :btree
-  add_index "account_txn_line_items", ["account_txn_id"], name: "index_account_txn_line_items_on_account_txn_id", using: :btree
-  add_index "account_txn_line_items", ["product_id"], name: "index_account_txn_line_items_on_product_id", using: :btree
-  add_index "account_txn_line_items", ["state_category_tax_rate_id"], name: "index_account_txn_line_items_on_state_category_tax_rate_id", using: :btree
 
   create_table "account_txns", force: :cascade do |t|
     t.integer  "business_entity_id",             null: false
@@ -93,6 +75,16 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   end
 
   add_index "authors", ["name"], name: "index_authors_on_name", unique: true, using: :btree
+
+  create_table "bank_reconciliations", force: :cascade do |t|
+    t.integer  "account_entry_id", null: false
+    t.integer  "reconciled_by_id"
+    t.datetime "reconciled_at"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "bank_reconciliations", ["account_entry_id"], name: "index_bank_reconciliations_on_account_entry_id", unique: true, using: :btree
 
   create_table "business_entities", force: :cascade do |t|
     t.string   "name",                     limit: 200,                 null: false
@@ -267,17 +259,23 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   add_index "invoice_headers", ["business_entity_location_id"], name: "index_invoice_headers_on_business_entity_location_id", using: :btree
 
   create_table "invoice_line_items", force: :cascade do |t|
-    t.integer  "invoice_id",                           null: false
-    t.integer  "product_id",                           null: false
-    t.integer  "quantity"
-    t.decimal  "goods_value", precision: 10, scale: 2, null: false
-    t.decimal  "tax_amount",  precision: 10, scale: 2, null: false
-    t.decimal  "amount",      precision: 10, scale: 2, null: false
-    t.decimal  "price",       precision: 8,  scale: 2, null: false
-    t.decimal  "tax_rate",    precision: 5,  scale: 2, null: false
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.integer  "account_txn_id",                                      null: false
+    t.integer  "product_id",                                          null: false
+    t.integer  "quantity",                                            null: false
+    t.decimal  "price",                      precision: 10, scale: 2, null: false
+    t.decimal  "goods_value",                precision: 12, scale: 2, null: false
+    t.decimal  "tax_rate",                   precision: 5,  scale: 2, null: false
+    t.decimal  "tax_amount",                 precision: 10, scale: 2, null: false
+    t.decimal  "amount",                     precision: 12, scale: 2, null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.integer  "state_category_tax_rate_id"
   end
+
+  add_index "invoice_line_items", ["account_txn_id", "product_id"], name: "index_invoice_line_items_on_account_txn_id_and_product_id", unique: true, using: :btree
+  add_index "invoice_line_items", ["account_txn_id"], name: "index_invoice_line_items_on_account_txn_id", using: :btree
+  add_index "invoice_line_items", ["product_id"], name: "index_invoice_line_items_on_product_id", using: :btree
+  add_index "invoice_line_items", ["state_category_tax_rate_id"], name: "index_invoice_line_items_on_state_category_tax_rate_id", using: :btree
 
   create_table "invoice_payments", force: :cascade do |t|
     t.integer  "invoice_id",                                  null: false
@@ -577,14 +575,13 @@ ActiveRecord::Schema.define(version: 20150706012753) do
 
   add_foreign_key "account_entries", "account_txns", on_delete: :cascade
   add_foreign_key "account_entries", "accounts", on_delete: :cascade
-  add_foreign_key "account_txn_line_items", "account_txns", on_delete: :cascade
-  add_foreign_key "account_txn_line_items", "products", on_delete: :cascade
-  add_foreign_key "account_txn_line_items", "state_category_tax_rates", on_delete: :restrict
   add_foreign_key "account_txns", "business_entities", on_delete: :restrict
   add_foreign_key "account_txns", "currencies", on_delete: :restrict
   add_foreign_key "account_txns", "users", column: "created_by_id", on_delete: :restrict
   add_foreign_key "account_txns", "voucher_sequences", on_delete: :restrict
   add_foreign_key "accounts", "business_entities", on_delete: :restrict
+  add_foreign_key "bank_reconciliations", "account_entries", on_delete: :restrict
+  add_foreign_key "bank_reconciliations", "users", column: "reconciled_by_id", on_delete: :restrict
   add_foreign_key "business_entities", "cities", on_delete: :restrict
   add_foreign_key "business_entity_locations", "accounts", column: "bank_account_id", on_delete: :restrict
   add_foreign_key "business_entity_locations", "accounts", column: "cash_account_id", on_delete: :restrict
@@ -603,8 +600,9 @@ ActiveRecord::Schema.define(version: 20150706012753) do
   add_foreign_key "inventory_txns", "voucher_sequences", on_delete: :restrict
   add_foreign_key "invoice_headers", "account_txns", on_delete: :cascade
   add_foreign_key "invoice_headers", "business_entity_locations", on_delete: :cascade
-  add_foreign_key "invoice_line_items", "invoices", on_delete: :restrict
-  add_foreign_key "invoice_line_items", "products", on_delete: :restrict
+  add_foreign_key "invoice_line_items", "account_txns", on_delete: :cascade
+  add_foreign_key "invoice_line_items", "products", on_delete: :cascade
+  add_foreign_key "invoice_line_items", "state_category_tax_rates", on_delete: :restrict
   add_foreign_key "invoices", "business_entities", column: "secondary_entity_id", on_delete: :restrict
   add_foreign_key "invoices", "business_entity_locations", column: "primary_location_id", on_delete: :restrict
   add_foreign_key "invoices", "currencies", on_delete: :restrict

@@ -61,13 +61,13 @@ class PosInvoicePdf < Prawn::Document
       @pos_invoice.payments.each do |payment|
         next if !payment.persisted?
         text (payment.mode_id==5 ? "#{payment.mode.name}: #{(sprintf '%.2f', -payment.amount)}" : "#{payment.mode.name}: #{(sprintf '%.2f', payment.amount)}"), size: 22
-        if payment.mode_id==2 && payment.additional_details.present?
+        if payment.mode_id==2 && payment.additional_info.present?
           indent(20) do
-            text "Bank Name: #{payment.additional_details['bank_name']}", size: 22
-            text "Card last 4 digits: #{payment.additional_details['card_last_digits']}", size: 22
-            text "Expiry month/year: #{payment.additional_details['expiry_month']} / #{payment.additional_details['expiry_year']}", size: 22
-            text "Mobile Number: #{payment.additional_details['mobile_number']}", size: 22
-            text "Card Holder's Name: #{payment.additional_details['card_holder_name']}", size: 22
+            text "Bank Name: #{payment.additional_info['bank_name']}", size: 22
+            text "Card last 4 digits: #{payment.additional_info['card_last_digits']}", size: 22
+            text "Expiry month/year: #{payment.additional_info['expiry_month']} / #{payment.additional_info['expiry_year']}", size: 22
+            text "Mobile Number: #{payment.additional_info['mobile_number']}", size: 22
+            text "Card Holder's Name: #{payment.additional_info['card_holder_name']}", size: 22
           end
         end
         move_down 10

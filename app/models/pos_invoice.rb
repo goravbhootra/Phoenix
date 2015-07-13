@@ -1,11 +1,6 @@
-class PosInvoice < AccountTxn
-  before_validation :check_invoice_header
+class PosInvoice < Invoice
 
-  def check_invoice_header
-    build_invoice_header if invoice_header.blank?
-    invoice_header.business_entity_location_id = account_txn.current_location.id if invoice_header.business_entity_location_id.blank? && account_txn.current_location
-  end
-
+  ### defined in account_txn.rb ###
   def has_credit_entries?
     errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.balance <= 0
   end
@@ -15,11 +10,15 @@ class PosInvoice < AccountTxn
   end
 
   def entries_cancel?
-    puts "debit balance: #{debit_entries.balance}"
-    puts "credit balance: #{credit_entries.balance}"
     errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.balance != debit_entries.balance
   end
+  ### end of defined in account_txn.rb ###
 
+  def account_types
+    @account_types = @account_types || debit_entries.account_types
+  end
+
+  ### defined in invoice.rb ###
   def create_sales_entry
     total = VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).calculate_invoice_total
     credit_entries.clear
@@ -31,7 +30,6 @@ class PosInvoice < AccountTxn
   end
 
   def mandatory_values_check(attributed)
-    byebug
     if attributed['product_id'].blank? || attributed['quantity'].to_i < 1
       # handle new records with invalid data
       return true if attributed['id'].blank?
@@ -43,8 +41,7 @@ class PosInvoice < AccountTxn
   end
 
   def payment_mandatory_values_check(attributed)
-    byebug
-    if attributed['mode_id'].blank? || attributed['amount'].to_i < 1
+    if attributed['account_id'].blank? || attributed['amount'].to_i < 1
       # handle new records with invalid data
       return true if attributed['id'].blank?
 
@@ -52,8 +49,8 @@ class PosInvoice < AccountTxn
       attributed['_destroy'] = true if attributed['id'].present?
     end
 
-    if attributed['mode_id'] == '2'
-      attributed['additional_details'] = {
+    if @account_types[attributed['mode_id'].to_i] == 'Account::BankAccount'
+      attributed['additional_info'] = {
                                     bank_name: attributed['bank_name'],
                                     card_last_digits: attributed['card_last_digits'],
                                     expiry_month: attributed['expiry_month'],
@@ -64,31 +61,14 @@ class PosInvoice < AccountTxn
     end
     false
   end
+  ### end of defined in invoice.rb ###
 
-  def consolidate_line_items_on_product
-    byebug
-    VoucherConsolidateLineItems.new({voucher: self, association_name: 'line_items', attrib_id: 'product_id', consolidate: 'quantity'}).consolidate_with_same_attribute
-  end
-
+  ### not used in new structure - to be deleted ###
   def payment_checks_and_credit_card_info
-    byebug
     payments.each do |payment|
-      # Invoice Payment received by
-      payment['received_by_id'] = payment['received_by_id'].presence || current_user_id
-
-      if payment['mode_id'] == 5 && BigDecimal(payment['amount']) > BigDecimal('0')
-        payment['amount'] = BigDecimal("-#{payment['amount']}")
-      else
-        payment['amount'] = BigDecimal("#{payment['amount']}")
-      end
-
-      # errors.add(:mode_id, 'Credit card details invalid or incomplete') and return false if payment['mode_id'] == 2 && (payment['additional_details']['bank_name'].blank? || payment['additional_details']['card_last_digits'].blank? || payment['additional_details']['expiry_month'].blank? || payment['additional_details']['expiry_year'].blank? || payment['additional_details']['mobile_number'].blank? || payment['additional_details']['card_holder_name'].blank?)
+      # errors.add(:mode_id, 'Credit card details invalid or incomplete') and return false if payment['mode_id'] == 2 && (payment['additional_info']['bank_name'].blank? || payment['additional_info']['card_last_digits'].blank? || payment['additional_info']['expiry_month'].blank? || payment['additional_info']['expiry_year'].blank? || payment['additional_info']['mobile_number'].blank? || payment['additional_info']['card_holder_name'].blank?)
     end
   end
-
-  # def consolidate_payments_on_mode
-  #   VoucherConsolidateLineItems.new({voucher: self, association_name: 'payments', attrib_id: 'mode_id', consolidate: 'amount'}).consolidate_with_same_attribute
-  # end
 
   def self.payments_to_csv(options = {})
     CSV.generate(options) do |csv|
@@ -106,13 +86,13 @@ class PosInvoice < AccountTxn
               cash += payment.amount
             when 2
               credit_card += payment.amount
-              if payment.additional_details.present?
-                pmt['card_last_digits'] = payment.additional_details['card_last_digits']
-                pmt['bank_name'] = payment.additional_details['bank_name']
-                pmt['card_holder_name'] = payment.additional_details['card_holder_name']
-                pmt['mobile_number'] = payment.additional_details['mobile_number']
-                pmt['expiry_month'] = payment.additional_details['expiry_month'].present? ? "#{payment.additional_details['expiry_month']}/" : ''
-                pmt['expiry_year'] = payment.additional_details['expiry_year']
+              if payment.additional_info.present?
+                pmt['card_last_digits'] = payment.additional_info['card_last_digits']
+                pmt['bank_name'] = payment.additional_info['bank_name']
+                pmt['card_holder_name'] = payment.additional_info['card_holder_name']
+                pmt['mobile_number'] = payment.additional_info['mobile_number']
+                pmt['expiry_month'] = payment.additional_info['expiry_month'].present? ? "#{payment.additional_info['expiry_month']}/" : ''
+                pmt['expiry_year'] = payment.additional_info['expiry_year']
               end
             when 5
               cash += payment.amount
@@ -153,4 +133,5 @@ class PosInvoice < AccountTxn
     end
     result
   end
+  ### end of not used in new structure - to be deleted ###
 end

@@ -1,5 +1,5 @@
 class InvoiceHeader < ActiveRecord::Base
-  belongs_to :account_txn, inverse_of: :invoice_header, touch: true
+  belongs_to :account_txn, inverse_of: :header, touch: true
   belongs_to :business_entity_location, inverse_of: :invoice_headers
 
   validates :account_txn, presence: true, uniqueness: true

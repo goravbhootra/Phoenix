@@ -1,7 +1,7 @@
 class StateCategoryTaxRate < MyActiveRecord
   belongs_to :state, inverse_of: :state_category_tax_rates
   belongs_to :category, -> { where category_id: Category.roots.pluck(:id) }, inverse_of: :state_category_tax_rates
-  has_many :account_txn_line_items, inverse_of: :state_category_tax_rate, dependent: :restrict_with_exception
+  has_many :invoice_line_items, inverse_of: :state_category_tax_rate, dependent: :restrict_with_exception
 
   validates :state_id, presence: true
   validates :category_id, presence: true
