@@ -18,14 +18,14 @@ ActiveRecord::Schema.define(version: 20150712035833) do
   enable_extension "hstore"
 
   create_table "account_entries", force: :cascade do |t|
-    t.integer  "account_txn_id",                              null: false
-    t.integer  "account_id",                                  null: false
-    t.string   "type",                                        null: false
-    t.decimal  "amount",             precision: 10, scale: 2, null: false
+    t.integer  "account_txn_id",                           null: false
+    t.integer  "account_id",                               null: false
+    t.string   "type",                                     null: false
+    t.decimal  "amount",          precision: 10, scale: 2, null: false
     t.text     "remarks"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.hstore   "additional_details"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.hstore   "additional_info"
   end
 
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree

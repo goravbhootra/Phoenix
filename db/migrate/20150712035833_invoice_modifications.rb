@@ -5,6 +5,16 @@ class InvoiceModifications < ActiveRecord::Migration
 
     add_column :account_entries, :additional_info, :hstore
 
+    arr = AccountEntry::Debit.where.not(remarks: nil).pluck(:id, :remarks).to_h
+    arr.each do |k,v|
+      remarks = v
+      arr[k] = Hash.new
+      eval(remarks).to_a.each { |rem| arr[k][rem[0]] = rem[1] }
+    end
+    arr.keys.each do |id|
+      AccountEntry::Debit.find(id).update_columns(additional_info: arr[id])
+    end
+
     create_table :bank_reconciliations do |t|
       t.belongs_to :account_entry,            null: false
       t.belongs_to :reconciled_by
