@@ -36,6 +36,10 @@ class Ability
       can :edit, BusinessEntity
       can :edit, VoucherSequence
       cannot :edit, BusinessEntityUser
+      cannot :show, Role
+      cannot :edit, Role
+      cannot :show, UserRole
+      cannot :edit, UserRole
       # can :destroy, Model, object         # for Delete
       # can :history, Model, object         # for HistoryShow
       # can :show_in_app, Model, object

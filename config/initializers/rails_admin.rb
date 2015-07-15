@@ -18,7 +18,9 @@ RailsAdmin.config do |config|
                             'Account::SundryDebtor', 'Account::SundryCreditor',
                             'Account::CurrentAsset', 'Account::CashAccount',
                             'Account::CurrentLiability', 'Account::SalesAccount',
-                            'AccountTxn', 'AccountTxnDetail', 'PosInvoic'
+                            'AccountTxn', 'AccountTxnDetail', 'AccountEntry',
+                            'AccountEntry::Debit', 'AccountEntry::Credit', 'InvoiceHeader',
+                            'Account::BankAccount', 'Account::CashAccount'
                           ]
 
   config.actions do

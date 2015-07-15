@@ -60,7 +60,9 @@ class PosInvoicePdf < Prawn::Document
     indent(20) do
       @pos_invoice.payments.each do |payment|
         next if payment.new_record?
-        # text (payment.mode_id==5 ? "#{payment.mode.name}: #{(sprintf '%.2f', -payment.amount)}" : "#{payment.mode.name}: #{(sprintf '%.2f', payment.amount)}"), size: 22
+        # account_types = @pos_invoice.entries_account_types
+        # if account_types[payment.account_id] == 'Account::CashAccount'
+        # text (payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', -payment.amount)}" : "#{payment.mode.name}: #{(sprintf '%.2f', payment.amount)}"), size: 22
         # if payment.mode_id==2 && payment.additional_info.present?
         #   indent(20) do
         #     text "Bank Name: #{payment.additional_info['bank_name']}", size: 22

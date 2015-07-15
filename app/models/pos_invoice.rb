@@ -14,8 +14,8 @@ class PosInvoice < Invoice
   end
   ### end of defined in account_txn.rb ###
 
-  def account_types
-    @account_types = @account_types || entries.account_types
+  def entries_account_types
+    account_types = entries.account_types
   end
 
   ### defined in invoice.rb ###
