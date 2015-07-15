@@ -1,5 +1,5 @@
 class InvoiceLineItem < ActiveRecord::Base
-  belongs_to :account_txn, inverse_of: :line_items, touch: true
+  belongs_to :invoice, inverse_of: :line_items, touch: true
   belongs_to :product, inverse_of: :invoice_line_items
   belongs_to :state_category_tax_rate, inverse_of: :invoice_line_items
 

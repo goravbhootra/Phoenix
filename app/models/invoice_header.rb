@@ -5,4 +5,8 @@ class InvoiceHeader < ActiveRecord::Base
   validates :account_txn, presence: true, uniqueness: true
   validates :business_entity_location, presence: true
   validates :customer_membership_number, length: { is: 9 }, allow_nil: true, allow_blank: true
+
+  def location
+    business_entity_location
+  end
 end

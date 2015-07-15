@@ -2,20 +2,20 @@ class PosInvoice < Invoice
 
   ### defined in account_txn.rb ###
   def has_credit_entries?
-    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.balance <= 0
+    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
   end
 
   def has_debit_entries?
-    errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.balance <= 0
+    errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.total_amount <= 0
   end
 
   def entries_cancel?
-    errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.balance != debit_entries.balance
+    errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.total_amount != debit_entries.total_amount
   end
   ### end of defined in account_txn.rb ###
 
   def account_types
-    @account_types = @account_types || debit_entries.account_types
+    @account_types = @account_types || entries.account_types
   end
 
   ### defined in invoice.rb ###

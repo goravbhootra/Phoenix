@@ -2,15 +2,14 @@ class PosInvoicesController < ApplicationController
   power :pos_invoices, map: {
                           [:edit, :update, :get_voucher_sequences] => :updatable_pos_invoices,
                           [:new, :create, :get_voucher_sequences] => :creatable_pos_invoices,
-                          [:index, :show] => :view_pos_invoices,
-                          [:payment] => :custom_pos_invoices
-                        },
-                        as: :pos_invoice_scope
+                          [:index, :show] => :view_pos_invoices
+                          # [:payment] => :custom_pos_invoices
+                        }, as: :pos_invoice_scope
   include VoucherSequenceable
   before_action :set_pos_invoice, only: [:edit, :update, :destroy, :show]
 
   def index
-    @pos_invoices = pos_invoice_scope.includes([primary_location: :business_entity], :created_by).order("number DESC")
+    @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :created_by).order("number DESC")
 
     respond_to do |format|
       format.html
@@ -117,7 +116,7 @@ class PosInvoicesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_pos_invoice
-      @pos_invoice = pos_invoice_scope.includes(:line_items, payments: :mode).find(params[:id])
+      @pos_invoice = pos_invoice_scope.includes(:line_items, :header, :debit_entries, :credit_entries).find(params[:id])
     end
 
     def populate_tax_slabs

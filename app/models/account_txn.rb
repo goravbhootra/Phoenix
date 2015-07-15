@@ -3,10 +3,9 @@ class AccountTxn < MyActiveRecord
   belongs_to :currency, inverse_of: :account_txns
   belongs_to :voucher_sequence, inverse_of: :account_txns
   belongs_to :created_by, class_name: 'User', inverse_of: :account_txns
-  has_many :entries, class_name: 'AccountEntry', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :debit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Debit', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :credit_entries, extend: AccountEntriesExtension, class_name: 'AccountEntry::Credit', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :line_items, class_name: 'InvoiceLineItem', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :entries, class_name: 'AccountEntry', extend: AccountEntriesExtension, inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :debit_entries, class_name: 'AccountEntry::Debit', extend: AccountEntriesExtension, inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :credit_entries, class_name: 'AccountEntry::Credit', extend: AccountEntriesExtension, inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
   has_one :header, class_name: 'InvoiceHeader', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
 
   validates :business_entity, presence: true
@@ -44,14 +43,14 @@ class AccountTxn < MyActiveRecord
   end
 
   def has_credit_entries?
-    errors[:base] << "Transaction must have at least one valid credit entry" if self.credit_entries.blank? || credit_entries.balance <= 0
+    errors[:base] << "Transaction must have at least one valid credit entry" if self.credit_entries.blank? || credit_entries.total_amount <= 0
   end
 
   def has_debit_entries?
-    errors[:base] << "Transaction must have at least one valid debit entry" if self.debit_entries.blank? || debit_entries.balance <= 0
+    errors[:base] << "Transaction must have at least one valid debit entry" if self.debit_entries.blank? || debit_entries.total_amount <= 0
   end
 
   def entries_cancel?
-    errors[:base] << "The credit and debit entries are not equal" if credit_entries.balance != debit_entries.balance
+    errors[:base] << "The credit and debit entries are not equal" if credit_entries.total_amount != debit_entries.total_amount
   end
 end

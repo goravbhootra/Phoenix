@@ -5,6 +5,7 @@ gem 'rails'
 gem 'pg'
 gem 'arel'#, '~> 6.0.0'
 # gem 'actionform'
+# gem 'eaco'
 
 gem 'rails_admin'
 gem 'ancestry'
