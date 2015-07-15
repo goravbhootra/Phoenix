@@ -1,6 +1,6 @@
 class Currency < MyActiveRecord
   has_many :regions, inverse_of: :currency, dependent: :restrict_with_exception
-  has_many :invoices, inverse_of: :currency, dependent: :restrict_with_exception
+  # has_many :invoices, inverse_of: :currency, dependent: :restrict_with_exception
   has_many :orders, inverse_of: :currency, dependent: :restrict_with_exception
   has_many :account_txns, inverse_of: :currency, dependent: :restrict_with_exception
 

@@ -16,12 +16,13 @@
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require dataTables/extras/dataTables.responsive
 //= require dataTables/extras/dataTables.tableTools
+//= require datetime-moment
+//= require moment
 //= require bootstrap.min
 // require best_in_place
 // require best_in_place.jquery-ui
 // require best_in_place.purr
 //= require custom
-//= require moment
 //= require bootstrap-datetimepicker
 //= require select2
 //= require turbolinks

@@ -3,7 +3,6 @@ class InventoryVoucher < MyActiveRecord
   belongs_to :receiving_business_entity, class_name: 'BusinessEntity', inverse_of: :receiving_inventory_vouchers
   belongs_to :voucher_sequence, inverse_of: :inventory_vouchers
   belongs_to :created_by, class_name: 'User', inverse_of: :created_inventory_vouchers
-  belongs_to :currency, inverse_of: :inventory_txns
   belongs_to :business_entity_location, inverse_of: :inventory_vouchers
   belongs_to :receiving_business_entity_location, class_name: 'BusinessEntityLocation', inverse_of: :receiving_inventory_vouchers
   has_many :line_items, class_name: 'InventoryVoucherLineItem', dependent: :destroy, inverse_of: :inventory_voucher, autosave: true
@@ -14,7 +13,6 @@ class InventoryVoucher < MyActiveRecord
   # validates :receiving_business_entity_location, absence: true, unless: :two_locations_involved?
   validates :voucher_sequence, presence: true
   validates :created_by, presence: true
-  validates :currency, presence: true
   validates :total_amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
   validates :voucher_date, presence: true
   validates :number, presence: true

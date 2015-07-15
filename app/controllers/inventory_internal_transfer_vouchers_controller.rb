@@ -10,7 +10,7 @@ class InventoryInternalTransferVouchersController < ApplicationController
   before_action :set_inventory_internal_transfer_voucher, only: [:edit, :update, :destroy]
 
   def index
-    @inventory_internal_transfer_vouchers = inventory_internal_transfer_voucher_scope.includes(:created_by, :primary_location, :secondary_location).order("number DESC")
+    @inventory_internal_transfer_vouchers = inventory_internal_transfer_voucher_scope.includes(:created_by, [primary_location: :business_entity], :secondary_location).order("number DESC")
 
     respond_to do |format|
       format.html
@@ -74,7 +74,7 @@ class InventoryInternalTransferVouchersController < ApplicationController
 
   private
     def inventory_internal_transfer_voucher_params
-      params.require(:inventory_internal_transfer_voucher).permit(:currency_id, :created_by_id,
+      params.require(:inventory_internal_transfer_voucher).permit(:created_by_id,
           :remarks, :tax_amount, :total_amount, :voucher_date, :ref_number, :status,
           :voucher_sequence_id, :goods_value, :primary_location_id, :address,
           :secondary_location_id,

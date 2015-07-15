@@ -74,7 +74,7 @@ class InventoryOutVouchersController < ApplicationController
 
   private
     def inventory_out_voucher_params
-      params.require(:inventory_out_voucher).permit(:currency_id, :created_by_id, :remarks,
+      params.require(:inventory_out_voucher).permit(:created_by_id, :remarks,
           :tax_amount, :total_amount, :voucher_date, :ref_number, :status, :voucher_sequence_id,
           :goods_value, :primary_location_id, :address, :tax_details, :secondary_entity_id,
           line_items_attributes: [:id, :product_id, :quantity_out, :price, :amount, :tax_rate,

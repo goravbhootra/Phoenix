@@ -52,6 +52,59 @@ $(document).on('ready page:load', function() {
 
   // $('.best_in_place').best_in_place();
 
+  // moment.lang('en-AU');
+  // $.fn.dataTable.moment( 'dddd, MMMM Do, YYYY' );
+  // $.fn.dataTable.moment( 'DD/MM/YYYY' );
+  // moment.locale('en-UK');
+
+  // // $.fn.dataTable.moment( '%B %e, %Y' );
+  // $.extend( jQuery.fn.dataTableExt.oSort, {
+  //   "date-uk-pre": function (a){
+  //       return parseInt(moment(a, "DD/MM/YYYY").format("X"), 10);
+  //   },
+  //   "date-uk-asc": function (a, b) {
+  //       return a - b;
+  //   },
+  //   "date-uk-desc": function (a, b) {
+  //       return b - a;
+  //   }
+  // });
+
+
+  // moment.locale('en', {
+  //   longDateFormat : {
+  //       LT: "h:mm A",
+  //       LTS: "h:mm:ss A",
+  //       L: "DD/MM/YYYY",
+  //       l: "D/M/YYYY",
+  //       LL: "MMMM Do YYYY",
+  //       ll: "MMM D YYYY",
+  //       LLL: "MMMM Do YYYY LT",
+  //       lll: "MMM D YYYY LT",
+  //       LLLL: "dddd, MMMM Do YYYY LT",
+  //       llll: "ddd, MMM D YYYY LT"
+  //   }
+  // });
+
+
+  $.fn.dataTable.moment = function ( format, locale ) {
+    var types = $.fn.dataTable.ext.type;
+
+    // Add type detection
+    types.detect.unshift( function ( d ) {
+        return moment( d, format, locale, true ).isValid() ?
+            'moment-'+format :
+            null;
+    } );
+
+    // Add sorting method - use an integer for the sorting
+    types.order[ 'moment-'+format+'-pre' ] = function ( d ) {
+        return moment( d, format, locale, true ).unix();
+    };
+  };
+
+  $.fn.dataTable.moment( 'DD/MM/YYYY' );
+
   $('.DataTable').DataTable({
     // "sDom": 'lC<"H"TCfr>t<"F"ip>',
     // "sDom": 'flt<ip>',
@@ -61,7 +114,7 @@ $(document).on('ready page:load', function() {
     //     },
     "aLengthMenu": [[12, 25, 50, 100, -1], [12, 25, 50, 100, "All"]],
     "iDisplayLength": 12,
-    "order": [[ 1, "desc" ]],
+    "order": [[ 0, "desc" ]],
     // ajax: ...,
     // autoWidth: false,
     pagingType: 'full_numbers',
