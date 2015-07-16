@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150715080925) do
+ActiveRecord::Schema.define(version: 20150716010506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -536,9 +536,11 @@ ActiveRecord::Schema.define(version: 20150715080925) do
     t.datetime "updated_at",                                             null: false
     t.string   "membership_number",          limit: 9,                   null: false
     t.boolean  "reserved",                               default: false, null: false
+    t.integer  "cash_account_id"
   end
 
   add_index "users", ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
+  add_index "users", ["cash_account_id"], name: "index_users_on_cash_account_id", using: :btree
   add_index "users", ["city_id"], name: "index_users_on_city_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["membership_number"], name: "index_users_on_membership_number", unique: true, using: :btree
@@ -629,6 +631,7 @@ ActiveRecord::Schema.define(version: 20150715080925) do
   add_foreign_key "user_roles", "business_entity_locations", on_delete: :restrict
   add_foreign_key "user_roles", "roles", on_delete: :restrict
   add_foreign_key "user_roles", "users", on_delete: :restrict
+  add_foreign_key "users", "accounts", column: "cash_account_id", on_delete: :restrict
   add_foreign_key "users", "cities", on_delete: :restrict
   add_foreign_key "voucher_sequences", "business_entities", on_delete: :restrict
   add_foreign_key "zones", "regions", on_delete: :restrict

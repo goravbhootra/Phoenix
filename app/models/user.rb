@@ -2,6 +2,7 @@ class User < MyActiveRecord
   has_secure_password
 
   belongs_to :city, inverse_of: :users
+  belongs_to :cash_account, class_name: 'Account::CashAccount', inverse_of: :user_cash_account
   has_many :business_entity_users, dependent: :restrict_with_exception, inverse_of: :user
   has_many :business_entities, through: :business_entity_users
   has_many :booked_orders, class_name: 'Order', foreign_key: 'booked_by_id', inverse_of: :booked_by, dependent: :restrict_with_exception
@@ -12,7 +13,6 @@ class User < MyActiveRecord
   has_many :account_txns, class_name: 'AccountTxn', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :user_roles, autosave: true, dependent: :destroy, inverse_of: :user
   has_many :roles, through: :user_roles
-
 
   validates :name, presence: true, length: { in: 3..100 }
   validates :membership_number, presence: true, uniqueness: true, length: { is: 9 }
