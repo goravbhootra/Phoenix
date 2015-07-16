@@ -1,7 +1,7 @@
 # Import data by invoking following in console:
 # InventoryVoucherImport.import('/path/to/file.xls')
 class InventoryVoucherImport < ActiveImporter::Base
-  imports InventoryVoucher
+  imports InventoryTxn
 
   column 'Sku', :sku do |sku|
     sku.to_i
