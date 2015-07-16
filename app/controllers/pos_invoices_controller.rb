@@ -97,18 +97,23 @@ class PosInvoicesController < ApplicationController
 
   private
     def pos_invoice_params
-      params.require(:pos_invoice).permit(:currency_id, :created_by_id, :remarks,
-                                           :tax_amount, :total_amount, :txn_date,
-                                           :ref_number, :status, :voucher_sequence_id,
-                                           :goods_value, :primary_location_id, :address,
-                                           :tax_details, :customer_membership_number,
-                                           line_items_attributes: [:id, :product_id,
-                                              :quantity, :price, :amount, :tax_rate,
-                                              :_destroy],
-                                           payments_attributes: [:id, :mode_id,
-                                              :received_by_id, :amount, :bank_name,
-                                              :card_last_digits, :expiry_month,
-                                              :expiry_year, :mobile_number, :card_holder_name,
+      params.require(:pos_invoice).permit(:business_entity_id, :currency_id,
+                                          :voucher_sequence_id, :created_by_id,
+                                          :remarks, :txn_date, :status, :ref_number,
+                                          debits: [:id, :account_id, :amount,
+                                            :remarks, :bank_name, :card_last_digits,
+                                            :expiry_month, :expiry_year, :mobile_number,
+                                            :card_holder_name, :_destroy],
+                                          credits: [:id, :account_id, :amount,
+                                            :remarks, :bank_name, :card_last_digits,
+                                            :expiry_month, :expiry_year, :mobile_number,
+                                            :card_holder_name, :_destroy],
+                                          header_attributes: [:id, :address, :legal_details,
+                                            :customer_membership_number,
+                                            :business_entity_location_id],
+                                          line_items_attributes: [:id, :product_id,
+                                            :quantity, :price, :goods_value, :tax_rate,
+                                              :tax_amount, :amount,:state_category_tax_rate_id,
                                               :_destroy]
                                            )
       #:tax_amount is not included in pos_invoice or line_items as it will be calculated by server
@@ -137,7 +142,11 @@ class PosInvoicesController < ApplicationController
 
     def build_payment_children
       # @payment_modes = PaymentMode.available_for_invoices
-      (PaymentMode.available_for_invoices.pluck(:id) - @pos_invoice.payments.pluck(:mode_id)).each { |x| @pos_invoice.payments.build(mode_id: x) }
+      # (PaymentMode.available_for_invoices.pluck(:id) - @pos_invoice.payments.pluck(:mode_id)).each { |x| @pos_invoice.payments.build(mode_id: x) }
+      user_cash_account_id = current_user.cash_account_id
+      @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
+      @pos_invoice.debit_entries.build
+      @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
 
     def initialize_form

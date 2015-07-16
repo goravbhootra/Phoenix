@@ -8,30 +8,32 @@
           <div class="col-md-2 text-center">
             <div class="form-group">
               <%= f.label :invoice_date, 'Date' %>
-              <%= f.text_field :invoice_date, value: (f.object.invoice_date.strftime('%d/%m/%Y') if f.object.invoice_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
+              <%= f.text_field :txn_date, value: (f.object.txn_date.strftime('%d/%m/%Y') if f.object.txn_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
             </div>
           </div>
 
-          <div class="col-md-3">
-            <div class='form-group text-center'>
-              <%= f.label :primary_location_id, 'Entity :: Location' %>
-              <% if @current_user.role?(['admins','power_user']) %>
-                <%= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
-                { include_blank: true },
-                { class: 'form-control selectme', id: 'primary_location' } %>
-              <% else %>
-                <%= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id).where(id: 150).order("business_entities.alias_name"), :id, :entity_name_with_location,
-                  { readonly: true }, { class: 'form-control selectme', id: 'primary_location' } %>
-              <% end %>
+          <%= f.fields_for :header do |fh| %>
+            <div class="col-md-3">
+              <div class='form-group text-center'>
+                  <%= fh.label :business_entity_location_id, 'Entity :: Location' %>
+                  <% if @current_user.role?(['admins','power_user']) %>
+                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                    { include_blank: true },
+                    { class: 'form-control selectme', id: 'primary_location' } %>
+                  <% else %>
+                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).where(id: 153).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                      { readonly: true }, { class: 'form-control selectme', id: 'primary_location' } %>
+                  <% end %>
+              </div>
             </div>
-          </div>
 
-          <div class='col-md-2'>
-            <div class="form-group text-center">
-              <%= f.label :customer_membership_number, 'ID Card #' %><br>
-              <%= f.text_field :customer_membership_number, class: 'form-control', id: 'customer_membership_number', autofocus: true %>
+            <div class='col-md-2'>
+              <div class="form-group text-center">
+                <%= fh.label :customer_membership_number, 'ID Card #' %><br>
+                <%= fh.text_field :customer_membership_number, class: 'form-control', id: 'customer_membership_number', autofocus: true %>
+              </div>
             </div>
-          </div>
+          <% end %>
 
           <div class='col-md-2'>
             <div class="form-group text-center">

@@ -96,9 +96,9 @@ class InventoryInternalTransferVouchersController < ApplicationController
     def build_child_line_items
       rec_count = @inventory_internal_transfer_voucher.line_items.size
       if rec_count < 4
-        (25 - rec_count).times { @inventory_internal_transfer_voucher.line_items.build }
+        (50 - rec_count).times { @inventory_internal_transfer_voucher.line_items.build }
       else
-        5.times { @inventory_internal_transfer_voucher.line_items.build }
+        10.times { @inventory_internal_transfer_voucher.line_items.build }
       end
     end
 

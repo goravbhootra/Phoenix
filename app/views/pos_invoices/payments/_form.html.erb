@@ -13,7 +13,7 @@
           <tr>
             <td>
               <%= ff.hidden_field :mode_id, class: 'form-control text-center', tabindex: '-1', min: 0, readonly: true %>
-              <%= text_field_tag ff.object.mode_id, ff.object.mode.name, disabled:  true, class: 'form-control' %>
+              <%= text_field_tag ff.object.mode_id, ff.object.mode.name, disabled: true, class: 'form-control' %>
             </td>
             <% if ff.object.mode_id == 5 %> <!-- ID 5 - change tendered -->
               <td>
