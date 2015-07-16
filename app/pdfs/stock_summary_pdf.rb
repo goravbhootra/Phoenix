@@ -49,7 +49,7 @@ class StockSummaryPdf < Prawn::Document
 
   def opening_stock_and_receipts(business_entity_location_id)
     opening_stock_product_ids_quantity_hash = {}
-    InventoryVoucher.where(classification: 2).map do |voucher|
+    InventoryTxn.where(classification: 2).map do |voucher|
       voucher.line_items.all.map { |x| opening_stock_product_ids_quantity_hash.keys.include?(x.product_id) ? opening_stock_product_ids_quantity_hash[x.product_id] += -x.quantity : opening_stock_product_ids_quantity_hash[x.product_id] = -x.quantity }
     end
     opening_stock_product_ids_quantity_hash

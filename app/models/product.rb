@@ -12,7 +12,7 @@ class Product < ActiveRecord::Base
   has_many :invoice_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :invoice_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :order_line_items, class_name: 'Order::LineItem', inverse_of: :product, dependent: :restrict_with_exception
-  has_many :inventory_voucher_line_items, class_name: 'InventoryVoucherLineItem', inverse_of: :product, dependent: :restrict_with_exception
+  # has_many :inventory_voucher_line_items, class_name: 'InventoryVoucherLineItem', inverse_of: :product, dependent: :restrict_with_exception
   has_many :business_entity_location_inventory_levels, inverse_of: :product, dependent: :restrict_with_exception
 
   validates :category, presence: true

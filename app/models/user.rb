@@ -9,7 +9,7 @@ class User < MyActiveRecord
   has_many :created_invoices, class_name: 'Invoice', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :created_inventory_txns, class_name: 'InventoryTxn', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :received_payments, class_name: 'InvoicePayment', foreign_key: 'received_by_id', inverse_of: :received_by, dependent: :restrict_with_exception
-  has_many :created_inventory_vouchers, class_name: 'InventoryVoucher', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
+  # has_many :created_inventory_vouchers, class_name: 'InventoryVoucher', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :account_txns, class_name: 'AccountTxn', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :user_roles, autosave: true, dependent: :destroy, inverse_of: :user
   has_many :roles, through: :user_roles

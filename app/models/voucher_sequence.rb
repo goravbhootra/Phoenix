@@ -3,7 +3,7 @@ class VoucherSequence < MyActiveRecord
   has_many :inventory_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :account_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :invoices, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
-  has_many :inventory_vouchers, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
+  # has_many :inventory_vouchers, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
 
   validates :business_entity_id, presence: true
   validates :classification, presence: true
