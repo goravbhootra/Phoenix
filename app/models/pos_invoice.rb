@@ -1,5 +1,6 @@
 class PosInvoice < Invoice
 
+  validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
   ### defined in account_txn.rb ###
   def has_credit_entries?
     errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0

@@ -21,7 +21,7 @@
                     { include_blank: true },
                     { class: 'form-control selectme', id: 'primary_location' } %>
                   <% else %>
-                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).where(id: 153).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).where(id: 154).order("business_entities.alias_name"), :id, :entity_name_with_location,
                       { readonly: true }, { class: 'form-control selectme', id: 'primary_location' } %>
                   <% end %>
               </div>

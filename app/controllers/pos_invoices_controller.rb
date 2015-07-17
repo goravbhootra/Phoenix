@@ -96,63 +96,78 @@ class PosInvoicesController < ApplicationController
   end
 
   private
-    def pos_invoice_params
-      params.require(:pos_invoice).permit(:business_entity_id, :currency_id,
-                                          :voucher_sequence_id, :created_by_id,
-                                          :remarks, :txn_date, :status, :ref_number,
-                                          debits: [:id, :account_id, :amount,
-                                            :remarks, :bank_name, :card_last_digits,
-                                            :expiry_month, :expiry_year, :mobile_number,
-                                            :card_holder_name, :_destroy],
-                                          credits: [:id, :account_id, :amount,
-                                            :remarks, :bank_name, :card_last_digits,
-                                            :expiry_month, :expiry_year, :mobile_number,
-                                            :card_holder_name, :_destroy],
-                                          header_attributes: [:id, :address, :legal_details,
-                                            :customer_membership_number,
-                                            :business_entity_location_id],
-                                          line_items_attributes: [:id, :product_id,
-                                            :quantity, :price, :goods_value, :tax_rate,
-                                              :tax_amount, :amount,:state_category_tax_rate_id,
-                                              :_destroy]
-                                           )
-      #:tax_amount is not included in pos_invoice or line_items as it will be calculated by server
+  def pos_invoice_params
+    params.require(:pos_invoice).permit(:business_entity_id, :currency_id,
+                                        :voucher_sequence_id, :created_by_id,
+                                        :remarks, :txn_date, :status, :ref_number,
+                                        debits: [:id, :account_id, :amount,
+                                          :remarks, :bank_name, :card_last_digits,
+                                          :expiry_month, :expiry_year, :mobile_number,
+                                          :card_holder_name, :_destroy],
+                                        credits: [:id, :account_id, :amount,
+                                          :remarks, :bank_name, :card_last_digits,
+                                          :expiry_month, :expiry_year, :mobile_number,
+                                          :card_holder_name, :_destroy],
+                                        header_attributes: [:id, :address, :legal_details,
+                                          :customer_membership_number,
+                                          :business_entity_location_id],
+                                        line_items_attributes: [:id, :product_id,
+                                          :quantity, :price, :goods_value, :tax_rate,
+                                            :tax_amount, :amount,:state_category_tax_rate_id,
+                                            :_destroy]
+                                         )
+    #:tax_amount is not included in pos_invoice or line_items as it will be calculated by server
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_pos_invoice
+    @pos_invoice = pos_invoice_scope.includes(:line_items, :header, :debit_entries, :credit_entries).find(params[:id])
+  end
+
+  def populate_tax_slabs
+  end
+
+  def populate_products
+    @products ||= Product.includes([:language, :category]).active.order(:sku).load
+  end
+
+  def build_child_line_items
+    rec_count = @pos_invoice.line_items.size
+    if rec_count < 4
+      (15 - rec_count).times { @pos_invoice.line_items.build }
+    else
+      4.times { @pos_invoice.line_items.build }
+    end
+  end
+
+  def build_payment_children
+    # @payment_modes = PaymentMode.available_for_invoices
+    # (PaymentMode.available_for_invoices.pluck(:id) - @pos_invoice.payments.pluck(:mode_id)).each { |x| @pos_invoice.payments.build(mode_id: x) }
+    user_cash_account_id = current_user.cash_account_id
+    payments_type_with_account_type = @pos_invoice.entries.payments_type_with_account_type
+
+    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::CashAccount')
+        @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_pos_invoice
-      @pos_invoice = pos_invoice_scope.includes(:line_items, :header, :debit_entries, :credit_entries).find(params[:id])
+    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::BankAccount')
+      @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id) if BusinessEntityLocation.find(154).bank_account_id.present?
     end
 
-    def populate_tax_slabs
-    end
-
-    def populate_products
-      @products ||= Product.includes([:language, :category]).active.order(:sku).load
-    end
-
-    def build_child_line_items
-      rec_count = @pos_invoice.line_items.size
-      if rec_count < 4
-        (20 - rec_count).times { @pos_invoice.line_items.build }
-      else
-        4.times { @pos_invoice.line_items.build }
-      end
-    end
-
-    def build_payment_children
-      # @payment_modes = PaymentMode.available_for_invoices
-      # (PaymentMode.available_for_invoices.pluck(:id) - @pos_invoice.payments.pluck(:mode_id)).each { |x| @pos_invoice.payments.build(mode_id: x) }
-      user_cash_account_id = current_user.cash_account_id
-      @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
-      @pos_invoice.debit_entries.build
+    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
       @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
+  end
 
-    def initialize_form
-      populate_tax_slabs
-      populate_products
-      build_child_line_items
-      build_payment_children
-    end
+  def build_header
+    @pos_invoice.header.presence || @pos_invoice.build_header(business_entity_location_id: 154)
+  end
+
+  def initialize_form
+    populate_tax_slabs
+    populate_products
+    build_child_line_items
+    build_header
+    build_payment_children
+  end
 end
