@@ -141,8 +141,6 @@ class PosInvoicesController < ApplicationController
   end
 
   def build_payment_children
-    # @payment_modes = PaymentMode.available_for_invoices
-    # (PaymentMode.available_for_invoices.pluck(:id) - @pos_invoice.payments.pluck(:mode_id)).each { |x| @pos_invoice.payments.build(mode_id: x) }
     user_cash_account_id = current_user.cash_account_id
     payments_type_with_account_type = @pos_invoice.entries.payments_type_with_account_type
 

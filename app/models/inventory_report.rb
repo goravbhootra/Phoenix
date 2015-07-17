@@ -5,10 +5,11 @@ class InventoryReport < ActiveType::Object
     master, opening_stock_products = locationwise_opening_stock_vouchers_consolidated(master)
     master, inventory_in_products = locationwise_inventory_in_vouchers_except_opening_stock_consolidated(master)
     master, inventory_out_products = locationwise_inventory_out_vouchers_consolidated(master)
-    master, pos_sales_products = locationwise_pos_invoices_consolidated(master)
+    # master, pos_sales_products = locationwise_pos_invoices_consolidated(master)
     master, in_transit_products = locationwise_in_transit_consolidated(master)
 
-    product_skus = (opening_stock_products + inventory_in_products + inventory_out_products + pos_sales_products + in_transit_products).uniq
+    # product_skus = (opening_stock_products + inventory_in_products + inventory_out_products + pos_sales_products + in_transit_products).uniq
+    product_skus = (opening_stock_products + inventory_in_products + inventory_out_products +  in_transit_products).uniq
 
     products = Product.sort_skus_by_parentcat_lang(product_skus)
     bus_ent_locs = Hash.new
@@ -23,7 +24,7 @@ class InventoryReport < ActiveType::Object
           available_stock += master[loc][product]['opening_stock'].to_i
           available_stock += master[loc][product]['inventory_in_wo_opening_stock'].to_i
           available_stock -= master[loc][product]['inventory_out'].to_i
-          available_stock += master[loc][product]['pos_sales'].to_i # pos quantity is in -ve
+          # available_stock += master[loc][product]['pos_sales'].to_i # pos quantity is in -ve
           available_stock -= master[loc][product]['in_transit'].to_i
 
           csv << [bus_ent_locs[loc][0],
@@ -34,7 +35,7 @@ class InventoryReport < ActiveType::Object
                   master[loc][product]['opening_stock'],
                   master[loc][product]['inventory_in_wo_opening_stock'],
                   master[loc][product]['inventory_out'],
-                  master[loc][product]['pos_sales'].present? ? -master[loc][product]['pos_sales'] : nil,
+                  # master[loc][product]['pos_sales'].present? ? -master[loc][product]['pos_sales'] : nil,
                   (master[loc][product]['in_transit'].present? && master[loc][product]['in_transit'] != 0) ? master[loc][product]['in_transit'] : nil,
                   available_stock]
         end
@@ -54,22 +55,9 @@ class InventoryReport < ActiveType::Object
   end
 
   def self.locationwise_pos_invoices_consolidated(master=Hash.new)
-    hash_reorganise_locatiowise(master, 'pos_sales',
-                                InvoiceLineItem.where("invoice_id IN (?)", PosInvoice.pluck(:id)).includes(:product, :invoice).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity)
-                                )
-    # sales = {}
-    # product_ids = {}
-    # PosInvoice.find_each do |invoice|
-    #   li_data = invoice.line_items.pluck(:product_id, :quantity)
-    #   sales["#{invoice.primary_location_id}"] = {} if sales.keys.exclude?("#{invoice.primary_location_id}")
-    #   li_data.each do |rec|
-    #     sales["#{invoice.primary_location_id}"][rec[0]] = sales["#{invoice.primary_location_id}"][rec[0]].to_i + rec[1].to_i
-    #     product_ids["#{invoice.primary_location_id}"] = [] if product_ids.keys.exclude?("#{invoice.primary_location_id}")
-    #     product_ids["#{invoice.primary_location_id}"] << rec[0]
-    #   end
-    #   product_ids["#{invoice.primary_location_id}"].uniq!
-    # end
-    # { 'sales': sales, 'product_ids': product_ids }
+    # hash_reorganise_locatiowise(master, 'pos_sales',
+    #                             InvoiceLineItem.where("invoice_id IN (?)", PosInvoice.pluck(:id)).includes(:product, :invoice).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity)
+    #                             )
   end
 
   def self.locationwise_retail_sale_vouchers_consolidated(master=Hash.new)
