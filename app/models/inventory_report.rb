@@ -137,11 +137,4 @@ class InventoryReport < ActiveType::Object
                                 InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryInternalTransferVoucher.pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum("quantity_out - quantity_in")
                                 )
   end
-
-  def self.locationwise_in_transit_consolidated(master=Hash.new)
-    # BusinessEntity(128) - Opening Stock - All records except Opening Stock
-    hash_reorganise_locatiowise(master, 'in_transit',
-                                InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryInternalTransferVoucher.pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum("quantity_out - quantity_in")
-                                )
-  end
 end
