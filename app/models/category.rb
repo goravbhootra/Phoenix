@@ -26,6 +26,6 @@ class Category < MyActiveRecord
   end
 
   def root_node_name
-    root? ? code : parent_code
+    root? ? name : parent.name
   end
 end

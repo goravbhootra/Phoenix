@@ -75,7 +75,7 @@ class Product < ActiveRecord::Base
     products = Product.includes(:language).where(sku: skus).pluck(:sku, :name, :category_id, :language_id)
     parent_cat = Hash.new
     Category.where(id: products.map {|row| row[2]}.uniq.compact).each { |cat| parent_cat[cat.id] = cat.root_node_name }
-    lang_codes = Language.where(id: products.map {|row| row[3]}.uniq.compact).pluck(:id, :code).to_h
+    lang_codes = Language.where(id: products.map {|row| row[3]}.uniq.compact).pluck(:id, :name).to_h
     result = Hash.new
     products.each { |p| result[p[0]] = [p[1], parent_cat[p[2]], lang_codes[p[3]].to_s] }
     result

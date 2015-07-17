@@ -17,7 +17,8 @@ class InventoryReport < ActiveType::Object
     bus_ent_locs = bus_ent_locs.sort_by { |_,value| value }.to_h
 
     CSV.generate(options) do |csv|
-      csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'POS Sales', 'In Transit', 'Avlbl Stk']
+      # csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'POS Sales', 'In Transit', 'Avlbl Stk']
+      csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'In Transit', 'Avlbl Stk']
       bus_ent_locs.keys.each do |loc| # Locations already in sorted order
         master[loc].keys.sort.each do |product|
           available_stock = 0
