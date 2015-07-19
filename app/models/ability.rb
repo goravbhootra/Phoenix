@@ -4,8 +4,10 @@ class Ability
   def initialize(user)
     user ||= User.new # guest user (not logged in)
     power = Power.new(user)
-    if power.global_role?
+    if power.global_role? && power.role?('admin')
       can :manage, :all
+      can :account_cash_account, :all
+      can :account_bank_account, :all
     elsif power.global_role? && power.role?('power_user')
       can :access, :rails_admin
       can :dashboard

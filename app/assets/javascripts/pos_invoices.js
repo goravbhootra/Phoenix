@@ -13,7 +13,7 @@ function populate_invoice_values_on_page_reload() {
 }
 
 function show_payment_details_if_credit_card_amount_populated() {
-  if(parseFloat($('#payment_mode_2_amount').val()) > 0) {
+  if(parseFloat($('#payment_mode_credit_card_amount').val()) > 0) {
     $('#payment_details').show();
   } else {
     $('#payment_details').hide();
@@ -69,12 +69,12 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $('form').on('change', '#payment_mode_1_amount', function(event) {
+  $('form').on('change', '#payment_mode_cash_amount', function(event) {
     if (parseFloat($(this).val()) == parseFloat($('#voucher_amount').text())) {
       $('#save_button').focus();
     }
     else if (parseFloat($(this).val()) > parseFloat($('#voucher_amount').text())) {
-      $('#payment_mode_5_amount').focus();
+      $('#payment_mode_cash_tendered_amount').focus();
     }
   });
 
@@ -83,12 +83,12 @@ $(document).on('ready page:load', function() {
     calc_total_payment();
     if (parseInt($(this).val()) == 0 || ($(this).val() == null) || ($(this).val() == '')) {
       $(this).closest('tr').find('.payment_destroy').val('1');
-      if ($(this).attr("id") == 'payment_mode_2_amount') {
+      if ($(this).attr("id") == 'payment_mode_credit_card_amount') {
         $('#payment_details').hide();
       }
     } else {
       $(this).closest('tr').find('.payment_destroy').val('0');
-      if ($(this).attr("id") == 'payment_mode_2_amount') {
+      if ($(this).attr("id") == 'payment_mode_credit_card_amount') {
         $('#payment_details').show();
         $('#bank_name').focus();
       }
@@ -102,7 +102,7 @@ $(document).on('click', '#save_button', function(event) {
     $('.payment_amount:first').focus();
     return event.preventDefault();
   }
-  if(parseFloat($('#payment_mode_5_amount').val()) > parseFloat($('#payment_mode_1_amount').val())) {
+  if(parseFloat($('#payment_mode_cash_tendered_amount').val()) > parseFloat($('#payment_mode_cash_amount').val())) {
     alert('Change tendered cannot be more than cash received. Cannot save the record');
     $('.change_tendered:first').focus();
     return event.preventDefault();

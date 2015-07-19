@@ -16,11 +16,11 @@ RailsAdmin.config do |config|
                             'BusinessEntityUser', 'VoucherSequence',
                             'Account', 'Account::Asset', 'Account::Liability',
                             'Account::SundryDebtor', 'Account::SundryCreditor',
-                            'Account::CurrentAsset', 'Account::CashAccount',
+                            'Account::CurrentAsset',
                             'Account::CurrentLiability', 'Account::SalesAccount',
                             'AccountTxn', 'AccountTxnDetail', 'AccountEntry',
-                            'AccountEntry::Debit', 'AccountEntry::Credit', 'InvoiceHeader',
-                            'Account::BankAccount', 'Account::CashAccount'
+                            'AccountEntry::Debit', 'AccountEntry::Credit', 'InvoiceHeader'
+                            # 'Account::BankAccount', 'Account::CashAccount'
                           ]
 
   config.actions do

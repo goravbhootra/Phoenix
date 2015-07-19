@@ -1,5 +1,5 @@
 class InventoryReport < ActiveType::Object
-  # http://localhost:3000/stock-summary.xls?location_id=153&from_date='17/07/2015'&to_date='17/07/2015'
+  # http://manapakkam.com/stock-summary.xls?location_id=153&from_date='17/07/2015'&to_date='17/07/2015'
 
   # attribute :from_date, :date
   # attribute :to_date, :date

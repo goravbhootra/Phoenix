@@ -15,7 +15,7 @@
           </td>
           <td>
             <%= fde.text_field :amount, class: 'form-control payment_amount',
-                              id: "payment_mode_{fde.object.mode_id}_amount" %>
+                  id: "payment_mode_#{debit_payment_mode[fde.object.account_id].delete(' ').underscore}_amount" %>
           </td>
           <td>
             <%= fde.hidden_field :_destroy, size: '5x5', class: 'payment_destroy' %>
@@ -60,7 +60,7 @@
             <div class="input-group">
               <div class="input-group-addon">-</div>
               <%= fce.text_field :amount, class: 'form-control change_tendered',
-                            id: "payment_mode_5_amount" %>
+                    id: "payment_mode_#{credit_payment_mode[fce.object.account_id].delete(' ').underscore}_tendered_amount" %>
             </div>
           </td>
         <% end %>
