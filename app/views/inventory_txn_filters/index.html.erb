@@ -1,0 +1,9 @@
+<% provide(:title, 'Inventory Summary Report') %>
+
+<h1>Inventory Summary Report</h1>
+<%= render 'filter_form', filter: @filter, remote: true %>
+
+<h2>Inventory Summary</h2>
+<div id="inventory_summary_filter_results">
+  <%= render 'filter_results' %>
+</div>

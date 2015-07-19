@@ -62,6 +62,11 @@ class Power
   end
 
   # Accessible by power_users and admins
+  power :inventory_txn_filters do
+    return true if global_role?
+    false
+  end
+
   power :states do
     return State.all if global_role?
     State.none

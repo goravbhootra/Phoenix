@@ -11,8 +11,8 @@
         <th class='col-md-1 text-center'>To Location</th>
         <th class='col-md-1 text-center'>Amount</th>
         <th class='col-md-2 text-center'>Remarks</th>
-        <th class='col-md-2 text-center'>Created by</th>
-        <th class='col-md-1 text-center'>Operations</th>
+        <th class='col-md-1 text-center'>Created by</th>
+        <th class='col-md-2 text-center'>Operations</th>
       </tr>
     </thead>
     <tbody>
@@ -24,9 +24,9 @@
           <td class='text-center'><%= inventory_internal_transfer_voucher.secondary_location_name %></td>
           <td class='text-center'><%= inventory_internal_transfer_voucher.total_amount %></td>
           <td><%= inventory_internal_transfer_voucher.remarks %></td>
-          <td class='text-center'><%= inventory_internal_transfer_voucher.created_by.custom_object_label %></td>
+          <td><%= inventory_internal_transfer_voucher.created_by.custom_object_label %></td>
           <td class='text-center'>
-            <%= link_to 'View', inventory_internal_transfer_voucher %> | <%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(inventory_internal_transfer_voucher) %>
+            <%= link_to 'View', inventory_internal_transfer_voucher %> | <%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(inventory_internal_transfer_voucher) %> | <%= link_to "PDF version", inventory_internal_transfer_voucher_url(inventory_internal_transfer_voucher.id, format: "pdf"), target: :_blank %>
           </td>
         </tr>
       <% end %>

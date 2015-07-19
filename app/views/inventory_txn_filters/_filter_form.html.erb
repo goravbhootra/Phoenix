@@ -1,0 +1,20 @@
+<%= form_for @filter, url: root_path, remote: true, method: :get do |f| %>
+  <fieldset>
+    <%= f.label      :title %>
+    <%= f.text_field :title %>
+  </fieldset>
+  <fieldset>
+    <%= f.label      :author_name_like %>
+    <%= f.text_field :author_name_like %>
+  </fieldset>
+  <fieldset>
+    <%= f.label   :category_id %>
+    <%= f.select  :category_id, categories_collection, include_blank: true %>
+  </fieldset>
+  <fieldset>
+    <%= f.label   :author_also_wrote_in_category_id %>
+    <%= f.select  :author_also_wrote_in_category_id, categories_collection, include_blank: true %>
+  </fieldset>
+  <button type="<%= :reset %>">Clear</button>
+  <%= f.submit 'Search' %>
+<% end %>

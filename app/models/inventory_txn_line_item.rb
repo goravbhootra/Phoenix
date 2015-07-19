@@ -14,7 +14,9 @@ class InventoryTxnLineItem < ActiveRecord::Base
   before_validation :update_amounts
 
   delegate :voucher_print_name, to: :product, allow_nil: true
+  delegate :sku, to: :product, prefix: true, allow_nil: true
   delegate :selling_price, to: :product, allow_nil: true
+  delegate :voucher_label, to: :product, allow_nil: true
 
   def initialize(attributes={})
     super

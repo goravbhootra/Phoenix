@@ -106,12 +106,40 @@ $(document).on('ready page:load', function() {
   $.fn.dataTable.moment( 'DD/MM/YYYY' );
 
   $('.DataTable').DataTable({
-    // "sDom": 'lC<"H"TCfr>t<"F"ip>',
     // "sDom": 'flt<ip>',
     // "sDom": "<lfr>Tt<ip>",
-    // "tableTools": {
-    //         "sSwfPath": '<%= asset_path "dataTables/copy_csv_xls_pdf.swf" %>'
-    //     },
+    "aLengthMenu": [[12, 25, 50, 100, -1], [12, 25, 50, 100, "All"]],
+    "iDisplayLength": 12,
+    "order": [[ 0, "desc" ]],
+    // ajax: ...,
+    // autoWidth: false,
+    pagingType: 'full_numbers',
+    "sPaginationType": "bootstrap",
+    // processing: true,
+    // serverSide: true,
+    responsive: true
+    // Optional, if you want full pagination controls.
+    // Check dataTables documentation to learn more about available options.
+    // http://datatables.net/reference/option/pagingType
+  });
+
+  $('.DataTable-line_items').DataTable({
+    "sDom": 't',
+    "aLengthMenu": [[12, 25, 50, 100, -1], [12, 25, 50, 100, "All"]],
+    "iDisplayLength": 12,
+    "order": [[ 0, "desc" ]],
+    pagingType: 'full_numbers',
+    "sPaginationType": "bootstrap",
+    responsive: true
+  });
+
+  $('.DataTable-export').DataTable({
+    "sDom": 'lC<"H"TCfr>t<"F"ip>',
+    "tableTools": {
+            "sSwfPath": '<%= asset_path "dataTables/copy_csv_xls_pdf.swf" %>'
+        },
+    // "sDom": 'flt<ip>',
+    // "sDom": "<lfr>Tt<ip>",
     "aLengthMenu": [[12, 25, 50, 100, -1], [12, 25, 50, 100, "All"]],
     "iDisplayLength": 12,
     "order": [[ 0, "desc" ]],

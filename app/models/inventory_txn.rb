@@ -5,7 +5,7 @@ class InventoryTxn < MyActiveRecord
   belongs_to :secondary_location, class_name: 'BusinessEntityLocation', inverse_of: :secondary_inventory_txns
   belongs_to :voucher_sequence, inverse_of: :inventory_txns
   belongs_to :created_by, class_name: 'User', inverse_of: :created_inventory_txns
-  has_many :line_items, class_name: 'InventoryTxnLineItem', dependent: :destroy, inverse_of: :inventory_txn, autosave: true
+  has_many :line_items, class_name: 'InventoryTxnLineItem', extend: InventoryTxnLineItemsExtension, dependent: :destroy, inverse_of: :inventory_txn, autosave: true
 
   validates :created_by, :voucher_sequence_id, presence: true
   validates :primary_location_id, :primary_entity_id, presence: true

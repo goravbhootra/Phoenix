@@ -3,7 +3,7 @@ ruby '2.2.2'
 gem 'bundle'
 gem 'rails'
 gem 'pg'
-gem 'arel'#, '~> 6.0.0'
+# gem 'arel'#, '~> 6.0.0'
 # gem 'actionform'
 # gem 'eaco'
 
@@ -25,6 +25,8 @@ gem 'sidekiq'
 gem 'nprogress-rails'
 gem 'momentjs-rails'
 gem 'bootstrap3-datetimepicker-rails'
+# gem 'searchlight'
+
 # gem 'mousetrap-rails'
 # gem 'paranoia' vs 'ruby-destroyed_at' # Soft delete
 # gem for audit trail

@@ -20,9 +20,15 @@ class InventoryInternalTransferVouchersController < ApplicationController
   end
 
   def show
-    @inventory_internal_transfer_voucher = inventory_internal_transfer_voucher_scope.includes(:created_by).find(params[:id])
+    @inventory_internal_transfer_voucher = inventory_internal_transfer_voucher_scope.includes(:created_by, [line_items: [product: [:language, :category]]]).find(params[:id])
     respond_to do |format|
       format.html
+      format.pdf do
+        pdf = InventoryInternalTransferVoucherPdf.new(@inventory_internal_transfer_voucher)
+        send_data pdf.render, filename: "inventory_internal_transfer_voucher#{@inventory_internal_transfer_voucher.number}",
+                              type: "application/pdf",
+                              disposition: 'inline'
+      end
     end
   end
 

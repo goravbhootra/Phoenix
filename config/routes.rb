@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   get '/inventory-internal-transfer-vouchers/get-voucher-sequences' => 'inventory_internal_transfer_vouchers#get_voucher_sequences'
   get '/inventory-internal-transfer-vouchers/get-entity-locations' => 'inventory_internal_transfer_vouchers#get_entity_locations'
 
+  get '/inventory-transactions/summary-report' => 'inventory_txn_reports#index'
+
   get '/pos-invoice-payments' => 'pos_invoices#payment'
 
   resources :pos_invoices, path: 'pos-invoices'
@@ -31,9 +33,9 @@ Rails.application.routes.draw do
 
   get '/sales-report' => 'reports#sales'
   get '/payment-collection' => 'reports#payment_collection'
-  get '/stock-summary' => 'reports#stock_summary'
-  get '/stock-summary-xls' => 'inventory_reports#stock_summary'
-  get '/opening-stock' => 'inventory_reports#opening_stock'
+  # get '/stock-summary' => 'reports#stock_summary'
+  get '/stock-summary' => 'inventory_reports#stock_summary'
+  # get '/opening-stock' => 'inventory_reports#opening_stock'
   get '/invoices-pending' => 'invoices_vouchers#pending_list'
 
   resources :states

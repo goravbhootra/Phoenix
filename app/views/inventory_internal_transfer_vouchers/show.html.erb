@@ -1,26 +1,73 @@
-<p>
-<!--   <strong>Member:</strong>
-  <%#= @inventory_internal_transfer_voucher.member.custom_object_label %> -->
-</p>
+<div class='row'>
+    <div>
+      <div class='col-md-2 form-group text-center'>
+        <strong>Voucher Date</strong><br>
+        <%= @inventory_internal_transfer_voucher.voucher_date.strftime('%d/%m/%Y') %>
+      </div>
+      <div class='col-md-3'>
+        <div class='form-group'>
+          <strong>From Location</strong><br>
+          <%= @inventory_internal_transfer_voucher.primary_location.entity_name_with_location %>
+          <%#= f.collection_select :primary_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(f.object.primary_location_id), :id, :entity_name_with_location, { include_blank: true },
+            { class: 'form-control selectme', id: 'primary_location' } %>
+        </div>
+        <div class='form-group'>
+          <div class='form-group'>
+            <strong>To Location</strong><br>
+            <%= @inventory_internal_transfer_voucher.secondary_location_name %>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class='form-group'>
+          <strong>Sequence</strong><br>
+          <%= @inventory_internal_transfer_voucher.number_prefix %> <%= @inventory_internal_transfer_voucher.number %>
+        </div>
+        <strong>Created by user</strong><br>
+        <%= @inventory_internal_transfer_voucher.created_by.custom_object_label %>
+      </div>
+      <div class='col-md-1'>
+        <div class='form-group text-right'>
+          <strong># of Products</strong><br>
+          <%= @inventory_internal_transfer_voucher.line_items.total_quantity %>
+        </div>
+        <div class='form-group text-right'>
+          <strong>Amount</strong><br>
+          <%= sprintf '%.2f', @inventory_internal_transfer_voucher.total_amount %>
+        </div>
+      </div>
+      <div class="col-md-3 form-group" style='margin-top:20px;'>
+        <strong>Remarks</strong><br>
+        <%= @inventory_internal_transfer_voucher.remarks %>
+      </div>
+    </div>
+  </div>
 
-<p>
-  <strong>Created by user:</strong>
-  <%= @inventory_internal_transfer_voucher.created_by.custom_object_label %>
-</p>
+  <hr style='margin-top:0px;margin-bottom:15px;border-color:black'>
 
-<p>
-  <strong>Remarks:</strong>
-  <%= @inventory_internal_transfer_voucher.remarks %>
-</p>
-
-<p>
-  <strong>Amount:</strong>
-  <%= @inventory_internal_transfer_voucher.total_amount %>
-</p>
-
-<p>
-  <strong>Number:</strong>
-  <%= @inventory_internal_transfer_voucher.voucher_number %>
-</p>
-
-<%= link_to 'New Invoice', new_inventory_internal_transfer_voucher_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(@inventory_internal_transfer_voucher) %> | <%= link_to 'Invoices Listing', inventory_internal_transfer_vouchers_path %>
+  <div class="display responsive no-wrap voucher_line_items">
+    <table id='voucher_line_items' class='print-table'>
+      <thead>
+        <tr>
+          <th class="col-md-1 text-right">SKU</th>
+          <th class='col-md-6' style='padding-left:15px;'>Product</th>
+          <th class="col-md-1 text-right">Qty Sent</th>
+          <th class="col-md-1 text-right">Qty Recd</th>
+          <th class="col-md-1 text-right">Rate</th>
+          <th class="col-md-2 text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @inventory_internal_transfer_voucher.line_items.each do |line_item| %>
+          <tr style='height:35px;'>
+            <td class="col-md-1 text-right"><%= line_item.product_sku %></td>
+            <td class='col-md-6' style='padding-left:15px;'><%= line_item.voucher_label %></td>
+            <td class="col-md-1 text-right"><%= line_item.quantity_out %></td>
+            <td class="col-md-1 text-right"><%= line_item.quantity_in %></td>
+            <td class="col-md-1 text-right"><%= line_item.price %></td>
+            <td class="col-md-2 text-right"><%= line_item.amount %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
