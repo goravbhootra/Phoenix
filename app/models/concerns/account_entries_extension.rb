@@ -8,6 +8,21 @@ module AccountEntriesExtension
     Account.return_types(account_ids)
   end
 
+  def payment_account_types
+    account_types_hash = account_types
+    account_types_hash.keys.each { |x| account_types_hash.delete(x) if !is_payment?(account_types_hash[x]) }
+    account_types_hash
+  end
+
+  def payment_account_types_humanize
+    ath = payment_account_types
+    ath.keys.each do |key|
+      ath[key] = 'Cash' and next if ath[key] == 'Account::CashAccount'
+      ath[key] = 'Credit Card' and next if ath[key] == 'Account::BankAccount'
+    end
+    ath
+  end
+
   def payments_type_with_account_type
     account_types_hash = account_types
     arr = reject(&:marked_for_destruction?).map { |x| [x.type, account_types_hash[x.account_id]] if is_payment?(account_types_hash[x.account_id]) }.compact

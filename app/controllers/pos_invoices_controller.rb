@@ -103,7 +103,7 @@ class PosInvoicesController < ApplicationController
                                         debits: [:id, :account_id, :amount,
                                           :remarks, :bank_name, :card_last_digits,
                                           :expiry_month, :expiry_year, :mobile_number,
-                                          :card_holder_name, :_destroy],
+                                          :card_holder_name, :_destroy, :mode],
                                         credits: [:id, :account_id, :amount,
                                           :remarks, :bank_name, :card_last_digits,
                                           :expiry_month, :expiry_year, :mobile_number,
@@ -152,7 +152,7 @@ class PosInvoicesController < ApplicationController
       @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id) if BusinessEntityLocation.find(154).bank_account_id.present?
     end
 
-    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
+    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Credit'].blank? || payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
       @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
   end
