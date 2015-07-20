@@ -3,15 +3,27 @@ module AccountEntriesExtension
     reject(&:marked_for_destruction?).sum(&:amount)
   end
 
+  def sales_total_amount
+    account_types_hash = account_types
+    reject(&:marked_for_destruction?).select {|x| is_sales_entry?(account_types_hash[x.account_id])}.sum(&:amount)
+  end
+
   def account_types
     account_ids = reject(&:marked_for_destruction?).collect(&:account_id).uniq
     Account.return_types(account_ids)
   end
 
+  # Returns Hash
   def payment_account_types
     account_types_hash = account_types
     account_types_hash.keys.each { |x| account_types_hash.delete(x) if !is_payment?(account_types_hash[x]) }
     account_types_hash
+  end
+
+  # Returns ActiveRecord set
+  def payments
+    account_types_hash = account_types
+    order("type DESC").reject(&:marked_for_destruction?).select {|x| is_payment?(account_types_hash[x.account_id])}
   end
 
   def payment_account_types_humanize
@@ -35,8 +47,7 @@ module AccountEntriesExtension
     ['Account::CashAccount', 'Account::BankAccount'].include? account_type
   end
 
-  def payments
-    account_types_hash = account_types
-    reject(&:marked_for_destruction?).select {|x| is_payment?(account_types_hash[x.account_id])}
+  def is_sales_entry?(account_type=nil)
+    ['Account::SalesAccount'].include? account_type
   end
 end

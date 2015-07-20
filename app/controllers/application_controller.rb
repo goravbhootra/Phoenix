@@ -37,8 +37,9 @@ class ApplicationController < ActionController::Base
   end
 
   def current_business_entity
-    @current_business_entity = BusinessEntity.where(id: params[:current_business_entity_id].to_i).first if params[:current_business_entity_id].present?
-    render text: ''
+    # @current_business_entity = BusinessEntity.where(id: params[:current_business_entity_id].to_i).first if params[:current_business_entity_id].present?
+    # render text: ''
+    @current_business_entity = BusinessEntity.find(1)
   end
 
   private

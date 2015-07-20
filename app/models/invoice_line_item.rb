@@ -1,5 +1,5 @@
 class InvoiceLineItem < ActiveRecord::Base
-  belongs_to :invoice, inverse_of: :line_items, touch: true
+  belongs_to :account_txn, inverse_of: :line_items, touch: true
   belongs_to :product, inverse_of: :invoice_line_items
   belongs_to :state_category_tax_rate, inverse_of: :invoice_line_items
 
@@ -20,5 +20,6 @@ class InvoiceLineItem < ActiveRecord::Base
     super
     self.tax_rate = self.tax_rate.presence || BigDecimal('0')
     self.tax_amount = self.tax_amount.presence || BigDecimal('0')
+    self.goods_value = self.goods_value.presence || amount
   end
 end

@@ -52,7 +52,7 @@ class PosInvoicePdf < Prawn::Document
   def total_amount
     move_down 25
     indent(290) do
-      text "Total Amount: #{(sprintf '%.2f', @pos_invoice.credit_entries.total_amount)}", size: 25, style: :bold
+      text "Total Amount: #{(sprintf '%.2f', @pos_invoice.credit_entries.sales_total_amount)}", size: 25, style: :bold
       text "Total Quantity: #{@pos_invoice.total_quantity}", size: 25
     end
     move_down 15
@@ -60,25 +60,23 @@ class PosInvoicePdf < Prawn::Document
     indent(20) do
       @pos_invoice.payments.each do |payment|
         next if payment.new_record?
-        # account_types = @pos_invoice.entries_account_types
-        # if account_types[payment.account_id] == 'Account::CashAccount'
-        # text (payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', -payment.amount)}" : "#{payment.mode.name}: #{(sprintf '%.2f', payment.amount)}"), size: 22
-        # if payment.mode_id==2 && payment.additional_info.present?
-        #   indent(20) do
-        #     text "Bank Name: #{payment.additional_info['bank_name']}", size: 22
-        #     text "Card last 4 digits: #{payment.additional_info['card_last_digits']}", size: 22
-        #     text "Expiry month/year: #{payment.additional_info['expiry_month']} / #{payment.additional_info['expiry_year']}", size: 22
-        #     text "Mobile Number: #{payment.additional_info['mobile_number']}", size: 22
-        #     text "Card Holder's Name: #{payment.additional_info['card_holder_name']}", size: 22
-        #   end
-        # end
-        text "#{payment.type} - #{payment.amount.to_f}"
+        account_types = @pos_invoice.entries_account_types
+        text (payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', payment.amount)}" : "Cash Tendered: #{(sprintf '%.2f', payment.amount)}"), size: 22 if account_types[payment.account_id] == 'Account::CashAccount'
+        if account_types[payment.account_id] == 'Account::BankAccount' && payment.additional_info.present?
+          indent(20) do
+            text "Bank Name: #{payment.additional_info['bank_name']}", size: 22
+            text "Card last 4 digits: #{payment.additional_info['card_last_digits']}", size: 22
+            text "Expiry month/year: #{payment.additional_info['expiry_month']} / #{payment.additional_info['expiry_year']}", size: 22
+            text "Mobile Number: #{payment.additional_info['mobile_number']}", size: 22
+            text "Card Holder's Name: #{payment.additional_info['card_holder_name']}", size: 22
+          end
+        end
         move_down 10
       end
     end
-    text "Invoice created by: User ID \##{@pos_invoice.created_by.id}", size: 22
+    text "You were served by: #{@pos_invoice.created_by.name}", size: 20
     move_down 5
-    text "Prices are inclusive of all taxes", size: 22
+    text "Prices are inclusive of taxes", size: 20
     move_down 50
   end
 end

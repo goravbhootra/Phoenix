@@ -1,6 +1,6 @@
 class PosInvoice < Invoice
 
-  validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
+  # validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
   ### defined in account_txn.rb ###
   def has_credit_entries?
     errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
@@ -20,14 +20,14 @@ class PosInvoice < Invoice
   end
 
   ### defined in invoice.rb ###
-  def create_sales_entry
-    total = VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).calculate_invoice_total
-    credit_entries.clear
-    credit_entries.build(amount: total, account_id: current_location.sales_account_id)
+  def populate_sales_amount
+    credit_entries.each do |entry|
+      entry.amount = VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).calculate_invoice_total and return if entry.account_id == 6
+    end
   end
 
   def convert_quantity_to_negative
-    self.line_items.reject(&:marked_for_destruction?).each { |x| x.quantity = -x.quantity if x.quantity > 0 }
+    self.line_items.reject(&:marked_for_destruction?).each { |x| x.quantity = -x.quantity if x.quantity.to_i > 0 }
   end
 
   def mandatory_values_check(attributed)
@@ -41,27 +41,27 @@ class PosInvoice < Invoice
     false
   end
 
-  def payment_mandatory_values_check(attributed)
-    if attributed['account_id'].blank? || attributed['amount'].to_i < 1
-      # handle new records with invalid data
-      return true if attributed['id'].blank?
+  # def payment_mandatory_values_check(attributed)
+  #   if attributed['account_id'].blank? || attributed['amount'].to_i < 1
+  #     # handle new records with invalid data
+  #     return true if attributed['id'].blank?
 
-      # handle existing records with invalid data
-      attributed['_destroy'] = true if attributed['id'].present?
-    end
+  #     # handle existing records with invalid data
+  #     attributed['_destroy'] = true if attributed['id'].present?
+  #   end
 
-    if @account_types[attributed['mode_id'].to_i] == 'Account::BankAccount'
-      attributed['additional_info'] = {
-                                    bank_name: attributed['bank_name'],
-                                    card_last_digits: attributed['card_last_digits'],
-                                    expiry_month: attributed['expiry_month'],
-                                    expiry_year: attributed['expiry_year'],
-                                    mobile_number: attributed['mobile_number'],
-                                    card_holder_name: attributed['card_holder_name']
-                                  }
-    end
-    false
-  end
+  #   if @account_types[attributed['mode_id'].to_i] == 'Account::BankAccount'
+  #     attributed['additional_info'] = {
+  #                                   bank_name: attributed['bank_name'],
+  #                                   card_last_digits: attributed['card_last_digits'],
+  #                                   expiry_month: attributed['expiry_month'],
+  #                                   expiry_year: attributed['expiry_year'],
+  #                                   mobile_number: attributed['mobile_number'],
+  #                                   card_holder_name: attributed['card_holder_name']
+  #                                 }
+  #   end
+  #   false
+  # end
   ### end of defined in invoice.rb ###
 
   ### not used in new structure - to be deleted ###

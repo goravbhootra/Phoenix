@@ -46,18 +46,23 @@
 
           <div class="col-md-1 text-center">
             <div class="form-group">
-              <%= label_tag 'Tot. Qty.' %>
+              <%= label_tag 'T. Qty.' %>
               <%= label_tag '0', nil, class: 'form-control text-center products_count', disabled: true %>
             </div>
           </div>
 
-          <div class='col-md-2 text-center'>
-            <div class='form-group'>
-            <%= f.label :amount %>
-            <%#= f.text_field :amount, id: 'voucher_amount', class: 'form-control', readonly: true %>
-            <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
-            </div>
-          </div>
+          <%= f.fields_for :credit_entries do |fce| %>
+            <% if fce.object.account.present? && fce.object.account.type == 'Account::SalesAccount' %>
+              <div class='col-md-2 text-center'>
+                <div class='form-group'>
+                  <%= fce.label :amount %>
+                  <%= fce.hidden_field :account_id, class: 'form-control', readonly: true  %>
+                  <%= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true %>
+                  <%#= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -100,10 +105,7 @@
                   <td><%= f_line_item.collection_select :product_id, @products, :id, :voucher_label,
                             { include_blank: true }, { class: 'form-control selectme voucher_line_item_product' } %></td>
                   <td>
-                    <%= f_line_item.text_field :quantity,
-                          value: (-f_line_item.object.quantity if f_line_item.object.quantity),
-                          class: 'form-control text-center voucher_line_item_quantity',
-                          type: 'number', min: 0 %>
+                    <%= f_line_item.text_field :quantity, value: (-f_line_item.object.quantity if f_line_item.object.quantity), class: 'form-control text-center voucher_line_item_quantity', type: 'number', min: 0 %>
                   </td>
                   <td><%= f_line_item.text_field :price, class: 'form-control text-center voucher_line_item_rate', tabindex: '-1', min: 0, readonly: true %></td>
                   <td style='padding-right:0px;'>

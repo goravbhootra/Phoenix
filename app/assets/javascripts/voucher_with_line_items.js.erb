@@ -57,7 +57,7 @@ function update_voucher_total_amount() {
       total_amount += parseFloat(amount)
     }
   });
-  $('#voucher_amount').text(parseFloat(total_amount).toFixed(2));
+  $('#voucher_amount').val(parseFloat(total_amount).toFixed(2));
 }
 
 function update_count_of_products() {

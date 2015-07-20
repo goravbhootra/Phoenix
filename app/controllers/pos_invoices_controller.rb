@@ -50,7 +50,7 @@ class PosInvoicesController < ApplicationController
   end
 
   def create
-    @pos_invoice = PosInvoice.new(pos_invoice_params.merge!(current_user_id: current_user.id))
+    @pos_invoice = PosInvoice.new(pos_invoice_params.merge!(current_user_id: current_user.id))#, current_business_entity: current_business_entity))
 
     respond_to do |format|
       if @pos_invoice.save
@@ -100,11 +100,11 @@ class PosInvoicesController < ApplicationController
     params.require(:pos_invoice).permit(:business_entity_id, :currency_id,
                                         :voucher_sequence_id, :created_by_id,
                                         :remarks, :txn_date, :status, :ref_number,
-                                        debits: [:id, :account_id, :amount,
+                                        debit_entries_attributes: [:id, :account_id, :amount,
                                           :remarks, :bank_name, :card_last_digits,
                                           :expiry_month, :expiry_year, :mobile_number,
                                           :card_holder_name, :_destroy, :mode],
-                                        credits: [:id, :account_id, :amount,
+                                        credit_entries_attributes: [:id, :account_id, :amount,
                                           :remarks, :bank_name, :card_last_digits,
                                           :expiry_month, :expiry_year, :mobile_number,
                                           :card_holder_name, :_destroy],
@@ -128,7 +128,7 @@ class PosInvoicesController < ApplicationController
   end
 
   def populate_products
-    @products ||= Product.includes([:language, :category]).active.order(:sku).load
+    @products ||= Product.includes([:language, :category]).active.order(:sku)
   end
 
   def build_child_line_items
@@ -158,14 +158,19 @@ class PosInvoicesController < ApplicationController
   end
 
   def build_header
-    @pos_invoice.header.presence || @pos_invoice.build_header(business_entity_location_id: 154)
+    @pos_invoice.build_header(business_entity_location_id: 154) if @pos_invoice.header.blank?
+  end
+
+  def build_sales_entry
+    @pos_invoice.credit_entries.build(account_id: 6) if @pos_invoice.credit_entries.account_types.exclude?(6)
   end
 
   def initialize_form
     populate_tax_slabs
     populate_products
-    build_child_line_items
     build_header
+    build_child_line_items
+    build_sales_entry
     build_payment_children
   end
 end
