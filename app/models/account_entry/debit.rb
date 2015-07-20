@@ -14,7 +14,7 @@ class AccountEntry::Debit < AccountEntry
   before_validation :populate_credit_card_information
 
   def pos_invoice_with_credit_card_payment?
-    return true if debit_account_txn.type && debit_account_txn.type == 'PosInvoice'
+    return true if debit_account_txn.type && debit_account_txn.type == 'PosInvoice' && account_id == 8
     false
   end
 

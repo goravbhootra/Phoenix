@@ -53,14 +53,15 @@ class PosInvoice < Invoice
       attributed['_destroy'] = true if attributed['id'].present?
     end
 
-    attributed['additional_info'] = {
-                                    bank_name: attributed['bank_name'],
-                                    card_last_digits: attributed['card_last_digits'],
-                                    expiry_month: attributed['expiry_month'],
-                                    expiry_year: attributed['expiry_year'],
-                                    mobile_number: attributed['mobile_number'],
-                                    card_holder_name: attributed['card_holder_name']
-                                  } if attributed['_destroy'] == false && attributed['mode_id'].present? && Account.find(attributed['mode_id'].to_i) == 'Account::BankAccount'
+    if (attributed['_destroy'].blank? || attributed['_destroy'] == '0') && Account.find(attributed['account_id'].to_i).type == 'Account::BankAccount'
+      attributed['additional_info'] ||= Hash.new
+      attributed['additional_info']['bank_name'] = attributed['bank_name']
+      attributed['additional_info']['card_last_digits'] = attributed['card_last_digits']
+      attributed['additional_info']['expiry_month'] = attributed['expiry_month']
+      attributed['additional_info']['expiry_year'] = attributed['expiry_year']
+      attributed['additional_info']['mobile_number'] = attributed['mobile_number']
+      attributed['additional_info']['card_holder_name'] = attributed['card_holder_name']
+    end
     false
   end
 

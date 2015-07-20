@@ -57,7 +57,7 @@
                 <div class='form-group'>
                   <%= fce.label :amount %>
                   <%= fce.hidden_field :account_id, class: 'form-control', readonly: true  %>
-                  <%= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true %>
+                  <%= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true, tabindex: '-1' %>
                   <%#= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
                 </div>
               </div>
