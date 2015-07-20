@@ -21,5 +21,6 @@ class InvoiceLineItem < ActiveRecord::Base
     self.tax_rate = self.tax_rate.presence || BigDecimal('0')
     self.tax_amount = self.tax_amount.presence || BigDecimal('0')
     self.goods_value = self.goods_value.presence || amount
+    # self.quantity = -1 if self.quantity.blank?
   end
 end

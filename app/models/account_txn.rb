@@ -80,7 +80,7 @@ class AccountTxn < MyActiveRecord
   end
 
   def payment_mandatory_values_check(attributed)
-    if attributed['amount'].to_i < 1
+    if attributed['account_id'].blank? || attributed['amount'].to_i < 1
       # handle new records with invalid data
       return true if attributed['id'].blank?
 

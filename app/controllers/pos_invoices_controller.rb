@@ -142,17 +142,17 @@ class PosInvoicesController < ApplicationController
 
   def build_payment_children
     user_cash_account_id = current_user.cash_account_id
-    payments_type_with_account_type = @pos_invoice.entries.payments_type_with_account_type
 
-    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::CashAccount')
+    debit_payments_type_with_account_type = @pos_invoice.debit_entries.payments_type_with_account_type
+    if debit_payments_type_with_account_type.blank? || debit_payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::CashAccount')
         @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
-
-    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::BankAccount')
+    if debit_payments_type_with_account_type.blank? || debit_payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::BankAccount')
       @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id) if BusinessEntityLocation.find(154).bank_account_id.present?
     end
 
-    if payments_type_with_account_type.blank? || payments_type_with_account_type['AccountEntry::Credit'].blank? || payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
+    credit_payments_type_with_account_type = @pos_invoice.credit_entries.payments_type_with_account_type
+    if credit_payments_type_with_account_type.blank? || credit_payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
       @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
     end
   end

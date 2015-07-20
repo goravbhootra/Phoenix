@@ -14,7 +14,7 @@
             <%= text_field_tag debit_payment_mode[fde.object.account_id], debit_payment_mode[fde.object.account_id], disabled: true, class: 'form-control' %>
           </td>
           <td>
-            <% fde.hidden_field :account_id, class: 'form-control', readonly: true %>
+            <%= fde.hidden_field :account_id, class: 'form-control', readonly: true %>
             <%= fde.text_field :amount, class: 'form-control payment_amount',
                   id: fde.object.account_id.present? ? "payment_mode_#{debit_payment_mode[fde.object.account_id].delete(' ').underscore}_amount" : 'payment_mode' %>
           </td>
@@ -60,7 +60,7 @@
           <td>
             <div class="input-group">
               <div class="input-group-addon">-</div>
-              <% fce.hidden_field :account_id, class: 'form-control', readonly: true %>
+              <%= fce.hidden_field :account_id, class: 'form-control', readonly: true %>
               <%= fce.text_field :amount, class: 'form-control change_tendered',
                     id: "payment_mode_#{credit_payment_mode[fce.object.account_id].delete(' ').underscore}_tendered_amount" %>
             </div>

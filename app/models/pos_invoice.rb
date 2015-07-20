@@ -2,15 +2,18 @@ class PosInvoice < Invoice
 
   # validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
   ### defined in account_txn.rb ###
-  def has_credit_entries?
-    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
-  end
-
   def has_debit_entries?
+    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ debit entries: #{self.debit_entries}"
     errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.total_amount <= 0
   end
 
+  def has_credit_entries?
+    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ credit entries: #{self.credit_entries}"
+    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
+  end
+
   def entries_cancel?
+    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ balance: #{self.debit_entries.total_amount}, #{self.credit_entries.total_amount}"
     errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.total_amount != debit_entries.total_amount
   end
   ### end of defined in account_txn.rb ###
@@ -41,36 +44,29 @@ class PosInvoice < Invoice
     false
   end
 
-  # def payment_mandatory_values_check(attributed)
-  #   if attributed['account_id'].blank? || attributed['amount'].to_i < 1
-  #     # handle new records with invalid data
-  #     return true if attributed['id'].blank?
+  def payment_mandatory_values_check(attributed)
+    if attributed['account_id'].blank? || attributed['amount'].to_i < 1
+      # handle new records with invalid data
+      return true if attributed['id'].blank?
 
-  #     # handle existing records with invalid data
-  #     attributed['_destroy'] = true if attributed['id'].present?
-  #   end
+      # handle existing records with invalid data
+      attributed['_destroy'] = true if attributed['id'].present?
+    end
 
-  #   if @account_types[attributed['mode_id'].to_i] == 'Account::BankAccount'
-  #     attributed['additional_info'] = {
-  #                                   bank_name: attributed['bank_name'],
-  #                                   card_last_digits: attributed['card_last_digits'],
-  #                                   expiry_month: attributed['expiry_month'],
-  #                                   expiry_year: attributed['expiry_year'],
-  #                                   mobile_number: attributed['mobile_number'],
-  #                                   card_holder_name: attributed['card_holder_name']
-  #                                 }
-  #   end
-  #   false
-  # end
+    attributed['additional_info'] = {
+                                    bank_name: attributed['bank_name'],
+                                    card_last_digits: attributed['card_last_digits'],
+                                    expiry_month: attributed['expiry_month'],
+                                    expiry_year: attributed['expiry_year'],
+                                    mobile_number: attributed['mobile_number'],
+                                    card_holder_name: attributed['card_holder_name']
+                                  } if attributed['_destroy'] == false && attributed['mode_id'].present? && Account.find(attributed['mode_id'].to_i) == 'Account::BankAccount'
+    false
+  end
+
   ### end of defined in invoice.rb ###
 
   ### not used in new structure - to be deleted ###
-  def payment_checks_and_credit_card_info
-    payments.each do |payment|
-      # errors.add(:mode_id, 'Credit card details invalid or incomplete') and return false if payment['mode_id'] == 2 && (payment['additional_info']['bank_name'].blank? || payment['additional_info']['card_last_digits'].blank? || payment['additional_info']['expiry_month'].blank? || payment['additional_info']['expiry_year'].blank? || payment['additional_info']['mobile_number'].blank? || payment['additional_info']['card_holder_name'].blank?)
-    end
-  end
-
   def self.payments_to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << ['invoice_date', 'invoice_number', 'total_amount', 'pmt_cash', 'pmt_credit_card',
