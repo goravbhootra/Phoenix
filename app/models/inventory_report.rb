@@ -1,5 +1,5 @@
 class InventoryReport < ActiveType::Object
-  # http://manapakkam.com/stock-summary.xls?location_id=153&from_date='17/07/2015'&to_date='17/07/2015'
+  # http://localhost:3000/stock-summary.xls?location_id=153&from_date='17/07/2015'&to_date='17/07/2015'
 
   # attribute :from_date, :date
   # attribute :to_date, :date
@@ -17,11 +17,11 @@ class InventoryReport < ActiveType::Object
     master, opening_stock_products = locationwise_opening_stock_vouchers_consolidated(master, from_date, location_id)
     master, inventory_in_products = locationwise_inventory_in_vouchers_within_period(master, from_date, to_date, location_id)
     master, inventory_out_products = locationwise_inventory_out_vouchers_within_period(master, from_date, to_date, location_id)
-    # master, pos_sales_products = locationwise_pos_invoices_consolidated(master)
+    master, pos_sales_products = locationwise_pos_invoices_within_period(master, from_date, to_date, location_id) # pos quantity fetched as positive, stored negative in DB
     master, in_transit_products = locationwise_in_transit_within_period(master, from_date, to_date, location_id)
 
-    # product_skus = (opening_stock_products + inventory_in_products + inventory_out_products + pos_sales_products + in_transit_products).uniq
-    product_skus = (opening_stock_products + inventory_in_products + inventory_out_products +  in_transit_products).uniq
+    product_skus = (opening_stock_products + inventory_in_products + inventory_out_products + pos_sales_products + in_transit_products).uniq
+    # product_skus = (opening_stock_products + inventory_in_products + inventory_out_products +  in_transit_products).uniq
 
     products = Product.sort_skus_by_parentcat_lang(product_skus)
     bus_ent_locs = Hash.new
@@ -29,15 +29,15 @@ class InventoryReport < ActiveType::Object
     bus_ent_locs = bus_ent_locs.sort_by { |_,value| value }.to_h
 
     CSV.generate(options) do |csv|
-      # csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'POS Sales', 'In Transit', 'Avlbl Stk']
-      csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'In Transit', 'Avlbl Stk']
+      csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'POS Sales', 'In Transit', 'Avlbl Stk']
+      # csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'In Transit', 'Avlbl Stk']
       bus_ent_locs.keys.each do |loc| # Locations already in sorted order
         master[loc].keys.sort.each do |product|
           available_stock = 0
           available_stock += master[loc][product]['opening_stock'].to_i
           available_stock += master[loc][product]['inventory_in'].to_i
           available_stock -= master[loc][product]['inventory_out'].to_i
-          # available_stock += master[loc][product]['pos_sales'].to_i # pos quantity is in -ve
+          available_stock -= master[loc][product]['pos_sales'].to_i
           available_stock -= master[loc][product]['in_transit'].to_i
 
           csv << [bus_ent_locs[loc][0],
@@ -48,7 +48,7 @@ class InventoryReport < ActiveType::Object
                   master[loc][product]['opening_stock'],
                   master[loc][product]['inventory_in'],
                   master[loc][product]['inventory_out'],
-                  # master[loc][product]['pos_sales'].present? ? -master[loc][product]['pos_sales'] : nil,
+                  master[loc][product]['pos_sales'],
                   (master[loc][product]['in_transit'].present? && master[loc][product]['in_transit'] != 0) ? master[loc][product]['in_transit'] : nil,
                   available_stock]
         end
@@ -175,6 +175,19 @@ class InventoryReport < ActiveType::Object
     end
   end
 
+  def self.locationwise_pos_invoices_within_period(master=Hash.new, from_date='01/04/2015', to_date=Time.zone.now.strftime('%d/%m/%Y'), location_id=nil)
+    # pos quantity returned as positive, stored negative in DB
+    if location_id.present?
+      hash_reorganise_locatiowise(master, 'pos_sales',
+                                InvoiceLineItem.where("invoice_line_items.account_txn_id IN (?)", PosInvoice.joins(:header).where("date(txn_date) >= ? AND date(txn_date) <= ?", Date.parse(from_date), Date.parse(to_date)).where("invoice_headers.business_entity_location_id = ?", location_id).references("invoice_headers").pluck(:id)).includes(:product, account_txn: :header).group(:business_entity_location_id, :sku).order("business_entity_location_id, products.sku").sum("-quantity")
+                                )
+    else
+      hash_reorganise_locatiowise(master, 'pos_sales',
+                                InvoiceLineItem.where("invoice_line_items.account_txn_id IN (?)", PosInvoice.where("date(txn_date) >= ? AND date(txn_date) <= ?", Date.parse(from_date), Date.parse(to_date)).pluck(:id)).includes(:product, account_txn: :header).group(:business_entity_location_id, :sku).order("business_entity_location_id, products.sku").sum("-quantity")
+                                )
+    end
+  end
+
   def self.locationwise_inventory_out_vouchers_without_reserved_accounts_consolidated(master=Hash.new)
     # All records except following
     # BusinessEntity(105) - Retail Sales, BusinessEntity(129) - Corpus Distribution, BusinessEntity(130) - Gratis Distribution
@@ -187,12 +200,6 @@ class InventoryReport < ActiveType::Object
     hash_reorganise_locatiowise(master, 'inventory_in',
                                 InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryInVoucher.pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity_in)
                                 )
-  end
-
-  def self.locationwise_pos_invoices_consolidated(master=Hash.new)
-    # hash_reorganise_locatiowise(master, 'pos_sales',
-    #                             InvoiceLineItem.where("invoice_id IN (?)", PosInvoice.pluck(:id)).includes(:product, :invoice).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity)
-    #                             )
   end
 
   def self.locationwise_retail_sale_vouchers_consolidated(master=Hash.new)
