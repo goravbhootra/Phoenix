@@ -41,8 +41,8 @@ class ReportsController < ApplicationController
   end
 
   private
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def sale_report_params
-      params.require(:sale_report).permit!
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def sale_report_params
+    params.require(:sale_report).permit!
+  end
 end

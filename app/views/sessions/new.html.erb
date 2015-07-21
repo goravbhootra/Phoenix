@@ -1,10 +1,23 @@
 <% if current_user %>
   <% provide(:title, "Dashboard") %>
-  <div class="col-md-6 col-md-offset-3 text-center">
-    <br>
-    <br>
-    <h2>System under maintenance...<br><br>Pls check back after some time.</h2>
+  <br>
+  <br>
+  <div class='row'>
+    <div class="col-md-8 text-center">
+      <h2>
+        Chariji Maharaj’s 88th Birth Anniversary Celebrations
+        <br><br>
+        ‘Vrindavan’, Tiruvallur
+        <br><br>
+        <%= Time.zone.now.strftime('%d/%m/%Y') %>
+      </h2>
+    </div>
+    <div class='col-md-4 text-center'>
+      <h2>My Account</h2>
+
+    </div>
   </div>
+
 <% else %>
   <% provide(:title, "Login") %>
   <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">

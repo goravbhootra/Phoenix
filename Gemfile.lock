@@ -133,8 +133,6 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     memoizer (1.0.1)
-    migration_comments (0.3.2)
-      activerecord (>= 2.3.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
@@ -315,7 +313,6 @@ DEPENDENCIES
   jquery-datatables-rails
   jquery-rails
   jquery-ui-rails
-  migration_comments
   momentjs-rails
   nprogress-rails
   pg

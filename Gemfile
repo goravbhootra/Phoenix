@@ -67,7 +67,7 @@ group :development, :test do
   gem 'capistrano-rails',             require: false   # automatic migrations and asset compilation
   gem 'capistrano3-puma',             require: false
   gem "rvm1-capistrano3",             require: false
-  gem 'migration_comments'
+  # gem 'migration_comments'
   gem 'bullet'
 
   gem 'rubocop'
