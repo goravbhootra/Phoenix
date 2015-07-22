@@ -3,17 +3,14 @@ class PosInvoice < Invoice
   # validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
   ### defined in account_txn.rb ###
   def has_debit_entries?
-    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ debit entries: #{self.debit_entries}"
     errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.total_amount <= 0
   end
 
   def has_credit_entries?
-    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ credit entries: #{self.credit_entries}"
     errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
   end
 
   def entries_cancel?
-    puts "$$$$$$$$$$$$$$$$$$$$$$$$$ balance: #{self.debit_entries.total_amount}, #{self.credit_entries.total_amount}"
     errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.total_amount != debit_entries.total_amount
   end
   ### end of defined in account_txn.rb ###

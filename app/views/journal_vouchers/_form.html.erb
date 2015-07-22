@@ -7,7 +7,13 @@
         <%= f.text_field :txn_date, value: (f.object.txn_date.strftime('%d/%m/%Y') if f.object.txn_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
       </div>
     </div>
-    <div class='col-md-7'></div>
+    <div class='col-md-2'>
+      <div class="form-group">
+        <%= f.label :ref_number, 'Ref Number' %>
+        <%= f.text_field :ref_number, class: 'text-center form-control' %>
+      </div>
+    </div>
+    <div class='col-md-5'></div>
     <div class='col-md-3'>
       <div class="actions">
         <%= f.submit 'Save', class: 'btn btn-primary btn-block', id: 'save_button' %>
@@ -32,7 +38,11 @@
                   <%= fde.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
                     { class: 'form-control selectme', id: 'secondary_business_entity' } %>
                 </td>
-                <td><%= fde.text_field :amount, class: 'form-control text-right' %></td>
+                <td>
+                  <%= fde.text_field :amount, class: 'form-control text-right' %>
+                  <%#= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%#= fde.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -56,7 +66,11 @@
                 <td><%= fce.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
                     { class: 'form-control selectme', id: 'secondary_business_entity' } %>
                 </td>
-                <td><%= fce.text_field :amount, class: 'form-control text-right' %></td>
+                <td>
+                  <%= fce.text_field :amount, class: 'form-control text-right' %>
+                  <%#= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%#= fce.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+                </td>
               </tr>
             <% end %>
           </tbody>
