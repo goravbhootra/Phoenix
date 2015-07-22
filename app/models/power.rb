@@ -89,21 +89,23 @@ class Power
   power :updatable_pos_invoices do
     return PosInvoice.all if global_role?
     # return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-    return PosInvoice.where(primary_location: get_my_locations) if role?('business_entity_location_admin')
-    PosInvoice.where(created_by_id: @user.id).where(primary_location: get_my_locations).where("created_at > ?", 5.minutes.ago)
+    return PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)) if role?('business_entity_location_admin')
+    PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)).where(created_by_id: @user.id).where("account_txns.created_at > ?", 5.minutes.ago)
   end
 
   power :view_pos_invoices do
     return PosInvoice.all if global_role?
-    return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-    PosInvoice.where(created_by_id: @user.id)
+    # return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
+    # PosInvoice.where(created_by_id: @user.id)
+    PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)) if role?('business_entity_location_admin')
+    PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)).where(created_by_id: @user.id)
   end
 
-  power :custom_pos_invoices do
-    return PosInvoice.all if global_role?
-    return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-    false
-  end
+  # power :custom_pos_invoices do
+  #   return PosInvoice.all if global_role?
+  #   return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
+  #   false
+  # end
 
   %w(inventory_out_vouchers inventory_internal_transfer_vouchers inventory_in_vouchers).each do |voucher_type|
     power :"creatable_#{voucher_type}" do
