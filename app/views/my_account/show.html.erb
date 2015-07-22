@@ -1,0 +1,4 @@
+<% provide(:title, 'My Account') %>
+<h2 class='text-center'>
+  <%= "Cash due: #{sprintf '%.0f', @current_user.cash_account.entries.debit_balance}" %>
+</h2>
