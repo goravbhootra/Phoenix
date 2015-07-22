@@ -72,6 +72,11 @@ class Power
     State.none
   end
 
+  power :journal_vouchers do
+    return JournalVoucher.all if global_role?
+    JournalVoucher.none
+  end
+
   power :business_entity_locations do
     return BusinessEntityLocation.all if global_role?
     get_my_locations

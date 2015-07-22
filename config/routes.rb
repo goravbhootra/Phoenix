@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resources :inventory_out_vouchers, path: 'inventory-out-vouchers'
   resources :inventory_in_vouchers, path: 'inventory-in-vouchers'
   resources :inventory_internal_transfer_vouchers, path: 'inventory-internal-transfer-vouchers'
+  resources :journal_vouchers, path: 'journal-vouchers'
 
   resources :users
 

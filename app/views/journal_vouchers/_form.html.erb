@@ -1,0 +1,67 @@
+<%= form_for(@journal_voucher) do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+  <div class='row'>
+    <div class='col-md-2'>
+      <div class="form-group">
+        <%= f.label :invoice_date, 'Date' %>
+        <%= f.text_field :txn_date, value: (f.object.txn_date.strftime('%d/%m/%Y') if f.object.txn_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
+      </div>
+    </div>
+    <div class='col-md-7'></div>
+    <div class='col-md-3'>
+      <div class="actions">
+        <%= f.submit 'Save', class: 'btn btn-primary btn-block', id: 'save_button' %>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-6'>
+      <div class='h3 text-center'><%= 'Debit Entries' %></div>
+      <div class="table-responsive table-striped table-hover">
+        <table class='DataTable'>
+          <thead>
+            <tr style='height:30px;'>
+              <th class="col-md-6 text-center">Account</th>
+              <th class="col-md-6 text-center">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= f.fields_for :debit_entries do |fde| %>
+              <tr class="fields">
+                <td>
+                  <%= fde.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
+                    { class: 'form-control selectme', id: 'secondary_business_entity' } %>
+                </td>
+                <td><%= fde.text_field :amount, class: 'form-control text-right' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class='col-md-6'>
+      <div class='h3 text-center'><%= 'Credit Entries' %></div>
+      <div class="table-responsive table-striped table-hover">
+        <table class='DataTable'>
+          <thead>
+            <tr style='height:30px;'>
+              <th class="col-md-6 text-center">Account</th>
+              <th class="col-md-6 text-center">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= f.fields_for :credit_entries do |fce| %>
+              <tr class="fields">
+                <td><%= fce.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
+                    { class: 'form-control selectme', id: 'secondary_business_entity' } %>
+                </td>
+                <td><%= fce.text_field :amount, class: 'form-control text-right' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>

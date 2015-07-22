@@ -41,6 +41,7 @@ class AccountTxn < MyActiveRecord
     self.number = attributes[:number].presence || 0 # Pre-filled for new invoice
     self.business_entity_id = 1 if self.business_entity_id.blank?
     self.voucher_sequence_id = 6 if self.voucher_sequence_id.blank?
+    self.currency_id = 1 if self.currency_id.blank?
   end
 
   def set_voucher_sequence
@@ -49,7 +50,6 @@ class AccountTxn < MyActiveRecord
 
   def set_defaults
     self.created_by_id = current_user_id if self.created_by_id.blank?
-    self.currency_id = 1 if self.currency_id.blank?
   end
 
   def set_number

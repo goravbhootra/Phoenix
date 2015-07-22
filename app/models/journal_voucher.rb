@@ -1,0 +1,2 @@
+class JournalVoucher < AccountTxn
+end

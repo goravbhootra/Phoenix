@@ -1,0 +1,31 @@
+<p>
+  <!-- <strong>Member:</strong> -->
+  <%#= @journal_voucher.member.custom_object_label %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @journal_voucher.currency.custom_object_label %>
+</p>
+
+<p>
+  <strong>Created by user:</strong>
+  <%= @journal_voucher.created_by.custom_object_label %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @journal_voucher.remarks %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= sprintf '%.0f', @journal_voucher.debit_entries.total_amount %>
+</p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @journal_voucher.voucher_number %>
+</p>
+
+<%= link_to 'New Voucher', new_journal_voucher_url %> | <%= link_to 'Edit', edit_journal_voucher_path(@journal_voucher) %> | <%= link_to 'Invoices Listing', journal_vouchers_path %>
