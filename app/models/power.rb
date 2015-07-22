@@ -90,13 +90,13 @@ class Power
     return PosInvoice.all if global_role?
     # return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
     return PosInvoice.where(primary_location: get_my_locations) if role?('business_entity_location_admin')
-    PosInvoice.created_by_user(@user.id).where(primary_location: get_my_locations).where("created_at > ?", 5.minutes.ago)
+    PosInvoice.where(created_by_id: @user.id).where(primary_location: get_my_locations).where("created_at > ?", 5.minutes.ago)
   end
 
   power :view_pos_invoices do
     return PosInvoice.all if global_role?
     return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-    PosInvoice.created_by_user(@user.id)
+    PosInvoice.where(created_by_id: @user.id)
   end
 
   power :custom_pos_invoices do
