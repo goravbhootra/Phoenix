@@ -87,6 +87,7 @@
           <li>
             <li><%#= select 'current_business_entity', 'current_business_entity', @business_entities, {}, class: 'form-control', id: 'current_business_entity' %></li>
           </li>
+          <li><a href='/my-account'>My Account</a></li>
           <li><%= link_to current_user.email, edit_user_path(current_user.id) %></li>
           <li><%= link_to('Logout', logout_path, :method=>'delete') %></li>
         <% end %>

@@ -32,7 +32,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        pdf = PaymentCollectionReportPdf.new(InvoicePayment.joins(:invoice).where(invoices: {primary_location_id: 150, type: 'PosInvoice' }).where("date(invoice_payments.created_at) = ?", Time.zone.now.to_date))
+        pdf = PaymentCollectionReportPdf.new
         send_data pdf.render, filename: "payment_collection_report",
                               type: "application/pdf",
                               disposition: 'inline'
