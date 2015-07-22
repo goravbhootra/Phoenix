@@ -1,6 +1,6 @@
 class Account < MyActiveRecord
   belongs_to :business_entity, inverse_of: :accounts
-  has_many :entries, class_name: 'AccountEntry', inverse_of: :account, dependent: :restrict_with_exception
+  has_many :entries, class_name: 'AccountEntry', extend: AccountEntriesExtension, inverse_of: :account, dependent: :restrict_with_exception
 
   validates :business_entity, presence: true
   validates :name, presence: true, length: { in: 3..100 }, uniqueness: {scope: :business_entity}

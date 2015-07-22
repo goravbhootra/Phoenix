@@ -31,8 +31,6 @@ class User < MyActiveRecord
   default_scope -> { where reserved: false }
   scope :active, -> { where active: true }
 
-  delegate :name, to: :city, prefix: true, allow_nil: true
-
   def downcase_email
     self.email = self.email.downcase if self.email.present?
   end
