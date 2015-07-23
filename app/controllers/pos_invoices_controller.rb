@@ -9,7 +9,7 @@ class PosInvoicesController < ApplicationController
   before_action :set_pos_invoice, only: [:edit, :update, :destroy, :show]
 
   def index
-    @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :created_by).order("number DESC")
+    @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :entries, :created_by).order("number DESC")
 
     respond_to do |format|
       format.html

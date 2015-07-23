@@ -21,7 +21,7 @@
           <td class='text-center'>
             <%= pos_invoice.location.entity_name_with_location %>
           </td>
-          <td class='text-center'><%#= pos_invoice.total_amount %></td>
+          <td class='text-center'><%= pos_invoice.entries.sales_total_amount %></td>
           <td class='text-center'><%= pos_invoice.created_by.custom_object_label %></td>
           <td class='text-center'><%#= link_to 'Show', pos_invoice %>
             <%= link_to "PDF version", pos_invoice_url(pos_invoice.id, format: "pdf"), target: :_blank %> | <%= link_to 'Edit', edit_pos_invoice_path(pos_invoice.id) if current_power.include_record?(:updatable, pos_invoice) %>
