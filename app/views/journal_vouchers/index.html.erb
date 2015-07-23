@@ -7,6 +7,7 @@
       <tr>
         <th class='col-md-1 text-center'>Date</th>
         <th class='col-md-1 text-center'>Voucher #</th>
+        <th class='col-md-1 text-center'>Ref #</th>
         <th class='col-md-2 text-center'>Amount</th>
         <th class='col-md-2 text-center'>Created by</th>
         <th class='col-md-3 text-center'>Operations</th>
@@ -17,6 +18,7 @@
         <tr>
           <td class='text-center'><%= journal_voucher.txn_date.strftime('%d/%m/%Y') %></td>
           <td class='text-center'><%= journal_voucher.number %></td>
+          <td class='text-center'><%= journal_voucher.ref_number %></td>
           <td class='text-center'><%= sprintf '%.0f', journal_voucher.debit_entries.total_amount %></td>
           <td class='text-center'><%= journal_voucher.created_by.custom_object_label %></td>
           <td class='text-center'><%= link_to 'Show', journal_voucher %>
