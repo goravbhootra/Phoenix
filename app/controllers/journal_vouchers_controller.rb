@@ -3,7 +3,7 @@ class JournalVouchersController < ApplicationController
   before_action :set_journal_voucher, only: [:show, :edit, :update, :destroy]
 
   def index
-    @journal_vouchers = JournalVoucher.all
+    @journal_vouchers = JournalVoucher.includes(:debit_entries, :created_by).order("number DESC")
   end
 
   def show
