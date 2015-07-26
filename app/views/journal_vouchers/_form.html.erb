@@ -40,8 +40,8 @@
                 </td>
                 <td>
                   <%= fde.text_field :amount, class: 'form-control text-right' %>
-                  <%#= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
-                  <%#= fde.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+                  <%= link_to "", '#', class: "fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%= fde.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
                 </td>
               </tr>
             <% end %>
@@ -68,8 +68,8 @@
                 </td>
                 <td>
                   <%= fce.text_field :amount, class: 'form-control text-right' %>
-                  <%#= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
-                  <%#= fce.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
+                  <%= link_to "", '#', class: "fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%= fce.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
                 </td>
               </tr>
             <% end %>

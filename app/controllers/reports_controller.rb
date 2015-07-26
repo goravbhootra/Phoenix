@@ -32,7 +32,19 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        pdf = PaymentCollectionReportPdf.new
+        pdf = PosInvoiceCashCollectionPdf.new
+        send_data pdf.render, filename: "payment_collection_report",
+                              type: "application/pdf",
+                              disposition: 'inline'
+      end
+    end
+  end
+
+  def sales_summary_userwise
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = SalesSummaryUserwisePdf.new
         send_data pdf.render, filename: "payment_collection_report",
                               type: "application/pdf",
                               disposition: 'inline'

@@ -1,7 +1,7 @@
-class PaymentCollectionReportPdf < Prawn::Document
+class PosInvoiceCashCollectionPdf < Prawn::Document
   def initialize
     super({top_margin: 40, left_margin: 50, right_margin: 50, bottom_margin: 20})
-    @users_with_balance_due = (User.where.not(cash_account_id: nil).select { |user| user.cash_account.entries.debit_balance != 0 })
+    @users_with_balance_due = (User.includes(:cash_account).where.not(cash_account_id: nil).select { |user| user.cash_account.entries.debit_balance != 0 })
     text "Spiritual Hierarchy Publication Trust", size: 16, style: :bold, align: :center
     text "Chennai Bookstall - Collection report", size: 13, align: :center
     stroke_horizontal_rule
