@@ -8,6 +8,7 @@ class Invoice < AccountTxn
   before_validation :populate_sales_amount
 
   delegate :location, to: :header, prefix: false, allow_nil: true
+  delegate :name, to: :created_by, prefix: true, allow_nil: true
 
   # def initialize(attributes={})
   #   super

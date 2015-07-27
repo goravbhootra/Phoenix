@@ -62,7 +62,7 @@ class Power
   end
 
   # Accessible by power_users and admins
-  power :inventory_txn_filters do
+  power :inventory_txn_filters, :pos_invoices_list_with_payment do
     return true if global_role?
     false
   end

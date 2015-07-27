@@ -17,10 +17,11 @@ class ReportsController < ApplicationController
   end
 
   def sales
+    @invoice_line_items = InvoiceLineItem.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).includes([product: :language]).all
     respond_to do |format|
       format.html
       format.pdf do
-        pdf = SalesReportPdf.new(InvoiceLineItem.includes([product: :language]).all)
+        pdf = SalesReportPdf.new(@invoice_line_items)
         send_data pdf.render, filename: "sale_reports",
                               type: "application/pdf",
                               disposition: 'inline'

@@ -13,8 +13,6 @@ class SalesSummaryUserwisePdf < Prawn::Document
 
     @pos_credit_card_sales = AccountEntry::Debit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::BankAccount'").sum(:amount)
 
-
-
     @users_with_balance_due = (User.includes(:cash_account).where.not(cash_account_id: nil).select { |user| user.cash_account.entries.debit_balance != 0 })
     text "Spiritual Hierarchy Publication Trust", size: 16, style: :bold, align: :center
     text "Chennai Bookstall - Collection report", size: 13, align: :center
