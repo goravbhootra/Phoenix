@@ -2,7 +2,7 @@ class PosInvoiceReport < ActiveType::Object
 
   def self.invoice_list_with_payments_to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << ['invoice_date', 'invoice_number', '# of products', 'total_amount', 'pmt_cash', 'pmt_credit_card',
+      csv << ['invoice_date', 'invoice_number', '# of line items', '# of products', 'total_amount', 'pmt_cash', 'pmt_credit_card',
               'created_by', 'card_last_digits', 'bank_name', 'card_holder_name', 'abhyasi_mobile', 'card_expiry', 'created_at', 'updated_at']
       pmt = Hash.new
       PosInvoice.includes(:header, [entries: :account], :line_items, :created_by).where("invoice_headers.business_entity_location_id = 154").references("invoice_headers").order(:txn_date, :number).find_each(batch_size: 750) do |invoice|
@@ -36,6 +36,7 @@ class PosInvoiceReport < ActiveType::Object
         csv << [
                   invoice.txn_date.strftime('%d/%m/%Y'),
                   "#{invoice.number_prefix} #{invoice.number}",
+                  invoice.line_items.size,
                   invoice.line_items.total_quantity,
                   invoice.line_items.total_amount,
                   pmt['cash'],
