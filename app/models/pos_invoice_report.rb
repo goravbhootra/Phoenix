@@ -50,28 +50,30 @@ class PosInvoiceReport < ActiveType::Object
     end
   end
 
-  def self.rows_for_export
-    product_ids = InvoiceLineItem.pluck(:product_id).uniq
-    product_details = product_details_by_ids(product_ids)
+  def self.pos_invoice_line_items_to_csv(options = {})
+    # Chennai Business Entity - Tiruvallur Location
+    account_txn_ids = InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)
+    product_ids = InvoiceLineItem.where(account_txn_id: account_txn_ids).pluck(:product_id).uniq
+    product_details = Product.product_details_by_ids(product_ids)
 
-    result = []
-    find_each do |invoice|
-      invoice.line_items.each do |line_item|
-        result << [
-                invoice.invoice_date.strftime('%d/%m/%Y'),
-                invoice.number,
-                product_details[line_item.product_id][:sku],
-                product_details[line_item.product_id][:name],
-                product_details[line_item.product_id][:category_code],
-                product_details[line_item.product_id][:language_code],
-                -line_item.quantity,
-                line_item.price,
-                line_item.amount,
-                line_item.updated_at,
-                line_item.created_at
-              ]
+    CSV.generate(options) do |csv|
+      csv << ['Invoice Date', 'Invoice Number', 'SKU', 'Product Name', 'Category Code', 'Language Code', 'Quantity', 'Price', 'Amount', 'Created At', 'Updated At']
+
+      InvoiceLineItem.includes(:account_txn).where(account_txn_id: account_txn_ids).order("account_txns.txn_date, account_txns.number").find_each do |line_item|
+        csv << [
+          line_item.account_txn.txn_date.strftime('%d/%m/%Y'),
+          line_item.account_txn.number,
+          product_details[line_item.product_id][:sku],
+          product_details[line_item.product_id][:name],
+          product_details[line_item.product_id][:category_code],
+          product_details[line_item.product_id][:language_code],
+          -line_item.quantity,
+          line_item.price,
+          line_item.amount,
+          line_item.updated_at,
+          line_item.created_at
+        ]
       end
     end
-    result
   end
 end

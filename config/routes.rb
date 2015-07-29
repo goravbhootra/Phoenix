@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   resources :pos_invoices, path: 'pos-invoices'
   get 'pos-invoices-list-with-payment' => 'pos_invoice_reports#pos_invoices_list_with_payment'
+  get 'pos-invoices-line-items' => 'pos_invoice_reports#pos_invoice_line_items'
   resources :inventory_out_vouchers, path: 'inventory-out-vouchers'
   resources :inventory_in_vouchers, path: 'inventory-in-vouchers'
   resources :inventory_internal_transfer_vouchers, path: 'inventory-internal-transfer-vouchers'
