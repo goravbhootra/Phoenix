@@ -51,7 +51,6 @@
           </tr>
         <% end %>
       <% end %>
-      <% credit_payment_mode = @pos_invoice.credit_entries.payment_account_types_humanize %>
       <%= f.fields_for :credit_entries do |fce| %>
         <% if credit_payment_mode.keys.present? && credit_payment_mode.keys.include?(fce.object.account_id) %>
           <td>

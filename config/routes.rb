@@ -26,11 +26,12 @@ Rails.application.routes.draw do
   get '/pos-invoice-payments' => 'pos_invoices#payment'
 
   resources :pos_invoices, path: 'pos-invoices'
-  get 'pos-invoices-list-with-payment' => 'pos_invoice_reports#pos_invoices_list_with_payment'
-  get 'pos-invoices-line-items' => 'pos_invoice_reports#pos_invoice_line_items'
+  get 'pos-invoices-list-with-payment' => 'pos_invoices_reports#pos_invoices_list_with_payment'
+  get 'pos-invoices-line-items' => 'pos_invoices_reports#pos_invoice_line_items'
   resources :inventory_out_vouchers, path: 'inventory-out-vouchers'
   resources :inventory_in_vouchers, path: 'inventory-in-vouchers'
   resources :inventory_internal_transfer_vouchers, path: 'inventory-internal-transfer-vouchers'
+  get 'inventory-internal-transfer-vouchers-line-items' => 'inventory_txn_vouchers_reports#inventory_internal_transfer_vouchers_line_items'
   resources :journal_vouchers, path: 'journal-vouchers'
 
   resources :users

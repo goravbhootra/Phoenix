@@ -1,4 +1,4 @@
-class PosInvoiceReport < ActiveType::Object
+class PosInvoicesReport < ActiveType::Object
 
   def self.invoice_list_with_payments_to_csv(options = {})
     CSV.generate(options) do |csv|
