@@ -9,7 +9,7 @@ class InventoryTxnVouchersReport < ActiveType::Object
     CSV.generate(options) do |csv|
       csv << ['Voucher Date', 'Voucher Number', 'SKU', 'Product Name', 'Category Code', 'Language Code', 'Quantity Sent', 'Quantity Received', 'Created By', 'Created At', 'Updated At']
 
-      InventoryTxnLineItem.includes(:inventory_txn).where(inventory_txn_id: inventory_txn_ids).order("inventory_txns.voucher_date, inventory_txns.number").find_each do |line_item|
+      InventoryTxnLineItem.includes(inventory_txn: :created_by).where(inventory_txn_id: inventory_txn_ids).order("inventory_txns.voucher_date, inventory_txns.number").find_each do |line_item|
         csv << [
           line_item.inventory_txn.voucher_date.strftime('%d/%m/%Y'),
           line_item.inventory_txn.number,
