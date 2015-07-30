@@ -1,4 +1,4 @@
-class InventoryTxn < MyActiveRecord
+ class InventoryTxn < MyActiveRecord
   belongs_to :primary_entity, class_name: 'BusinessEntity', inverse_of: :inventory_txns
   belongs_to :primary_location, class_name: 'BusinessEntityLocation', inverse_of: :inventory_txns
   belongs_to :secondary_entity, class_name: 'BusinessEntity', inverse_of: :secondary_inventory_txns
@@ -39,6 +39,7 @@ class InventoryTxn < MyActiveRecord
   delegate :entity_name_with_location, to: :primary_location, prefix: 'primary', allow_nil: true
   delegate :alias_name, to: :secondary_entity, prefix: true, allow_nil: true
   delegate :name, to: :secondary_location, prefix: true, allow_nil: true
+  delegate :name, to: :primary_location, prefix: true, allow_nil: true
 
   scope :created_by_user, -> (user_id) { where(created_by_id: user_id) }
 
