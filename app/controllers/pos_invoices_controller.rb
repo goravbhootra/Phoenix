@@ -3,7 +3,6 @@ class PosInvoicesController < ApplicationController
                           [:edit, :update, :get_voucher_sequences] => :updatable_pos_invoices,
                           [:new, :create, :get_voucher_sequences] => :creatable_pos_invoices,
                           [:index, :show] => :view_pos_invoices
-                          # [:payment] => :custom_pos_invoices
                         }, as: :pos_invoice_scope
   include VoucherSequenceable
   before_action :set_pos_invoice, only: [:edit, :update, :destroy, :show]
@@ -15,15 +14,6 @@ class PosInvoicesController < ApplicationController
       format.html
       # format.csv { send_data @pos_invoices.to_csv, filename: "sale_transactions_complete_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.csv" }
       format.xls #{ send_data @pos_invoices.to_csv(col_sep: "\t"), filename: "sale_transactions_complete_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.xls" }
-    end
-  end
-
-  def payment
-    @pos_invoices = pos_invoice_scope.includes(:payments, :created_by).order("number DESC")
-
-    respond_to do |format|
-      format.csv { send_data @pos_invoices.payments_to_csv, filename: "sale_payment_details_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.csv" }
-      format.xls { send_data @pos_invoices.payments_to_csv(col_sep: "\t"), filename: "sale_payment_details_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.xls" }
     end
   end
 
@@ -161,16 +151,16 @@ class PosInvoicesController < ApplicationController
     @pos_invoice.build_header(business_entity_location_id: 154) if @pos_invoice.header.blank?
   end
 
-  def build_sales_entry
-    @pos_invoice.credit_entries.build(account_id: 6) if @pos_invoice.credit_entries.account_types.exclude?(6)
-  end
+  # def build_sales_entry
+  #   @pos_invoice.credit_entries.build(type: 'AccountEntry::Sales') if @pos_invoice.credit_entries.sales_entries.blank?
+  # end
 
   def initialize_form
     populate_tax_slabs
     populate_products
     build_header
     build_child_line_items
-    build_sales_entry
+    # build_sales_entry
     build_payment_children
   end
 end

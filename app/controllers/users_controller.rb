@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        if current_user.role?(['admins','power_user'])
+        if current_user.role?(['admin','power_user'])
           format.html { redirect_to users_url, flash: {success: 'User profile was successfully updated.' } }
           format.json { render :show, status: :ok, location: @user }
         else

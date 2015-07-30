@@ -47,6 +47,10 @@ module AccountEntriesExtension
     hash
   end
 
+  def sales_entries
+    reject(&:marked_for_destruction?).select { |x| x.type == 'AccountEntry::Sales' || x.account.type == 'Account::SalesAccount'}
+  end
+
   def is_payment?(account_type=nil)
     ['Account::CashAccount', 'Account::BankAccount'].include? account_type
   end

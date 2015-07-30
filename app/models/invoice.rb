@@ -5,7 +5,7 @@ class Invoice < AccountTxn
   before_validation :check_header_exists_and_populate
   before_validation :convert_quantity_to_negative
   before_validation :consolidate_line_items_on_product
-  before_validation :populate_sales_amount
+  before_validation :populate_sales_account_and_amount
 
   delegate :location, to: :header, prefix: false, allow_nil: true
   delegate :name, to: :created_by, prefix: true, allow_nil: true
@@ -24,6 +24,48 @@ class Invoice < AccountTxn
     VoucherConsolidateLineItems.new({voucher: self, association_name: 'line_items', attrib_id: 'product_id', consolidate: 'quantity'}).consolidate_with_same_attribute
   end
 
+  ### defined in account_txn.rb ###
+  def has_debit_entries?
+    errors[:base] << 'Payment detail needs to be entered against the invoice' if self.debit_entries.blank? || debit_entries.total_amount <= 0
+  end
+
+  def has_credit_entries?
+    errors[:base] << 'No products added! Total amount should be more than 0' if self.credit_entries.blank? || credit_entries.total_amount <= 0
+  end
+
+  def entries_cancel?
+    errors[:base] << 'Payment is not equal to Invoice amount' if credit_entries.total_amount != debit_entries.total_amount
+  end
+  ### end of defined in account_txn.rb ###
+
+  def mandatory_values_check(attributed)
+    if attributed['product_id'].blank? || attributed['quantity'].to_i < 1
+      # handle new records with invalid data
+      return true if attributed['id'].blank?
+
+      # handle existing records with invalid data
+      attributed['_destroy'] = true if attributed['id'].present?
+    end
+    false
+  end
+
+  def populate_sales_account_and_amount
+    sales_entries = credit_entries.sales_entries
+    errors[:base] << 'Invoice cannot have multiple sales account' and return if sales_entries.size > 1
+    if sales_entries.blank?
+      entry = self.credit_entries.build(type: 'AccountEntry::Sales')
+    else
+      entry = sales_entries.first
+    end
+    entry.amount = VoucherCalculations.new({voucher: self, quantity_field: 'quantity'}).calculate_invoice_total
+    entry.account_id = header.business_entity_location.sales_account_id
+    errors[:base] << 'Sale amount should be greater than 0' and return if entry.amount.to_i == 0
+  end
+
+  def convert_quantity_to_negative
+    self.line_items.reject(&:marked_for_destruction?).each { |x| x.quantity = -x.quantity if x.quantity.to_i > 0 }
+  end
+
   def total_quantity
     line_items.total_quantity
   end
@@ -34,14 +76,5 @@ class Invoice < AccountTxn
 
   def payments
     entries.payments
-  end
-
-  def mandatory_values_check(attributed)
-  end
-
-  def populate_sales_amount
-  end
-
-  def convert_quantity_to_negative
   end
 end

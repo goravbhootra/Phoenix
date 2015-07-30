@@ -16,12 +16,12 @@
             <div class="col-md-3">
               <div class='form-group text-center'>
                   <%= fh.label :business_entity_location_id, 'Entity :: Location' %>
-                  <% if @current_user.role?(['admins','power_user']) %>
+                  <% if @current_user.role?(['admin','power_user']) %>
                     <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
                     { include_blank: true },
                     { class: 'form-control selectme', id: 'primary_location' } %>
                   <% else %>
-                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).where(id: 154).order("business_entities.alias_name"), :id, :entity_name_with_location,
+                    <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
                       { readonly: true }, { class: 'form-control selectme', id: 'primary_location' } %>
                   <% end %>
               </div>
@@ -51,8 +51,11 @@
             </div>
           </div>
 
+          <!-- credit_payment_mode used for sales entry as well as cash tendered -->
+          <% credit_payment_mode = @pos_invoice.credit_entries.payment_account_types_humanize %>
           <%= f.fields_for :credit_entries do |fce| %>
-            <% if fce.object.account.present? && fce.object.account.type == 'Account::SalesAccount' %>
+            <%# if fce.object.account.present? && fce.object.account.type == 'Account::SalesAccount' %>
+            <% if credit_payment_mode.keys.blank? || credit_payment_mode.keys.exclude?(fce.object.account_id) %>
               <div class='col-md-2 text-center'>
                 <div class='form-group'>
                   <%= fce.label :amount %>
