@@ -47,6 +47,7 @@ gem 'uglifier'
 gem 'execjs'
 gem "jquery-ui-rails"
 gem 'jquery-datatables-rails'
+gem 'ajax-datatables-rails'
 # gem 'best_in_place'#, '3.0.1'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

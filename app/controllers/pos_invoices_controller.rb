@@ -133,17 +133,17 @@ class PosInvoicesController < ApplicationController
   def build_payment_children
     user_cash_account_id = current_user.cash_account_id
 
-    debit_payments_type_with_account_type = @pos_invoice.debit_entries.payments_type_with_account_type
-    if debit_payments_type_with_account_type.blank? || debit_payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::CashAccount')
-        @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
+    debit_payments = @pos_invoice.debit_entries.payment_entries
+    if debit_payments.blank? || debit_payments.collect(&:mode).exclude?('Account::CashAccount')
+        @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id, mode: current_user.cash_account.type) if current_user.cash_account_id.present?
     end
-    if debit_payments_type_with_account_type.blank? || debit_payments_type_with_account_type['AccountEntry::Debit'].exclude?('Account::BankAccount')
-      @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id) if BusinessEntityLocation.find(154).bank_account_id.present?
+    if debit_payments.blank? || debit_payments.collect(&:mode).exclude?('Account::BankAccount')
+      @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id, mode: BusinessEntityLocation.find(154).bank_account.type) if BusinessEntityLocation.find(154).bank_account_id.present?
     end
 
-    credit_payments_type_with_account_type = @pos_invoice.credit_entries.payments_type_with_account_type
-    if credit_payments_type_with_account_type.blank? || credit_payments_type_with_account_type['AccountEntry::Credit'].exclude?('Account::CashAccount')
-      @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id) if current_user.cash_account_id.present?
+    credit_payments = @pos_invoice.credit_entries.payment_entries
+    if credit_payments.blank? || credit_payments.collect(&:mode).exclude?('Account::CashAccount')
+      @pos_invoice.credit_entries.build(account_id: current_user.cash_account_id, mode: current_user.cash_account.type) if current_user.cash_account_id.present?
     end
   end
 
@@ -152,7 +152,7 @@ class PosInvoicesController < ApplicationController
   end
 
   # def build_sales_entry
-  #   @pos_invoice.credit_entries.build(type: 'AccountEntry::Sales') if @pos_invoice.credit_entries.sales_entries.blank?
+  #   @pos_invoice.credit_entries.build(mode: 'Account::SalesAccount') if @pos_invoice.credit_entries.sales_entries.blank?
   # end
 
   def initialize_form

@@ -53,7 +53,7 @@ class Invoice < AccountTxn
     sales_entries = credit_entries.sales_entries
     errors[:base] << 'Invoice cannot have multiple sales account' and return if sales_entries.size > 1
     if sales_entries.blank?
-      entry = self.credit_entries.build(type: 'AccountEntry::Sales')
+      entry = self.credit_entries.build(mode: 'Account::SalesAccount')
     else
       entry = sales_entries.first
     end
@@ -74,7 +74,7 @@ class Invoice < AccountTxn
     line_items.total_amount
   end
 
-  def payments
-    entries.payments
+  def payments_order_type_desc
+    entries.order("type DESC").payment_entries
   end
 end

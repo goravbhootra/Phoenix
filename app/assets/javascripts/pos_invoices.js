@@ -41,7 +41,7 @@ function update_change_due() {
   $('#change_tendered_label').text(parseFloat(change_tendered).toFixed(2));
 
   if ($('#payment_total').text() > 0) {
-    $('#change_due').text(parseFloat($('#payment_total').text()-$('#voucher_amount').val()-change_tendered).toFixed(2));
+    $('#change_due').text(parseFloat($('#payment_total').text()-$('#voucher_amount').text()-change_tendered).toFixed(2));
   } else {
     $('#change_due').text(parseFloat('0.00').toFixed(2));
   }
@@ -70,10 +70,10 @@ $(document).on('ready page:load', function() {
   });
 
   $('form').on('change', '#payment_mode_cash_amount', function(event) {
-    if (parseFloat($(this).val()) == parseFloat($('#voucher_amount').val())) {
+    if (parseFloat($(this).val()) == parseFloat($('#voucher_amount').text())) {
       $('#save_button').focus();
     }
-    else if (parseFloat($(this).val()) > parseFloat($('#voucher_amount').val())) {
+    else if (parseFloat($(this).val()) > parseFloat($('#voucher_amount').text())) {
       $('#payment_mode_cash_tendered_amount').focus();
     }
   });
@@ -97,7 +97,7 @@ $(document).on('ready page:load', function() {
 });
 
 $(document).on('click', '#save_button', function(event) {
-  if(parseFloat($('#payment_total').text()) < parseFloat($('#voucher_amount').val())) {
+  if(parseFloat($('#payment_total').text()) < parseFloat($('#voucher_amount').text())) {
     alert('Total payment cannot be less than Invoice Amount');
     $('.payment_amount:first').focus();
     return event.preventDefault();

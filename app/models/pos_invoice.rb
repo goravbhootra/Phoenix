@@ -15,7 +15,7 @@ class PosInvoice < Invoice
       attributed['_destroy'] = true if attributed['id'].present?
     end
 
-    if (attributed['_destroy'].blank? || attributed['_destroy'] == '0') && Account.find(attributed['account_id'].to_i).type == 'Account::BankAccount'
+    if (attributed['_destroy'].blank? || attributed['_destroy'] == '0' || attributed['_destroy'] == 'false') && Account.find(attributed['account_id'].to_i).type == 'Account::BankAccount'
       attributed['additional_info'] ||= Hash.new
       attributed['additional_info']['bank_name'] = attributed['bank_name']
       attributed['additional_info']['card_last_digits'] = attributed['card_last_digits']

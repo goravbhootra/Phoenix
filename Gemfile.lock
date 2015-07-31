@@ -43,6 +43,8 @@ GEM
     airbrake (4.3.0)
       builder
       multi_json
+    ajax-datatables-rails (0.3.1)
+      railties (>= 3.1)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
     arel (6.0.2)
@@ -56,7 +58,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bitmask_attributes (1.0.0)
       activerecord (>= 3.1)
-    bootstrap3-datetimepicker-rails (4.14.30)
+    bootstrap3-datetimepicker-rails (4.15.35)
       momentjs-rails (>= 2.8.1)
     builder (3.2.2)
     bullet (4.14.7)
@@ -102,7 +104,7 @@ GEM
       activerecord
     erubis (2.7.0)
     execjs (2.5.2)
-    font-awesome-rails (4.3.0.0)
+    font-awesome-rails (4.4.0.0)
       railties (>= 3.2, < 5.0)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
@@ -209,7 +211,7 @@ GEM
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     remotipart (1.2.1)
-    roo (2.0.1)
+    roo (2.1.0)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
     rspec (3.3.0)
@@ -293,6 +295,7 @@ DEPENDENCIES
   active_importer
   active_type
   airbrake
+  ajax-datatables-rails
   ancestry
   assignable_values
   bcrypt

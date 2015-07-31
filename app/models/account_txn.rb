@@ -3,9 +3,9 @@ class AccountTxn < MyActiveRecord
   belongs_to :currency, inverse_of: :account_txns
   belongs_to :voucher_sequence, inverse_of: :account_txns
   belongs_to :created_by, class_name: 'User', inverse_of: :account_txns
-  has_many :entries, class_name: 'AccountEntry', extend: AccountEntriesExtension, inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :debit_entries, class_name: 'AccountEntry::Debit', extend: AccountEntriesExtension, inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_many :credit_entries, class_name: 'AccountEntry::Credit', extend: AccountEntriesExtension, inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :entries, class_name: 'AccountEntry', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :debit_entries, class_name: 'AccountEntry::Debit', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
+  has_many :credit_entries, class_name: 'AccountEntry::Credit', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
   has_one :header, class_name: 'InvoiceHeader', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :line_items, class_name: 'InvoiceLineItem', extend: InvoiceLineItemsExtension, foreign_key: 'account_txn_id', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
 

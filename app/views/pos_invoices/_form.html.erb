@@ -52,20 +52,20 @@
           </div>
 
           <!-- credit_payment_mode used for sales entry as well as cash tendered -->
-          <% credit_payment_mode = @pos_invoice.credit_entries.payment_account_types_humanize %>
-          <%= f.fields_for :credit_entries do |fce| %>
-            <%# if fce.object.account.present? && fce.object.account.type == 'Account::SalesAccount' %>
-            <% if credit_payment_mode.keys.blank? || credit_payment_mode.keys.exclude?(fce.object.account_id) %>
+          <%# credit_payment_mode = @pos_invoice.credit_entries.payment_account_types_humanize %>
+          <%#= f.fields_for :credit_entries do |fce| %>
+            <%# if credit_payment_mode.keys.blank? || credit_payment_mode.keys.exclude?(fce.object.account_id) %>
               <div class='col-md-2 text-center'>
                 <div class='form-group'>
-                  <%= fce.label :amount %>
-                  <%= fce.hidden_field :account_id, class: 'form-control', readonly: true  %>
-                  <%= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true, tabindex: '-1' %>
-                  <%#= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+                  <%= label_tag 'Amount' %>
+                  <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+                  <%#= fce.label :amount %>
+                  <%#= fce.hidden_field :account_id, class: 'form-control', readonly: true  %>
+                  <%#= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true, tabindex: '-1' %>
                 </div>
               </div>
-            <% end %>
-          <% end %>
+            <%# end %>
+          <%# end %>
         </div>
       </div>
     </div>

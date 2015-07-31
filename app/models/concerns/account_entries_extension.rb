@@ -7,49 +7,47 @@ module AccountEntriesExtension
     reject(&:marked_for_destruction?).sum(&:amount)
   end
 
-  def sales_total_amount
-    account_types_hash = account_types
-    reject(&:marked_for_destruction?).select {|x| is_sales_entry?(account_types_hash[x.account_id])}.sum(&:amount)
+  def sales_entries
+    reject(&:marked_for_destruction?).select { |x| is_sales_entry?(x.mode) }
   end
 
-  def account_types
-    account_ids = reject(&:marked_for_destruction?).collect(&:account_id).uniq
-    Account.return_types(account_ids)
+  def sales_total_amount
+    sales_entries.sum(&:amount)
+  end
+
+  # def account_types
+  #   hsh = Hash.new
+  #   reject(&:marked_for_destruction?).map { |entry| hsh[entry.account_id] = entry.mode }
+  #   hsh
+  # end
+
+  # Returns ActiveRecord set
+  def payment_entries
+    reject(&:marked_for_destruction?).select { |x| is_payment?(x.mode) }
   end
 
   # Returns Hash
   def payment_account_types
-    account_types_hash = account_types
-    account_types_hash.keys.each { |x| account_types_hash.delete(x) if !is_payment?(account_types_hash[x]) }
-    account_types_hash
-  end
-
-  # Returns ActiveRecord set
-  def payments
-    account_types_hash = account_types
-    order("type DESC").reject(&:marked_for_destruction?).select {|x| is_payment?(account_types_hash[x.account_id])}
+    hsh = Hash.new
+    payment_entries.map { |entry| hsh[entry.account_id] = entry.mode }
+    hsh
   end
 
   def payment_account_types_humanize
-    ath = payment_account_types
-    ath.keys.each do |key|
-      ath[key] = 'Cash' and next if ath[key] == 'Account::CashAccount'
-      ath[key] = 'Credit Card' and next if ath[key] == 'Account::BankAccount'
+    hsh = Hash.new
+    payment_entries.each do |payment|
+      hsh[payment.account_id] = 'Cash' and next if payment.mode == 'Account::CashAccount'
+      hsh[payment.account_id] = 'Credit Card' and next if payment.mode == 'Account::BankAccount'
     end
-    ath
+    hsh
   end
 
-  def payments_type_with_account_type
-    account_types_hash = account_types
-    arr = reject(&:marked_for_destruction?).map { |x| [x.type, account_types_hash[x.account_id]] if is_payment?(account_types_hash[x.account_id]) }.compact
-    hash = Hash.new
-    arr.each { |x| hash.keys.include?(x[0].to_s) ? hash[x[0].to_s] << x[1] : hash[x[0].to_s] = Array(x[1]) }
-    hash
-  end
-
-  def sales_entries
-    reject(&:marked_for_destruction?).select { |x| x.type == 'AccountEntry::Sales' || x.account.type == 'Account::SalesAccount'}
-  end
+  # def payments_type_with_account_type
+  #   arr = reject(&:marked_for_destruction?).map { |x| [x.type, x.mode] if is_payment?(x.mode) }.compact
+  #   hsh = Hash.new
+  #   arr.each { |x| hsh.keys.include?(x[0].to_s) ? hsh[x[0].to_s] << x[1] : hsh[x[0].to_s] = Array(x[1]) }
+  #   hsh
+  # end
 
   def is_payment?(account_type=nil)
     ['Account::CashAccount', 'Account::BankAccount'].include? account_type

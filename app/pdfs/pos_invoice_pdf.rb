@@ -58,11 +58,10 @@ class PosInvoicePdf < Prawn::Document
     move_down 15
     text 'Payment Details:', size: 22, style: :bold
     indent(20) do
-      @pos_invoice.payments.each do |payment|
+      @pos_invoice.payments_order_type_desc.each do |payment|
         next if payment.new_record?
-        account_types = @pos_invoice.entries_account_types
-        text (payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', payment.amount)}" : "Cash Tendered: #{(sprintf '%.2f', payment.amount)}"), size: 20 if account_types[payment.account_id] == 'Account::CashAccount'
-        if account_types[payment.account_id] == 'Account::BankAccount' && payment.additional_info.present?
+        text (payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', payment.amount)}" : "Cash Tendered: #{(sprintf '%.2f', payment.amount)}"), size: 20 if payment.mode == 'Account::CashAccount'
+        if payment.mode == 'Account::BankAccount' && payment.additional_info.present?
           indent(20) do
             text "Bank Name: #{payment.additional_info['bank_name']}", size: 18
             text "Card last 4 digits: #{payment.additional_info['card_last_digits']}", size: 18
