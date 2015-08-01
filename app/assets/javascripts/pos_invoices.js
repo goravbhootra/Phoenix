@@ -55,6 +55,27 @@ $(document).on('ready page:load', function() {
     $('#pdf_print')[0].click();
   }
 
+  $(function() {
+    return $('#pos_invoice_index').dataTable({
+      processing: true,
+      serverSide: true,
+      ajax: $('#pos_invoice_index').data('source'),
+      aLengthMenu: [[15, 30, 60, 120, -1], [15, 30, 60, 120, "All"]],
+      pagingType: 'full_numbers',
+      order: [[ 0, "desc" ], [ 1, "desc" ]],
+      sPaginationType: "bootstrap",
+      columns: [
+                  {"sClass": "text-center"},
+                  {"sClass": "text-center"},
+                  {"sClass": "text-center", "sortable": false},
+                  {"sClass": "text-center"},
+                  {"sClass": "text-right", "sortable": false},
+                  {"sClass": "text-center"},
+                  {"sClass": "text-center", "sortable": false}
+                ]
+    });
+  });
+
   $('form').on('keydown', '#customer_membership_number', function(event) {
     if(event.keyCode == 13) {
       $('#s2id_pos_invoice_line_items_attributes_0_sku').select2('focus');

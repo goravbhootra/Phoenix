@@ -7,7 +7,8 @@ class Invoice < AccountTxn
   before_validation :consolidate_line_items_on_product
   before_validation :populate_sales_account_and_amount
 
-  delegate :location, to: :header, prefix: false, allow_nil: true
+  delegate :location_entity_name, to: :header, prefix: false
+  delegate :business_entity_location_name, to: :header, prefix: false
   delegate :name, to: :created_by, prefix: true, allow_nil: true
 
   # def initialize(attributes={})

@@ -8,12 +8,13 @@ class PosInvoicesController < ApplicationController
   before_action :set_pos_invoice, only: [:edit, :update, :destroy, :show]
 
   def index
-    @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :entries, :created_by).order("number DESC")
+    # @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :entries, :created_by).order("number DESC")
 
     respond_to do |format|
       format.html
       # format.csv { send_data @pos_invoices.to_csv, filename: "sale_transactions_complete_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.csv" }
       format.xls #{ send_data @pos_invoices.to_csv(col_sep: "\t"), filename: "sale_transactions_complete_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.xls" }
+      format.json { render json: PosInvoiceDatatable.new(view_context) }
     end
   end
 

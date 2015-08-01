@@ -3,7 +3,7 @@ class InventoryTxnVouchersReport < ActiveType::Object
   def self.inventory_internal_transfer_vouchers_line_items_to_csv(options = {})
     # Chennai Business Entity - Tiruvallur Location
     inventory_txn_ids = InventoryInternalTransferVoucher.where('primary_location_id = ? OR secondary_entity_id = ?', 153, 154).pluck(:id)
-    product_ids = InventoryTxnLineItem.where(inventory_txn_id: inventory_txn_ids).pluck(:product_id).uniq
+    product_ids = InventoryTxnLineItem.where(inventory_txn_id: inventory_txn_ids).pluck('DISTINCT product_id')
     product_details = Product.product_details_by_ids(product_ids)
 
     CSV.generate(options) do |csv|

@@ -59,6 +59,6 @@ class AccountsContinued < ActiveRecord::Migration
       sales_account: Account::SalesAccount.find_by(business_entity_id: 3, name: 'Sales - Cel201504')
       )
 
-    PosInvoic.where("id NOT IN (?)", InvoiceLineItem.pluck(:invoice_id).uniq).update_all(status: 2)
+    PosInvoic.where("id NOT IN (?)", InvoiceLineItem.pluck('DISTINCT invoice_id')).update_all(status: 2)
   end
 end

@@ -21,7 +21,7 @@ module AccountEntriesExtension
   #   hsh
   # end
 
-  # Returns ActiveRecord set
+  # Returns array with ActiveRecord objects
   def payment_entries
     reject(&:marked_for_destruction?).select { |x| is_payment?(x.mode) }
   end

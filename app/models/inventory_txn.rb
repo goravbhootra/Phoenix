@@ -104,7 +104,7 @@
   end
 
   def self.rows_for_export
-    product_ids = InventoryTxnLineItem.pluck(:product_id).uniq
+    product_ids = InventoryTxnLineItem.pluck('DISTINCT product_id')
     product_details = product_details_by_ids(product_ids)
 
     result = []

@@ -18,13 +18,13 @@ class Power
   def get_my_locations
     return BusinessEntityLocation.where(active: true) if global_role?
     entities_and_locs = @user.user_roles.where("business_entity_id IS NOT NULL OR business_entity_location_id IS NOT NULL").pluck(:business_entity_id, :business_entity_location_id)
-    BusinessEntityLocation.where('business_entity_id in (?) OR business_entity_locations.id in (?)', BusinessEntity.where(id: entities_and_locs.transpose[0].compact).pluck(:id).uniq, entities_and_locs.transpose[1].compact.uniq) if entities_and_locs.present?
+    BusinessEntityLocation.where('business_entity_id in (?) OR business_entity_locations.id in (?)', BusinessEntity.where(id: entities_and_locs.transpose[0].compact).pluck('DISTINCT id'), entities_and_locs.transpose[1].compact.uniq) if entities_and_locs.present?
   end
 
   def get_my_business_entities
     return BusinessEntity.where(active: true) if global_role?
     entities_and_locs = @user.user_roles.where("business_entity_id IS NOT NULL OR business_entity_location_id IS NOT NULL").pluck(:business_entity_id, :business_entity_location_id)
-    BusinessEntity.where('id in (?) OR id in (?)', entities_and_locs.transpose[0].compact.uniq, BusinessEntityLocation.where(id: entities_and_locs.transpose[1].compact.uniq).pluck(:business_entity_id).uniq) if entities_and_locs.present?
+    BusinessEntity.where('id in (?) OR id in (?)', entities_and_locs.transpose[0].compact.uniq, BusinessEntityLocation.where(id: entities_and_locs.transpose[1].compact.uniq).pluck('DISTINCT business_entity_id')) if entities_and_locs.present?
   end
 
   # power :documents do
