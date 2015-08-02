@@ -60,7 +60,7 @@ $(document).on('ready page:load', function() {
       processing: true,
       serverSide: true,
       ajax: $('#pos_invoice_index').data('source'),
-      aLengthMenu: [[15, 30, 60, 120, -1], [15, 30, 60, 120, "All"]],
+      aLengthMenu: [[15, 30, 60, 120, 240], [15, 30, 60, 120, 240]],
       pagingType: 'full_numbers',
       order: [[ 0, "desc" ], [ 1, "desc" ]],
       sPaginationType: "bootstrap",

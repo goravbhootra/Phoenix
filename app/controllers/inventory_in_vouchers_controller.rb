@@ -10,7 +10,7 @@ class InventoryInVouchersController < ApplicationController
   before_action :set_inventory_in_voucher, only: [:edit, :update, :destroy]
 
   def index
-    @inventory_in_vouchers = inventory_in_voucher_scope.includes(:created_by, :secondary_entity, :primary_location).order("number DESC")
+    @inventory_in_vouchers = inventory_in_voucher_scope.includes(:created_by, :secondary_entity, [primary_location: :business_entity]).order("number DESC")
 
     respond_to do |format|
       format.html
