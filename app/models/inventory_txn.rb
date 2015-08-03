@@ -40,6 +40,7 @@
   delegate :alias_name, to: :secondary_entity, prefix: true, allow_nil: true
   delegate :name, to: :secondary_location, prefix: true, allow_nil: true
   delegate :name, to: :primary_location, prefix: true, allow_nil: true
+  delegate :name, to: :secondary_entity, prefix: true, allow_nil: true
 
   scope :created_by_user, -> (user_id) { where(created_by_id: user_id) }
 
