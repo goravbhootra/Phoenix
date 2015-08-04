@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150731050401) do
+ActiveRecord::Schema.define(version: 20150804093936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,26 +215,22 @@ ActiveRecord::Schema.define(version: 20150731050401) do
 
   create_table "inventory_txns", force: :cascade do |t|
     t.text     "remarks"
-    t.decimal  "total_amount",                          precision: 10, scale: 2, null: false
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
-    t.decimal  "tax_amount",                            precision: 10, scale: 2, null: false
-    t.datetime "voucher_date",                                                   null: false
-    t.integer  "status",                                                         null: false
-    t.string   "ref_number",                 limit: 30
-    t.integer  "voucher_sequence_id",                                            null: false
-    t.decimal  "goods_value",                           precision: 10, scale: 2, null: false
+    t.decimal  "total_amount",                     precision: 10, scale: 2, null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
+    t.datetime "voucher_date",                                              null: false
+    t.integer  "status",                                                    null: false
+    t.string   "ref_number",            limit: 30
+    t.integer  "voucher_sequence_id",                                       null: false
     t.text     "address"
-    t.hstore   "tax_details"
-    t.integer  "number",                                                         null: false
-    t.string   "number_prefix",              limit: 8
-    t.integer  "primary_location_id",                                            null: false
-    t.integer  "created_by_id",                                                  null: false
-    t.string   "customer_membership_number", limit: 9
-    t.integer  "primary_entity_id",                                              null: false
+    t.integer  "number",                                                    null: false
+    t.string   "number_prefix",         limit: 8
+    t.integer  "primary_location_id",                                       null: false
+    t.integer  "created_by_id",                                             null: false
+    t.integer  "primary_entity_id",                                         null: false
     t.integer  "secondary_entity_id"
     t.integer  "secondary_location_id"
-    t.string   "type",                                                           null: false
+    t.string   "type",                                                      null: false
     t.integer  "invoice_id"
   end
 

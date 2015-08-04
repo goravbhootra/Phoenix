@@ -17,7 +17,7 @@
   validates :voucher_date, presence: true
   validates :status, presence: true
   validates :ref_number, length: { maximum: 30 }
-  validates :goods_value, presence: true, numericality: { less_than_or_equal_to: 99999999 }
+  # validates :goods_value, presence: true, numericality: { less_than_or_equal_to: 99999999 }
 
   accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: :mandatory_values_check
 
@@ -48,7 +48,7 @@
     super
     self.status = attributes[:status].presence || 1 # Default Active
     self.number = attributes[:number].presence || 0 # Pre-filled for new invoice
-    self.tax_amount = attributes[:tax_amount].presence || BigDecimal('0')
+    # self.tax_amount = attributes[:tax_amount].presence || BigDecimal('0')
   end
 
   def set_defaults
@@ -97,35 +97,35 @@
     Product.product_details_by_ids(product_ids)
   end
 
-  def self.to_csv(options = {})
-    CSV.generate(options) do |csv|
-      csv << ['voucher_date', 'voucher_number', 'sku', 'product_name', 'category', 'language', 'quantity', 'rate', 'amount', 'created_at', 'updated_at']
-      all.rows_for_export.each { |row| csv << row }
-    end
-  end
+  # def self.to_csv(options = {})
+  #   CSV.generate(options) do |csv|
+  #     csv << ['voucher_date', 'voucher_number', 'sku', 'product_name', 'category', 'language', 'quantity', 'rate', 'amount', 'created_at', 'updated_at']
+  #     all.rows_for_export.each { |row| csv << row }
+  #   end
+  # end
 
-  def self.rows_for_export
-    product_ids = InventoryTxnLineItem.pluck('DISTINCT product_id')
-    product_details = product_details_by_ids(product_ids)
+  # def self.rows_for_export
+  #   product_ids = InventoryTxnLineItem.pluck('DISTINCT product_id')
+  #   product_details = product_details_by_ids(product_ids)
 
-    result = []
-    all.each do |invoice|
-      invoice.line_items.each do |line_item|
-        result << [
-                invoice.voucher_date.strftime('%d/%m/%Y'),
-                invoice.voucher_number,
-                product_details[line_item.product_id][:sku],
-                product_details[line_item.product_id][:name],
-                product_details[line_item.product_id][:category_code],
-                product_details[line_item.product_id][:language_code],
-                line_item.quantity_out,
-                line_item.price,
-                line_item.amount,
-                line_item.updated_at,
-                line_item.created_at
-              ]
-      end
-    end
-    result
-  end
+  #   result = []
+  #   all.each do |invoice|
+  #     invoice.line_items.each do |line_item|
+  #       result << [
+  #               invoice.voucher_date.strftime('%d/%m/%Y'),
+  #               invoice.voucher_number,
+  #               product_details[line_item.product_id][:sku],
+  #               product_details[line_item.product_id][:name],
+  #               product_details[line_item.product_id][:category_code],
+  #               product_details[line_item.product_id][:language_code],
+  #               line_item.quantity_out,
+  #               line_item.price,
+  #               line_item.amount,
+  #               line_item.updated_at,
+  #               line_item.created_at
+  #             ]
+  #     end
+  #   end
+  #   result
+  # end
 end

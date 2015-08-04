@@ -1,21 +1,17 @@
 class BusinessEntity < MyActiveRecord
   belongs_to :city, inverse_of: :business_entities
   has_many :locations, class_name: 'BusinessEntityLocation', inverse_of: :business_entity, dependent: :restrict_with_exception
-  has_many :business_entity_users, inverse_of: :business_entity, dependent: :restrict_with_exception
-  has_many :users, through: :business_entity_users
   has_many :inventory_txns, foreign_key: 'primary_entity_id', inverse_of: :primary_entity, dependent: :restrict_with_exception
   has_many :secondary_inventory_txns, class_name: 'InventoryTxn', foreign_key: 'secondary_entity_id', inverse_of: :secondary_entity, dependent: :restrict_with_exception
-  # has_many :inventory_vouchers, inverse_of: :business_entity, dependent: :restrict_with_exception
-  # has_many :receiving_inventory_vouchers, class_name: 'InventoryVoucher', inverse_of: :receiving_business_entity, dependent: :restrict_with_exception
   has_many :voucher_sequences, inverse_of: :business_entity, dependent: :restrict_with_exception
-  has_many :invoices, class_name: 'Invoice', inverse_of: :secondary_entity,
-            dependent: :restrict_with_exception
+  # has_many :invoices, class_name: 'Invoice', inverse_of: :secondary_entity,
+  #           dependent: :restrict_with_exception
   has_many :accounts, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_many :account_txns, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_many :user_roles, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_one :publisher, inverse_of: :business_entity, dependent: :restrict_with_exception
 
-  accepts_nested_attributes_for :business_entity_users, :publisher
+  accepts_nested_attributes_for :publisher
   accepts_nested_attributes_for :locations
 
   validates :name, presence: true, length: { in: 3..200 }
