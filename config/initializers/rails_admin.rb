@@ -2,7 +2,7 @@ RailsAdmin.config do |config|
   config.authorize_with :cancan
 
   # config.included_models = ['Product', 'ProductGroup', 'Author', 'BusinessEntity',
-  #                           'BusinessEntityUser', 'Category', 'City', 'CoreLevel', 'Currency',
+  #                           'Category', 'City', 'CoreLevel', 'Currency',
   #                           'DistributionType', 'Language', 'Member', 'PaymentMode', 'Publisher',
   #                           'Region', 'State', 'Uom', 'User', 'StateCategoryTaxRate', 'Zone'
   #                         ]
@@ -13,7 +13,7 @@ RailsAdmin.config do |config|
                             'Invoice', 'InvoiceLineItem', 'PosVoucher',
                             'InvoicesVoucher',
                             'SignIn', 'InventoryReport', 'LocationInventoryLevel',
-                            'BusinessEntityUser', 'VoucherSequence',
+                            'VoucherSequence',
                             'Account', 'Account::Asset', 'Account::Liability',
                             'Account::SundryDebtor', 'Account::SundryCreditor',
                             'Account::CurrentAsset',
@@ -96,11 +96,6 @@ RailsAdmin.config do |config|
     navigation_label 'Configuration'
     weight -31
   end
-
-  # config.model BusinessEntityUser do
-  #   exclude_fields :id, :position, :created_at, :updated_at
-  #   visible false
-  # end
 
   config.model BusinessEntityLocation do
     exclude_fields :id, :position, :created_at, :updated_at

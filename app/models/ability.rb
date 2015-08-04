@@ -37,7 +37,6 @@ class Ability
       can :edit, City
       can :edit, BusinessEntity
       can :edit, VoucherSequence
-      cannot :edit, BusinessEntityUser
       cannot :show, Role
       cannot :edit, Role
       cannot :show, UserRole
