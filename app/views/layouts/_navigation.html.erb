@@ -73,9 +73,7 @@
               <ul class="dropdown-menu">
                 <li><a href='/voucher-sequences'>Voucher Sequences</a></li>
                 <li><a href='/products'>Products</a></li>
-                <% if current_user.role?(['admin']) %>
-                  <li><a href='/masters'>Admin Panel</a></li>
-                <% end %>
+                <li><a href='/masters'>Admin Panel</a></li>
               </ul>
             </li>
           <% else %>
