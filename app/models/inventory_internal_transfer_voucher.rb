@@ -7,8 +7,6 @@ class InventoryInternalTransferVoucher < InventoryTxn
   def process_calculations
     VoucherCalculations.new({voucher: self, quantity_field: 'quantity_out'}).process_totals
     errors.add(:base, 'No products added! Total amount should be more than 0') and return false if self.total_amount < 1
-    self.tax_amount = self.total_amount
-    self.goods_value = self.total_amount
   end
 
   def mandatory_values_check(attributed)

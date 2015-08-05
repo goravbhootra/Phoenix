@@ -11,13 +11,12 @@
   validates :primary_location_id, :primary_entity_id, presence: true
   validates :type, presence: true
   validate :secondary_entity_xor_location
-  validates :total_amount, :tax_amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
+  validates :total_amount, presence: true, numericality: { less_than_or_equal_to: 99999999 }
   validates :number_prefix, length: { maximum: 8 }
   validates :number, presence: true, numericality: true, uniqueness: { scope: [:voucher_sequence_id, :number_prefix], case_sensitive: false }
   validates :voucher_date, presence: true
   validates :status, presence: true
   validates :ref_number, length: { maximum: 30 }
-  # validates :goods_value, presence: true, numericality: { less_than_or_equal_to: 99999999 }
 
   accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: :mandatory_values_check
 
@@ -48,7 +47,6 @@
     super
     self.status = attributes[:status].presence || 1 # Default Active
     self.number = attributes[:number].presence || 0 # Pre-filled for new invoice
-    # self.tax_amount = attributes[:tax_amount].presence || BigDecimal('0')
   end
 
   def set_defaults

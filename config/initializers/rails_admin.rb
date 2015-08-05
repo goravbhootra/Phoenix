@@ -11,7 +11,7 @@ RailsAdmin.config do |config|
                             'Order', 'Order::LineItem', 'InventoryInternalTransferVoucher',
                             'InventoryVoucher', 'InventoryVoucherLineItem',
                             'Invoice', 'InvoiceLineItem', 'PosVoucher',
-                            'InvoicesVoucher',
+                            'InvoicesVoucher', 'InventoryTxnFilter',
                             'SignIn', 'InventoryReport', 'LocationInventoryLevel',
                             'VoucherSequence',
                             'Account', 'Account::Asset', 'Account::Liability',
