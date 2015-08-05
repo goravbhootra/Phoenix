@@ -1,0 +1,54 @@
+<% provide(:title, 'View Product') %>
+
+<p>
+  <strong>Sku:</strong>
+  <%= @product.sku %>
+</p>
+
+<p>
+  <strong>Alias name:</strong>
+  <%= @product.alias_name %>
+</p>
+
+<p>
+  <strong>Selling price:</strong>
+  <%= @product.selling_price %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @product.active %>
+</p>
+
+<p>
+  <strong>Product group:</strong>
+  <%= @product.product_group_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @product.category_id %>
+</p>
+
+<p>
+  <strong>Core level:</strong>
+  <%= @product.core_level_id %>
+</p>
+
+<p>
+  <strong>Author:</strong>
+  <%= @product.author_id %>
+</p>
+
+<p>
+  <strong>Distribution type:</strong>
+  <%= @product.distribution_type_id %>
+</p>
+
+<p>
+  <strong>Language:</strong>
+  <%= @product.language_id %>
+</p>
+
+<%= link_to 'Edit', edit_product_path(@product) %> |
+<%= link_to 'Back', products_path %>

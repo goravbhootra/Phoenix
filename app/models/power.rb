@@ -62,7 +62,7 @@ class Power
   end
 
   # Accessible by power_users and admins
-  power :inventory_txn_filters, :pos_invoices_list_with_payment, :pos_invoice_line_items, :inventory_internal_transfer_vouchers_line_items do
+  power :inventory_txn_filters, :pos_invoices_list_with_payment, :pos_invoice_line_items, :inventory_internal_transfer_vouchers_line_items, :products do
     return true if global_role?
     false
   end

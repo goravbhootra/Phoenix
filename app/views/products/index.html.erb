@@ -1,0 +1,42 @@
+<% provide(:title, 'Products') %>
+<%= link_to 'New Product', new_product_url, class: 'pull-right' %>
+
+<div class="display responsive no-wrap voucher_line_items">
+  <table id='products' class='DataTable DataTable-line-items'>
+    <thead>
+      <tr>
+        <th class='text-center'>Sku</th>
+        <th class='text-center'>Name</th>
+        <th class='text-center'>Language</th>
+        <th class='text-center'>S. Price</th>
+        <th class='text-center'>Author</th>
+        <th class='text-center'>P. Group</th>
+        <th class='text-center'>Category</th>
+        <th class='text-center'>Core Lvl</th>
+        <th class='text-center'>Dist. Type</th>
+        <th class='text-center'>Active</th>
+        <th class='text-center'>Op.</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= link_to product.sku, product %></td>
+          <td><%= product.name %></td>
+          <td><%= product.language.custom_object_label if product.language %></td>
+          <td><%= product.selling_price %></td>
+          <td><%= product.author.custom_object_label if product.author %></td>
+          <td><%= product.product_group.custom_object_label if product.product_group %></td>
+          <td><%= product.category.code if product.category %></td>
+          <td><%= product.core_level.custom_object_label if product.core_level %></td>
+          <td><%= product.distribution_type.custom_object_label if product.distribution_type %></td>
+          <td><%= product.active %></td>
+          <!-- <td><%#= link_to 'Show', product %></td> -->
+          <td><%= link_to 'Edit', edit_product_path(product) %></td>
+          <!-- <td><%#= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

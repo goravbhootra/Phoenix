@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:new, :create, :destroy]
 
+  resources :products
   get '/my-account' => 'my_account#show'
   get '/pos-invoices/get-voucher-sequences' => 'pos_invoices#get_voucher_sequences'
 

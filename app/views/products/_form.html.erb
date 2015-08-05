@@ -1,0 +1,166 @@
+<br>
+<%= form_for(@product) do |f| %>
+  <%= render 'layouts/error_messages', object: f.object %>
+  <div class='row'>
+    <div class='col-md-10 col-md-offset-1'>
+      <div class='col-md-2'>
+        <div class="form-group">
+          <%= f.label :sku, 'SKU' %>
+          <%= f.text_field :sku, class: 'text-center form-control', required: 'true', type: 'number' %>
+        </div>
+      </div>
+      <div class='col-md-4'>
+        <div class="form-group">
+          <%= f.label :name %>
+          <%= f.text_field :name, class: 'form-control', required: 'true' %>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class="form-group">
+          <%= f.label :alias_name %>
+          <%= f.text_field :alias_name, class: 'form-control', required: 'true' %>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class="form-group">
+          <%= f.label :selling_price, 'Price' %>
+          <%= f.text_field :selling_price, class: 'text-center form-control', required: 'true', type: 'number' %>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class="form-group">
+          <%= f.label :publication_date, 'Publication Date' %>
+          <%= f.text_field :publication_date, class: 'text-center form-control datetimepicker', required: 'true', type: 'date' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-10 col-md-offset-1'>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :language_id, 'Language' %>
+          <%= f.collection_select :language_id, Language.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :author_id, 'Author' %>
+          <%= f.collection_select :author_id, Author.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :product_group_id, 'Product Group' %>
+          <%= f.collection_select :product_group_id, ProductGroup.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :category_id, 'Category' %>
+          <%= f.collection_select :category_id, Category.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-10 col-md-offset-1'>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :core_level_id, 'Core Level' %>
+          <%= f.collection_select :core_level_id, CoreLevel.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :distribution_type_id, 'Distribution Type' %>
+          <%= f.collection_select :distribution_type_id, DistributionType.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :publisher_id, 'Publisher' %>
+          <%= f.collection_select :publisher_id, Publisher.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :uom_id, 'Unit of Measurement' %>
+          <%= f.collection_select :uom_id, Uom.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-10 col-md-offset-1'>
+
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :focus_group_id, 'Focus Group' %>
+          <%= f.collection_select :focus_group_id, FocusGroup.all, :id, :name, { include_blank: true },
+                    { class: 'form-control selectme' } %>
+        </div>
+      </div>
+      <div class='col-md-3'>
+        <div class="form-group">
+          <%= f.label :isbn, 'ISBN #' %>
+          <%= f.text_field :isbn, class: 'text-center form-control' %>
+        </div>
+      </div>
+      <br>
+      <div class='col-md-3'>
+        <div class='form-group'>
+          <%= f.label :active, class: "col-md-4 control-label" %>
+          <div class='col-md-8 pull-left'>
+            <%= f.check_box :active, { class: 'form-control'  } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-10 col-md-offset-1'>
+      <div class='col-md-5'>
+        <div class="form-group">
+          <%= f.label :summary %>
+          <%= f.text_area :summary, class: 'form-control', size: '5x5' %>
+        </div>
+      </div>
+      <div class='col-md-5'>
+        <div class="form-group">
+          <%= f.label :synopsis %>
+          <%= f.text_area :synopsis, class: 'form-control', size: '5x5' %>
+        </div>
+      </div>
+      <div class='col-md-2'>
+        <div class="form-group">
+          <%= f.label :notes %>
+          <%= f.text_area :notes, class: 'form-control', size: '2x5' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class='row'>
+    <div class='col-md-6 col-md-offset-3'>
+      <div class='col-md-6'>
+        <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
+      </div>
+      <div class='col-md-6'>
+        <%= link_to 'Cancel', products_path, class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+  </div>
+<% end %>

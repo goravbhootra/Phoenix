@@ -13,14 +13,13 @@ RailsAdmin.config do |config|
                             'Invoice', 'InvoiceLineItem', 'PosVoucher',
                             'InvoicesVoucher', 'InventoryTxnFilter',
                             'SignIn', 'InventoryReport', 'LocationInventoryLevel',
-                            'VoucherSequence',
+                            'VoucherSequence', 'Product',
                             'Account', 'Account::Asset', 'Account::Liability',
                             'Account::SundryDebtor', 'Account::SundryCreditor',
                             'Account::CurrentAsset',
                             'Account::CurrentLiability', 'Account::SalesAccount',
                             'AccountTxn', 'AccountTxnDetail', 'AccountEntry',
                             'AccountEntry::Debit', 'AccountEntry::Credit', 'InvoiceHeader'
-                            # 'Account::BankAccount', 'Account::CashAccount'
                           ]
 
   config.actions do
@@ -197,38 +196,38 @@ RailsAdmin.config do |config|
     weight -50
   end
 
-  RailsAdmin.config do |config|
-    config.model Product do
-      [list, show].each do
-        field :sku
-        field :name
-        field :language
-        field :alias_name
-        field :category
-        field :active
-        field :selling_price
-        field :distribution_type
-        field :product_group
-        field :core_level
-        field :author
-        field :isbn
-        field :summary
-        field :synopsis
-        field :publication_date
-        field :mrp
-        field :notes
-        field :uom
-      end
+  # RailsAdmin.config do |config|
+  #   config.model Product do
+  #     [list, show].each do
+  #       field :sku
+  #       field :name
+  #       field :language
+  #       field :alias_name
+  #       field :category
+  #       field :active
+  #       field :selling_price
+  #       field :distribution_type
+  #       field :product_group
+  #       field :core_level
+  #       field :author
+  #       field :isbn
+  #       field :summary
+  #       field :synopsis
+  #       field :publication_date
+  #       field :mrp
+  #       field :notes
+  #       field :uom
+  #     end
 
-      exclude_fields :inventory_txn_line_items, :position, :id, :created_at, :updated_at
-      field :publisher do
-        pretty_value do
-          value.name
-        end
-      end
-      weight -51
-    end
-  end
+  #     exclude_fields :inventory_txn_line_items, :position, :id, :created_at, :updated_at
+  #     field :publisher do
+  #       pretty_value do
+  #         value.name
+  #       end
+  #     end
+  #     weight -51
+  #   end
+  # end
 
   ### Popular gems integration
 
