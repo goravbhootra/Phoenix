@@ -2,14 +2,13 @@ class PosInvoicesController < ApplicationController
   power :pos_invoices, map: {
                           [:edit, :update, :get_voucher_sequences] => :updatable_pos_invoices,
                           [:new, :create, :get_voucher_sequences] => :creatable_pos_invoices,
-                          [:index, :show] => :view_pos_invoices
+                          [:index, :show] => :view_pos_invoices,
+                          [:destroy] => :destroyable_pos_invoices
                         }, as: :pos_invoice_scope
   include VoucherSequenceable
-  before_action :set_pos_invoice, only: [:edit, :update, :destroy, :show]
+  before_action :set_pos_invoice, only: [:edit, :update, :destroy]
 
   def index
-    # @pos_invoices = pos_invoice_scope.includes([header: [business_entity_location: :business_entity]], :entries, :created_by).order("number DESC")
-
     respond_to do |format|
       format.html
       # format.csv { send_data @pos_invoices.to_csv, filename: "sale_transactions_complete_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.csv" }
@@ -19,7 +18,7 @@ class PosInvoicesController < ApplicationController
   end
 
   def show
-    @pos_invoice = pos_invoice_scope.includes(:created_by).find(params[:id])
+    @pos_invoice = pos_invoice_scope.includes([line_items: [product: :language]], :created_by).find(params[:id])
     respond_to do |format|
       format.html #{ redirect_to pos_invoice(@pos_invoice.id) }
       format.pdf do
@@ -52,9 +51,9 @@ class PosInvoicesController < ApplicationController
           # format.html { redirect_to "/#{pos_invoices_url}/#{@pos_invoice.id}?save_and_print=1", notice: 'Invoice  has been saved and printed.' }
         else
           initialize_form
-          format.html { redirect_to pos_invoice_path(@pos_invoice.id), flash: {success: 'POS invoice was created successfully.'}}
-          # format.html { redirect_to new_pos_invoice_url, flash: {success: 'POS invoice created successfully.'} }
-          # format.html { redirect_to pos_invoice_url(@pos_invoice, format: "pdf"), flash: {success: 'POS invoice created successfully.'} }
+          # Temp workaround, this needs to be changed.
+          # format.html { redirect_to pos_invoice_path(@pos_invoice.id), flash: {success: 'POS invoice was created successfully.'}}
+          format.html { redirect_to pos_invoice_path(@pos_invoice.id) }
           format.json { render :show, status: :created, location: @pos_invoice }
         end
       else
@@ -79,7 +78,7 @@ class PosInvoicesController < ApplicationController
   end
 
   def destroy
-    @pos_invoice.destroy
+    @pos_invoice.destroy_with_children
     respond_to do |format|
       format.html { redirect_to pos_invoices_url, notice: 'POS invoice was successfully destroyed.' }
       format.json { head :no_content }
@@ -110,7 +109,6 @@ class PosInvoicesController < ApplicationController
     #:tax_amount is not included in pos_invoice or line_items as it will be calculated by server
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_pos_invoice
     @pos_invoice = pos_invoice_scope.includes(:line_items, :header, :debit_entries, :credit_entries).find(params[:id])
   end
@@ -139,7 +137,7 @@ class PosInvoicesController < ApplicationController
         @pos_invoice.debit_entries.build(account_id: current_user.cash_account_id, mode: current_user.cash_account.type) if current_user.cash_account_id.present?
     end
     if debit_payments.blank? || debit_payments.collect(&:mode).exclude?('Account::BankAccount')
-      @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(154).bank_account_id, mode: BusinessEntityLocation.find(154).bank_account.type) if BusinessEntityLocation.find(154).bank_account_id.present?
+      @pos_invoice.debit_entries.build(account_id: BusinessEntityLocation.find(GlobalSettings.current_bookstall_id).bank_account_id, mode: BusinessEntityLocation.find(GlobalSettings.current_bookstall_id).bank_account.type) if BusinessEntityLocation.find(GlobalSettings.current_bookstall_id).bank_account_id.present?
     end
 
     credit_payments = @pos_invoice.credit_entries.payment_entries
@@ -149,19 +147,14 @@ class PosInvoicesController < ApplicationController
   end
 
   def build_header
-    @pos_invoice.build_header(business_entity_location_id: 154) if @pos_invoice.header.blank?
+    @pos_invoice.build_header(business_entity_location_id: GlobalSettings.current_bookstall_id) if @pos_invoice.header.blank?
   end
-
-  # def build_sales_entry
-  #   @pos_invoice.credit_entries.build(mode: 'Account::SalesAccount') if @pos_invoice.credit_entries.sales_entries.blank?
-  # end
 
   def initialize_form
     populate_tax_slabs
     populate_products
     build_header
     build_child_line_items
-    # build_sales_entry
     build_payment_children
   end
 end

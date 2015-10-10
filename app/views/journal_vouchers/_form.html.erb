@@ -13,34 +13,45 @@
         <%= f.text_field :ref_number, class: 'text-center form-control' %>
       </div>
     </div>
-    <div class='col-md-5'></div>
-    <div class='col-md-3'>
+    <div class='col-md-4'></div>
+    <div class='col-md-2'>
       <div class="actions">
+        <br>
         <%= f.submit 'Save', class: 'btn btn-primary btn-block', id: 'save_button' %>
       </div>
     </div>
+    <div class='col-md-2'>
+      <br>
+      <%= link_to 'Cancel', journal_vouchers_path, class: 'btn btn-primary btn-block' %>
+    </div>
   </div>
+
   <div class='row'>
     <div class='col-md-6'>
       <div class='h3 text-center'><%= 'Debit Entries' %></div>
       <div class="table-responsive table-striped table-hover">
-        <table class='DataTable DataTable-line-items'>
+        <table class='DataTable-line-items'>
           <thead>
             <tr style='height:30px;'>
               <th class="col-md-6 text-center">Account</th>
-              <th class="col-md-6 text-center">Amount</th>
+              <th class="col-md-5 text-center">Amount</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <%= f.fields_for :debit_entries do |fde| %>
+              <% next if fde.object._destroy == true %>
               <tr class="fields">
                 <td>
                   <%= fde.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
                     { class: 'form-control selectme', id: 'secondary_business_entity' } %>
                 </td>
                 <td>
-                  <%= fde.text_field :amount, class: 'form-control text-right' %>
-                  <%= link_to "", '#', class: "fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%= fde.text_field :amount, value: (number_with_precision(fde.object.amount, precision: 2) if fde.object.amount), class: 'form-control text-right' %>
+                  <%#= fde.text_field :amount, class: 'form-control text-right' %>
+                </td>
+                <td>
+                  <%= link_to "", '#', class: "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
                   <%= fde.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
                 </td>
               </tr>
@@ -53,22 +64,27 @@
     <div class='col-md-6'>
       <div class='h3 text-center'><%= 'Credit Entries' %></div>
       <div class="table-responsive table-striped table-hover">
-        <table class='DataTable DataTable-line-items'>
+        <table class='DataTable-line-items'>
           <thead>
             <tr style='height:30px;'>
               <th class="col-md-6 text-center">Account</th>
-              <th class="col-md-6 text-center">Amount</th>
+              <th class="col-md-5 text-center">Amount</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <%= f.fields_for :credit_entries do |fce| %>
+              <% next if fce.object._destroy == true %>
               <tr class="fields">
-                <td><%= fce.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
+                <td>
+                  <%= fce.collection_select :account_id, Account.cash_or_bank_type, :id, :alias_name, { include_blank: true },
                     { class: 'form-control selectme', id: 'secondary_business_entity' } %>
                 </td>
                 <td>
-                  <%= fce.text_field :amount, class: 'form-control text-right' %>
-                  <%= link_to "", '#', class: "fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                  <%= fce.text_field :amount, value: (number_with_precision(fce.object.amount, precision: 2) if fce.object.amount), class: 'form-control text-right' %>
+                </td>
+                <td>
+                  <%= link_to "", '#', class: "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
                   <%= fce.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
                 </td>
               </tr>

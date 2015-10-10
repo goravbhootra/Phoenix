@@ -5,8 +5,6 @@ class PosInvoicesReportsController < ApplicationController
                         }
 
   def pos_invoices_list_with_payment
-    # @pos_invoices = PosInvoicesReport.invoice_list_with_payments_to_csv
-
     respond_to do |format|
       format.csv { send_data PosInvoicesReport.invoice_list_with_payments_to_csv, filename: "sale_payment_details_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.csv" }
       format.xls { send_data PosInvoicesReport.invoice_list_with_payments_to_csv(col_sep: "\t"), filename: "sale_payment_details_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.xls" }

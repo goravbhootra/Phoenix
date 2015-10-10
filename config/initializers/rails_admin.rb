@@ -13,7 +13,8 @@ RailsAdmin.config do |config|
                             'Invoice', 'InvoiceLineItem', 'PosVoucher',
                             'InvoicesVoucher', 'InventoryTxnFilter',
                             'SignIn', 'InventoryReport', 'LocationInventoryLevel',
-                            'VoucherSequence', 'Product',
+                            'VoucherSequence', 'Product', 'InventoryTxnVouchersReport',
+                            'JournalVoucher', 'MyAccount',
                             'Account', 'Account::Asset', 'Account::Liability',
                             'Account::SundryDebtor', 'Account::SundryCreditor',
                             'Account::CurrentAsset',
@@ -183,6 +184,7 @@ RailsAdmin.config do |config|
     field :contact_number_secondary
     field :address
     field :active
+    field :cash_account_id
     list do
       field :confirmed_at
       field :current_sign_in_at

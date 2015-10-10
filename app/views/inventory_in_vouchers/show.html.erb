@@ -23,4 +23,4 @@
   <%= @inventory_in_voucher.voucher_number %>
 </p>
 
-<%= link_to 'New Invoice', new_inventory_in_voucher_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_inventory_in_voucher_path(@inventory_in_voucher) %> | <%= link_to 'Invoices Listing', inventory_in_vouchers_path %>
+<%= link_to 'New Invoice', new_inventory_in_voucher_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_inventory_in_voucher_path(@inventory_in_voucher) %> | <%= link_to 'Invoices Listing', inventory_in_vouchers_path %> | <%= link_to 'Delete', @inventory_in_voucher, method: :delete, data: { confirm: 'Are you sure?' } if current_power.destroyable_inventory_in_vouchers? %>

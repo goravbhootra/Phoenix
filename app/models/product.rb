@@ -25,6 +25,7 @@ class Product < ActiveRecord::Base
   validates :mrp, :selling_price, numericality: { less_than_or_equal_to: 999999 }
   validates :active, inclusion: { in: [true, false] }
 
+  before_validation :populate_mrp, on: :create
   before_validation :strip_fields
 
   scope :active, -> { where active: true }
@@ -34,6 +35,10 @@ class Product < ActiveRecord::Base
 
   def voucher_label
     "#{name} : #{alias_name} : #{language_code} : #{category_code} : #{selling_price}"
+  end
+
+  def populate_mrp
+    self.mrp = self.selling_price
   end
 
   def self.product_details_by_ids(product_ids)

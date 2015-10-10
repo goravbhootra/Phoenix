@@ -5,6 +5,17 @@ class PosInvoice < Invoice
     account_types = entries.account_types
   end
 
+  def destroy_with_children
+    ActiveRecord::Base.transaction do
+      self.entries.destroy_all
+      self.debit_entries.destroy_all
+      self.credit_entries.destroy_all
+      self.header.destroy
+      self.line_items.destroy_all
+      self.destroy!
+    end
+  end
+
   ### defined in invoice.rb ###
   def payment_mandatory_values_check(attributed)
     if attributed['account_id'].blank? || attributed['amount'].to_i < 1

@@ -1,12 +1,9 @@
 class InventoryReport < ActiveType::Object
-  # http://localhost:3000/stock-summary.xls?location_id=153&from_date='17/07/2015'&to_date='17/07/2015'
+  # http://localhost:3000/stock-summary.xls?location_id=155&from_date='26/09/2015'&to_date='29/09/2015'
 
   # attribute :from_date, :date
   # attribute :to_date, :date
   # attribute :location_id, :integer
-
-  # # validates :from_date, :to_date, presence: true
-  # validates :location_id, numericality: true, allow_blank: true, allow_nil: true
 
   def self.locationwise_stock_summary(options = {}, filter_params={})
     from_date = filter_params[:from_date]
@@ -21,7 +18,6 @@ class InventoryReport < ActiveType::Object
     master, in_transit_products = locationwise_in_transit_within_period(master, from_date, to_date, location_id)
 
     product_skus = (opening_stock_products + inventory_in_products + inventory_out_products + pos_sales_products + in_transit_products).uniq
-    # product_skus = (opening_stock_products + inventory_in_products + inventory_out_products +  in_transit_products).uniq
 
     products = Product.sort_skus_by_parentcat_lang(product_skus)
     bus_ent_locs = Hash.new
@@ -30,7 +26,6 @@ class InventoryReport < ActiveType::Object
 
     CSV.generate(options) do |csv|
       csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'POS Sales', 'In Transit', 'Avlbl Stk']
-      # csv << ['Bus. Entity', 'Location', 'SKU', 'Product Name', 'P. Cat', 'Lang', 'Op. Stk', 'Inv. Voucher In', 'Inv. Voucher Out', 'In Transit', 'Avlbl Stk']
       bus_ent_locs.keys.each do |loc| # Locations already in sorted order
         master[loc].keys.sort.each do |product|
           available_stock = 0
@@ -84,13 +79,6 @@ class InventoryReport < ActiveType::Object
       end
       hash_reorganise_locatiowise(master, 'opening_stock', inventory['consolidated'])
   end
-
-  # def self.locationwise_opening_stock_vouchers_consolidated(master=Hash.new)
-  #   # BusinessEntity(128) - Opening Stock
-  #   hash_reorganise_locatiowise(master, 'opening_stock',
-  #                       InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryTxn.where(secondary_entity_id: 128).pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity_in)
-  #                               )
-  # end
 
   def self.hash_reorganise_locatiowise(master=Hash.new, key_name='not_specified', hsh=Hash.new)
     products = Array.new
@@ -189,8 +177,6 @@ class InventoryReport < ActiveType::Object
   end
 
   def self.locationwise_inventory_out_vouchers_without_reserved_accounts_consolidated(master=Hash.new)
-    # All records except following
-    # BusinessEntity(105) - Retail Sales, BusinessEntity(129) - Corpus Distribution, BusinessEntity(130) - Gratis Distribution
     hash_reorganise_locatiowise(master, 'inventory_out_wo_reserved',
                                 InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryOutVoucher.where("secondary_entity_id NOT IN (105, 129, 130)").pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity_out)
                                 )
@@ -203,7 +189,6 @@ class InventoryReport < ActiveType::Object
   end
 
   def self.locationwise_retail_sale_vouchers_consolidated(master=Hash.new)
-    # BusinessEntity(105) - Retail Sales
     hash_reorganise_locatiowise(master, 'retail_sales',
                                 InventoryTxnLineItem.where('inventory_txn_id IN (?)', InventoryOutVoucher.where(secondary_entity_id: 105).pluck(:id)).includes(:product, :inventory_txn).group(:primary_location_id, :sku).order("primary_location_id, products.sku").sum(:quantity_out)
                                 )

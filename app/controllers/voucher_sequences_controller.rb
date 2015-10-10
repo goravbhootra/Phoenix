@@ -5,10 +5,6 @@ class VoucherSequencesController < ApplicationController
     @voucher_sequences = VoucherSequence.includes(:business_entity).all
   end
 
-  # def show
-  # end
-
-  # GET /voucher_sequences/new
   def new
     @voucher_sequence = VoucherSequence.new
   end
@@ -51,12 +47,10 @@ class VoucherSequencesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_voucher_sequence
       @voucher_sequence = VoucherSequence.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def voucher_sequence_params
       params.require(:voucher_sequence).permit(:business_entity_id, :classification, :number_prefix, :starting_number, :valid_from, :valid_till, :terms_conditions, :active)
     end

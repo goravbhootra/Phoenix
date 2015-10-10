@@ -3,14 +3,15 @@ class InventoryOutVouchersController < ApplicationController
     {
       [:edit, :update, :get_voucher_sequences, :get_business_entities] => :updatable_inventory_out_vouchers,
       [:new, :create, :get_voucher_sequences, :get_business_entities] => :creatable_inventory_out_vouchers,
-      [:index, :show] => :inventory_out_vouchers_view
+      [:index, :show] => :inventory_out_vouchers_view,
+      [:destroy] => :destroyable_inventory_out_vouchers
     }, as: :inventory_out_voucher_scope
   include VoucherSequenceable
   include VoucherExtensible
   before_action :set_inventory_out_voucher, only: [:edit, :update, :destroy]
 
   def index
-    @inventory_out_vouchers = inventory_out_voucher_scope.includes(:created_by, :primary_location, :secondary_entity).order("number DESC")
+    @inventory_out_vouchers = inventory_out_voucher_scope.includes(:created_by, [primary_location: :business_entity], :secondary_entity).order("number DESC")
 
     respond_to do |format|
       format.html
@@ -83,7 +84,6 @@ class InventoryOutVouchersController < ApplicationController
       #:tax_amount will be calculated on server-side and not accepted as params
     end
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_inventory_out_voucher
       @inventory_out_voucher = inventory_out_voucher_scope.includes(:line_items).find(params[:id])
     end

@@ -3,7 +3,8 @@ class InventoryInternalTransferVouchersController < ApplicationController
     {
       [:edit, :update, :get_voucher_sequences, :get_entity_locations] => :updatable_inventory_internal_transfer_vouchers,
       [:new, :create, :get_voucher_sequences, :get_entity_locations] => :creatable_inventory_internal_transfer_vouchers,
-      [:index, :show] => :inventory_internal_transfer_vouchers_view
+      [:index, :show] => :inventory_internal_transfer_vouchers_view,
+      [:destroy] => :destroyable_inventory_internal_transfer_vouchers
     }, as: :inventory_internal_transfer_voucher_scope
   include VoucherSequenceable
   include VoucherExtensible
@@ -90,7 +91,6 @@ class InventoryInternalTransferVouchersController < ApplicationController
       #:tax_amount will be calculated on server-side and not accepted as params
     end
 
-    # Use callbacks to share common setup or constraints between actions.
     def set_inventory_internal_transfer_voucher
       @inventory_internal_transfer_voucher = inventory_internal_transfer_voucher_scope.includes(:line_items).find(params[:id])
     end

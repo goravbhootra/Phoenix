@@ -10,4 +10,4 @@ Rails.application.config.assets.precompile += %w( *.svg *.eot *.woff *.woff2 *.t
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-Rails.application.config.assets.precompile += %w( pos_invoices.js inventory_out_vouchers.js inventory_in_vouchers.js inventory_internal_transfer_vouchers.js )
+Rails.application.config.assets.precompile += %w( pos_invoices.js inventory_out_vouchers.js inventory_in_vouchers.js inventory_internal_transfer_vouchers.js journal_vouchers.js print.css )

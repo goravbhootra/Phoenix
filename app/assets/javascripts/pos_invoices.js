@@ -51,8 +51,10 @@ $(document).on('ready page:load', function() {
   populate_invoice_values_on_page_reload();
 
   if($('#pdf_print').length) {
-    $('#open_new_invoice')[0].click();
-    $('#pdf_print')[0].click();
+  //   $('#pdf_print')[0].click();
+    window.print();
+    window.print();
+    // $('#open_new_invoice')[0].click();
   }
 
   $(function() {

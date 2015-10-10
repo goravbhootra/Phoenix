@@ -1,0 +1,63 @@
+@media print{
+  body{
+    background-color:#FFFFFF;
+    background-image:none;
+    color:#000000;
+    margin: 0;
+    padding: 0;
+  }
+
+  header nav, footer {
+    display: none;
+  }
+
+  .navbar { display:none; }
+
+  @page :left {
+    margin: 0cm;
+  }
+
+  @page :right {
+    margin: 0cm;
+  }
+
+  @page {
+    margin: 0cm;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  table, th, td {
+   border: 1px solid black;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: 20pt;
+    font: 'serif';
+  }
+
+  h2 {
+    font-size: 12pt;
+    margin-top: 25px;
+    font: 'serif';
+  }
+
+  p {
+    font: 'serif';
+  }
+
+  a {
+    display: none;
+    color: white;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}

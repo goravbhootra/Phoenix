@@ -170,7 +170,8 @@ $(document).on('ready page:load', function() {
 
   $('#voucher_line_items').on('select2-blur', '.voucher_line_item_sku', function(event) {
     if($(this).select2('val').length) {
-      $(this).closest('tr').find($('.voucher_line_item_quantity')).focus();
+      var quantity_field = $(this).closest('tr').find($('.voucher_line_item_quantity')).focus();
+      if (!quantity_field.val().length) { quantity_field.val('1').change(); }
     }
   });
 

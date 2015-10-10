@@ -1,8 +1,7 @@
 class InventoryTxnVouchersReport < ActiveType::Object
 
   def self.inventory_internal_transfer_vouchers_line_items_to_csv(options = {})
-    # Chennai Business Entity - Tiruvallur Location
-    inventory_txn_ids = InventoryTxn.where("primary_location_id IN (153, 154) OR secondary_location_id IN (153, 154)").pluck('DISTINCT id')
+    inventory_txn_ids = InventoryTxn.where("primary_location_id IN (#{GlobalSettings.current_bookstall_id}, #{GlobalSettings.current_stores_id}) OR secondary_location_id IN (#{GlobalSettings.current_bookstall_id}, #{GlobalSettings.current_stores_id})").pluck('DISTINCT id')
     product_ids = InventoryTxnLineItem.where(inventory_txn_id: inventory_txn_ids).pluck('DISTINCT product_id')
     product_details = Product.product_details_by_ids(product_ids)
 

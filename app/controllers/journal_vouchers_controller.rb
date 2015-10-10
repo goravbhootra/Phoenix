@@ -3,7 +3,7 @@ class JournalVouchersController < ApplicationController
   before_action :set_journal_voucher, only: [:show, :edit, :update, :destroy]
 
   def index
-    @journal_vouchers = JournalVoucher.includes(:debit_entries, :created_by).order("number DESC")
+    @journal_vouchers = JournalVoucher.where('created_at > ?', Date.today-4.days).includes(:debit_entries, :created_by).order("number DESC")
   end
 
   def show
@@ -65,10 +65,10 @@ class JournalVouchersController < ApplicationController
       params.require(:journal_voucher).permit(:business_entity_id, :currency_id,
                                         :voucher_sequence_id, :created_by_id,
                                         :remarks, :txn_date, :status, :ref_number,
-                                        debit_entries_attributes: [:id, :account_id, :amount,
-                                          :remarks, :_destroy, :mode],
-                                        credit_entries_attributes: [:id, :account_id, :amount,
-                                          :remarks, :_destroy]
+                                        debit_entries_attributes: [:account_id, :amount,
+                                          :remarks, :_destroy, :mode, :id],
+                                        credit_entries_attributes: [:account_id, :amount,
+                                          :remarks, :_destroy, :id]
                                          )
     end
 

@@ -1,3 +1,4 @@
+# Respond to health checks
 class PingController < ApplicationController
   skip_before_action :authenticate
 

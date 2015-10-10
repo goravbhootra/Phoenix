@@ -15,12 +15,6 @@ module AccountEntriesExtension
     sales_entries.sum(&:amount)
   end
 
-  # def account_types
-  #   hsh = Hash.new
-  #   reject(&:marked_for_destruction?).map { |entry| hsh[entry.account_id] = entry.mode }
-  #   hsh
-  # end
-
   # Returns array with ActiveRecord objects
   def payment_entries
     reject(&:marked_for_destruction?).select { |x| is_payment?(x.mode) }
@@ -41,13 +35,6 @@ module AccountEntriesExtension
     end
     hsh
   end
-
-  # def payments_type_with_account_type
-  #   arr = reject(&:marked_for_destruction?).map { |x| [x.type, x.mode] if is_payment?(x.mode) }.compact
-  #   hsh = Hash.new
-  #   arr.each { |x| hsh.keys.include?(x[0].to_s) ? hsh[x[0].to_s] << x[1] : hsh[x[0].to_s] = Array(x[1]) }
-  #   hsh
-  # end
 
   def is_payment?(account_type=nil)
     ['Account::CashAccount', 'Account::BankAccount'].include? account_type

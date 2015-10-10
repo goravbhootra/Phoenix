@@ -2,16 +2,16 @@ class SalesSummaryUserwisePdf < Prawn::Document
   def initialize
     super({top_margin: 40, left_margin: 50, right_margin: 50, bottom_margin: 20})
     # consolidated sales amount
-    # @pos_sales = InvoiceLineItem.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).sum(:amount).to_f
+    # @pos_sales = InvoiceLineItem.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).sum(:amount).to_f
 
     # Returns Hash with (k) - user_id, (v) - amount
-    @userwise_sales_consolidated = InvoiceLineItem.joins(account_txn: :header, account_txn: :created_by).where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).group(:created_by_id).sum(:amount)
+    @userwise_sales_consolidated = InvoiceLineItem.joins(account_txn: [:header, :created_by]).where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).group(:created_by_id).sum(:amount)
 
-    pos_cash_collected = AccountEntry::Debit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::CashAccount'").sum(:amount)
-    pos_cash_tendered = AccountEntry::Credit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::CashAccount'").sum(:amount)
+    pos_cash_collected = AccountEntry::Debit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::CashAccount'").sum(:amount)
+    pos_cash_tendered = AccountEntry::Credit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::CashAccount'").sum(:amount)
     @pos_cash_sales = (pos_cash_collected - pos_cash_tendered).to_f
 
-    @pos_credit_card_sales = AccountEntry::Debit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::BankAccount'").sum(:amount)
+    @pos_credit_card_sales = AccountEntry::Debit.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).joins(:account).where("accounts.type = 'Account::BankAccount'").sum(:amount)
 
     @users_with_balance_due = (User.includes(:cash_account).where.not(cash_account_id: nil).select { |user| user.cash_account.entries.debit_balance != 0 })
     text "Spiritual Hierarchy Publication Trust", size: 16, style: :bold, align: :center

@@ -26,13 +26,10 @@
   before_validation :set_primary_entity_based_on_location
 
   before_create :set_number
-  # before_save :process_calculations
-  # after_create :print_invoice
 
   attr_accessor :current_user_id
 
   enum status_enum: { 'Active': 1, 'Draft': 2, 'Waiting Approval': 4 }
-  # enum classification_enum: { 'POS Invoices': 1, 'Inventory Out Vouchers': 2, 'Inventory In Vouchers': 3, 'Inventory Adjustment': 4 }
 
   delegate :name, to: :created_by, prefix: true, allow_nil: true
   delegate :entity_name_with_location, to: :primary_location, prefix: 'primary', allow_nil: true
@@ -87,43 +84,10 @@
   end
 
   def total_quantity
-    # line_items.pluck(:quantity).inject(0) { |sum,x| sum += x }
     line_items.sum(:quantity)
   end
 
   def self.product_details_by_ids(product_ids)
     Product.product_details_by_ids(product_ids)
   end
-
-  # def self.to_csv(options = {})
-  #   CSV.generate(options) do |csv|
-  #     csv << ['voucher_date', 'voucher_number', 'sku', 'product_name', 'category', 'language', 'quantity', 'rate', 'amount', 'created_at', 'updated_at']
-  #     all.rows_for_export.each { |row| csv << row }
-  #   end
-  # end
-
-  # def self.rows_for_export
-  #   product_ids = InventoryTxnLineItem.pluck('DISTINCT product_id')
-  #   product_details = product_details_by_ids(product_ids)
-
-  #   result = []
-  #   all.each do |invoice|
-  #     invoice.line_items.each do |line_item|
-  #       result << [
-  #               invoice.voucher_date.strftime('%d/%m/%Y'),
-  #               invoice.voucher_number,
-  #               product_details[line_item.product_id][:sku],
-  #               product_details[line_item.product_id][:name],
-  #               product_details[line_item.product_id][:category_code],
-  #               product_details[line_item.product_id][:language_code],
-  #               line_item.quantity_out,
-  #               line_item.price,
-  #               line_item.amount,
-  #               line_item.updated_at,
-  #               line_item.created_at
-  #             ]
-  #     end
-  #   end
-  #   result
-  # end
 end

@@ -27,10 +27,6 @@ class InventoryTxnLineItem < ActiveRecord::Base
     self.tax_amount = self.amount
   end
 
-  # def quantity_in_xor_quantity_out
-  #   errors.add(:base, "Either quantity_in or quantity_out must be entered") if !(quantity_in.present? ^ quantity_out.present?)
-  # end
-
   def quantity_in_out_check
     # if [month_day, week_day, hour].compact.count =! 1 - Can handle more than two attributes
     errors.add(:base, "Either quantity_in or quantity_out must be entered") and return if !(quantity_in.present? ^ quantity_out.present?) && self.inventory_txn.secondary_location_id.blank?

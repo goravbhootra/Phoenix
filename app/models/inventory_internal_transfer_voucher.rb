@@ -1,8 +1,4 @@
 class InventoryInternalTransferVoucher < InventoryTxn
-  # def initialize(attributes={})
-  #   super
-  #   self.classification = 2
-  # end
 
   def process_calculations
     VoucherCalculations.new({voucher: self, quantity_field: 'quantity_out'}).process_totals

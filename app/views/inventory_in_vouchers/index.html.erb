@@ -1,5 +1,5 @@
 <% provide(:title, 'InventoryIn Vouchers listing') %>
-
+<%= link_to 'New InventoryIn Voucher', new_inventory_in_voucher_path, class: 'pull-right' %>
 <!-- <div class="table-responsive table-striped table-hover "> -->
 <div class="display responsive no-wrap voucher_line_items">
   <table id='voucher_line_items' class='DataTable DataTable-line-items'>
@@ -26,13 +26,10 @@
           <td><%= inventory_in_voucher.remarks %></td>
           <td class='text-center'><%= inventory_in_voucher.created_by.custom_object_label %></td>
           <td class='text-center'>
-            <%= link_to 'View', inventory_in_voucher %> | <%= link_to 'Edit', edit_inventory_in_voucher_path(inventory_in_voucher) %>
+            <%= link_to 'View', inventory_in_voucher %> | <%= link_to 'Edit', edit_inventory_in_voucher_path(inventory_in_voucher) %> | <%= link_to 'Delete', inventory_in_voucher, method: :delete, data: { confirm: 'Are you sure?' } if current_power.destroyable_inventory_in_vouchers? %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-<br>
-
-<%= link_to 'New InventoryIn Voucher', new_inventory_in_voucher_path %>

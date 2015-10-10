@@ -14,10 +14,11 @@
     <meta name="author" content="Gorav Bhootra">
     <!-- Favicon -->
     <!-- <link rel="shortcut icon" href="favicon.ico"> -->
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'application', media: 'screen', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track' => true %>
     <!-- <link rel="stylesheet" type="text/css" media="print" href="print.css"> -->
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag controller_name, 'data-turbolinks-track' => true if %w(pos_invoices inventory_out_vouchers inventory_in_vouchers inventory_internal_transfer_vouchers).include?(controller_name) %>
+    <%= javascript_include_tag controller_name, 'data-turbolinks-track' => true if %w(pos_invoices inventory_out_vouchers inventory_in_vouchers inventory_internal_transfer_vouchers journal_vouchers).include?(controller_name) %>
     <%= csrf_meta_tags %>
   </head>
 

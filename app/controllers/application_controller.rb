@@ -37,8 +37,6 @@ class ApplicationController < ActionController::Base
   end
 
   def current_business_entity
-    # @current_business_entity = BusinessEntity.where(id: params[:current_business_entity_id].to_i).first if params[:current_business_entity_id].present?
-    # render text: ''
     @current_business_entity = BusinessEntity.find(1)
   end
 
@@ -50,15 +48,7 @@ class ApplicationController < ActionController::Base
       current_power = Power.new(@current_user)
       @business_entities ||= current_power.get_my_business_entities.pluck(:id, :alias_name).to_h.invert
     end
-      # @entity_locations ||= BusinessEntityLocation.active.map { |location| [location.business_entity_name_with_location, location.id] }
-    @current_user
   end
-
-  # def rails_admin_authenticate
-  #   RailsAdmin.authorize_with do
-  #     redirect_to main_app.root_url unless current_user
-  #   end
-  # end
 
   def authenticate
     unless current_user
@@ -69,8 +59,4 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
-  # def current_business_entity
-  #   @current_business_entity ||= current_user.business_entities.find(session[:company_id])
-  # end
 end

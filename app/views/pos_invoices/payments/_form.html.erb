@@ -42,7 +42,7 @@
                     <%= fde.text_field :expiry_year, value: (fde.object.additional_info['expiry_year'] if fde.object.additional_info.present? && fde.object.additional_info['expiry_year'].present?), class: 'form-control', placeholder: 'YYYY', type: 'number', min: 2015, max: 2040 %>
                   </div>
                   <div class='col-md-6'>
-                    <%= fde.text_field :mobile_number, value: (fde.object.additional_info['mobile_number'] if fde.object.additional_info.present? && fde.object.additional_info['mobile_number'].present?), class: 'form-control', placeholder: 'Mobile Number', type: 'number', min: 1000000000, max: 9999999999 %>
+                    <%= fde.text_field :mobile_number, value: (fde.object.additional_info['mobile_number'] if fde.object.additional_info.present? && fde.object.additional_info['mobile_number'].present?), class: 'form-control', placeholder: 'Mobile Number', type: 'number', min: 1000000000, max: 999999999999999 %>
                   </div>
                 </div>
                   <%= fde.text_field :card_holder_name, value: (fde.object.additional_info['card_holder_name'] if fde.object.additional_info.present? && fde.object.additional_info['card_holder_name'].present?), class: 'form-control', placeholder: "Card Holder's Name" %>

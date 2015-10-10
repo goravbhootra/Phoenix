@@ -5,7 +5,7 @@ class PosInvoicesReport < ActiveType::Object
       csv << ['invoice_date', 'invoice_number', '# of line items', '# of products', 'total_amount', 'pmt_cash', 'pmt_credit_card',
               'created_by', 'card_last_digits', 'bank_name', 'card_holder_name', 'abhyasi_mobile', 'card_expiry', 'created_at', 'updated_at']
       pmt = Hash.new
-      PosInvoice.includes(:header, [entries: :account], :line_items, :created_by).where("invoice_headers.business_entity_location_id = 154").references("invoice_headers").order(:txn_date, :number).find_each(batch_size: 750) do |invoice|
+      PosInvoice.includes(:header, [entries: :account], :line_items, :created_by).where("invoice_headers.business_entity_location_id = #{GlobalSettings.current_bookstall_id}").references("invoice_headers").order(:txn_date, :number).find_each(batch_size: 750) do |invoice|
         pmt['credit_card'] = pmt['cash'] = pmt['card_last_digits'] = pmt['bank_name'] = pmt['card_holder_name'] = ''
         pmt['mobile_number'] = pmt['expiry_month'] = pmt['expiry_year'] = ''
         invoice.entries.each do |entry|
@@ -52,7 +52,7 @@ class PosInvoicesReport < ActiveType::Object
 
   def self.pos_invoice_line_items_to_csv(options = {})
     # Chennai Business Entity - Tiruvallur Location
-    account_txn_ids = InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)
+    account_txn_ids = InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)
     product_ids = InvoiceLineItem.where(account_txn_id: account_txn_ids).pluck('DISTINCT product_id')
     product_details = Product.product_details_by_ids(product_ids)
 

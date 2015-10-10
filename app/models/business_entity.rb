@@ -4,8 +4,6 @@ class BusinessEntity < MyActiveRecord
   has_many :inventory_txns, foreign_key: 'primary_entity_id', inverse_of: :primary_entity, dependent: :restrict_with_exception
   has_many :secondary_inventory_txns, class_name: 'InventoryTxn', foreign_key: 'secondary_entity_id', inverse_of: :secondary_entity, dependent: :restrict_with_exception
   has_many :voucher_sequences, inverse_of: :business_entity, dependent: :restrict_with_exception
-  # has_many :invoices, class_name: 'Invoice', inverse_of: :secondary_entity,
-  #           dependent: :restrict_with_exception
   has_many :accounts, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_many :account_txns, inverse_of: :business_entity, dependent: :restrict_with_exception
   has_many :user_roles, inverse_of: :business_entity, dependent: :restrict_with_exception
@@ -46,13 +44,6 @@ class BusinessEntity < MyActiveRecord
     name = name.strip if name
     alias_name = alias_name.strip if alias_name
   end
-
-  # enum registration_status: { registered_branch: 1,
-  #                             additional_place_of_business: 2,
-  #                             registered_company: 3,
-  #                             unregistered_company: 4,
-  #                             registered_individual: 5,
-  #                             unregistered_individual: 6 }
 
   def classification_enum
     {

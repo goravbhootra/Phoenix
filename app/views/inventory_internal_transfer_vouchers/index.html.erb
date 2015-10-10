@@ -1,5 +1,5 @@
 <% provide(:title, 'Inventory Internal Transfer Vouchers listing') %>
-
+<%= link_to 'New Inventory Internal Transfer Voucher', new_inventory_internal_transfer_voucher_path, class: 'pull-right' %>
 <!-- <div class="table-responsive table-striped table-hover "> -->
 <div class="display responsive no-wrap voucher_line_items">
   <table id='voucher_line_items' class='DataTable DataTable-line-items'>
@@ -8,7 +8,7 @@
         <th class='col-md-1 text-center'>Date</th>
         <th class='col-md-1 text-center'>Invoice #</th>
         <th class='col-md-2 text-center'>From Location</th>
-        <th class='col-md-1 text-center'>To Location</th>
+        <th class='col-md-2 text-center'>To Location</th>
         <th class='col-md-1 text-center'>Amount</th>
         <th class='col-md-2 text-center'>Remarks</th>
         <th class='col-md-1 text-center'>Created by</th>
@@ -26,11 +26,10 @@
           <td><%= inventory_internal_transfer_voucher.remarks %></td>
           <td><%= inventory_internal_transfer_voucher.created_by.custom_object_label %></td>
           <td class='text-center'>
-            <%= link_to 'View', inventory_internal_transfer_voucher %> | <%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(inventory_internal_transfer_voucher) %> | <%= link_to "PDF version", inventory_internal_transfer_voucher_url(inventory_internal_transfer_voucher.id, format: "pdf"), target: :_blank %>
+            <%#= link_to 'View', inventory_internal_transfer_voucher %><%= link_to 'Edit', edit_inventory_internal_transfer_voucher_path(inventory_internal_transfer_voucher) %> | <%= link_to "PDF", inventory_internal_transfer_voucher_url(inventory_internal_transfer_voucher.id, format: "pdf"), target: :_blank %> | <%= link_to 'Delete', inventory_internal_transfer_voucher, method: :delete, data: { confirm: 'Are you sure?' } if current_power.destroyable_inventory_internal_transfer_vouchers? %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
-<%= link_to 'New Inventory Internal Transfer Voucher', new_inventory_internal_transfer_voucher_path %>

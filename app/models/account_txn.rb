@@ -6,7 +6,7 @@ class AccountTxn < MyActiveRecord
   has_many :entries, class_name: 'AccountEntry', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :debit_entries, class_name: 'AccountEntry::Debit', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :debit_account_txn, dependent: :restrict_with_exception, autosave: true
   has_many :credit_entries, class_name: 'AccountEntry::Credit', extend: AccountEntriesExtension, primary_key: 'id', inverse_of: :credit_account_txn, dependent: :restrict_with_exception, autosave: true
-  has_one :header, class_name: 'InvoiceHeader', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
+  has_one :header, class_name: 'InvoiceHeader', inverse_of: :account_txn, dependent: :destroy, autosave: true
   has_many :line_items, class_name: 'InvoiceLineItem', extend: InvoiceLineItemsExtension, foreign_key: 'account_txn_id', inverse_of: :account_txn, dependent: :restrict_with_exception, autosave: true
 
   validates :business_entity, presence: true

@@ -13,10 +13,6 @@ class Account < MyActiveRecord
 
   class_attribute :normal_credit_balance
 
-  # def self.return_types(account_ids=[])
-  #   where(id: account_ids).pluck(:id, :type).to_h
-  # end
-
   def self.cash_or_bank_type
     where("type = 'Account::CashAccount' OR type = 'Account::BankAccount'")
   end

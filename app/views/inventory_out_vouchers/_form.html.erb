@@ -54,12 +54,13 @@
     <div class="col-md-2 text-center">
       <div class="text-center">
         <div class='form-group text-center'>
-          <br>
           <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
         </div>
         <div class='form-group text-center'>
-          <br>
-          <%= link_to 'List of invoices', inventory_out_vouchers_url, :class => 'btn btn-primary btn-block' %>
+          <%= link_to 'List of invoices', inventory_out_vouchers_url, class: 'btn btn-primary btn-block' %>
+        </div>
+        <div class='form-group text-center'>
+          <%= link_to 'Delete', f.object, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-block' if current_power.destroyable_inventory_out_vouchers? && f.object.persisted? %>
         </div>
       </div>
     </div>
@@ -94,7 +95,7 @@
               </td>
               <td style='padding-right:0px;'>
                 <%= f_line_item.text_field :amount, class: 'form-control text-center voucher_line_item_amount', tabindex: '-1', min: 0, readonly: true, style: 'width:80%;float:left;' %>
-                <%= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                <%= link_to "", '#', class: "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
                 <%= f_line_item.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
               </td>
             </tr>

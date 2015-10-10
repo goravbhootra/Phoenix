@@ -23,4 +23,5 @@
  *= require dataTables/extras/dataTables.tableTools
  *= require nprogress
  *= require nprogress-bootstrap
+ *= require print
  */

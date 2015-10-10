@@ -11,14 +11,8 @@ class Invoice < AccountTxn
   delegate :business_entity_location_name, to: :header, prefix: false
   delegate :name, to: :created_by, prefix: true, allow_nil: true
 
-  # def initialize(attributes={})
-  #   super
-  #   self.status = attributes[:status].presence || 1 # Default Active
-  #   self.number = attributes[:number].presence || 0 # Pre-filled for new invoice
-  # end
-
   def check_header_exists_and_populate
-    self.header.business_entity_location_id = 154 if self.header.business_entity_location_id.blank?
+    self.header.business_entity_location_id = GlobalSettings.current_bookstall_id if self.header.business_entity_location_id.blank?
   end
 
   def consolidate_line_items_on_product

@@ -2,22 +2,15 @@ class InventoryReportsController < ApplicationController
   power :inventory_reports
 
   def stock_summary
-    # build_inventory_report
-    # params[:from_date] = '01/04/2015'
-    # params[:to_date] = Time.zone.now.strftime('%d/%m/%Y')
-    # puts "$$$$$$$$$$$$$$$$$$$$$$$$$$ #{params}"
-
     filter_params = Hash.new
-    # if @inventory_report.save!
-      filter_params[:location_id] = params[:location_id]
-      filter_params[:from_date] = params[:from_date] || '01/04/2015'
-      filter_params[:to_date] = params[:to_date] || Time.zone.now.strftime('%d/%m/%Y')
-    # else
-      # puts "$$$$$$$$$$$$$$$$$$$$$$$ params"
-    # end
+    filter_params[:location_id] = params[:location_id]
+    filter_params[:from_date] = params[:from_date] || '01/04/2015'
+    filter_params[:to_date] = params[:to_date] || Time.zone.now.strftime('%d/%m/%Y')
+    @stock_summary = InventoryReport.locationwise_stock_summary({}, filter_params)
 
     respond_to do |format|
       format.xls { send_data InventoryReport.locationwise_stock_summary({col_sep: "\t"}, filter_params), filename: "stock_summary_#{Time.zone.now.in_time_zone.strftime('%Y%m%d')}.xls" }
+      format.html
     end
   end
 

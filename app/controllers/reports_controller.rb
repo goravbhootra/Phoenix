@@ -17,7 +17,7 @@ class ReportsController < ApplicationController
   end
 
   def sales
-    @invoice_line_items = InvoiceLineItem.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: 154).pluck(:account_txn_id)).includes([product: :language]).all
+    @invoice_line_items = InvoiceLineItem.where(account_txn_id: InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)).includes([product: :language]).all
     respond_to do |format|
       format.html
       format.pdf do
@@ -54,7 +54,6 @@ class ReportsController < ApplicationController
   end
 
   private
-  # Never trust parameters from the scary internet, only allow the white list through.
   def sale_report_params
     params.require(:sale_report).permit!
   end

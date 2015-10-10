@@ -1,31 +1,63 @@
+<h2 class='text-center'><%= "Spiritual Hierarchy Publication Trust" %></h2>
+<p class='text-center'>
+  <%= 'Babuji Memorial Ashram, Manapakkam, Chennai' %><br>
+  <%= 'TIN # 33400845081' %>
+</p>
+<hr>
+
+<h3 class='text-center'><%= "POS Invoice ##{@pos_invoice.number}" %></h3>
+<p><%= "Dated: #{@pos_invoice.txn_date.strftime('%d/%m/%Y')}" %></p>
+
+<!-- <div class="display responsive no-wrap"> -->
+  <table style='width: 100%;'>
+    <thead>
+      <tr>
+        <th class='col-md-2 text-center'>SKU</th>
+        <th class='col-md-4 text-center'>Product</th>
+        <th class='col-md-2 text-center'>Qty</th>
+        <th class='col-md-2 text-center'>Price</th>
+        <th class='col-md-2 text-center'>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pos_invoice.line_items.map do |item| %>
+        <% next if !item.persisted? %>
+        <tr>
+          <td class='text-center'><%= item.product.sku %></td>
+          <td><%= item.voucher_print_name %></td>
+          <td class='text-center'><%= -item.quantity %></td>
+          <td class='text-center'><%= sprintf '%.0f', item.selling_price %></td>
+          <td class='text-center'><%= sprintf '%.0f', item.amount %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<!-- </div> -->
+
+<h3><%= "Total Amount: #{(sprintf '%.2f', @pos_invoice.credit_entries.sales_total_amount)}" %><br>
+<%= "Total Quantity: #{@pos_invoice.total_quantity}" %><br>
+<%= "Payment Details:" %></h3>
 <p>
-  <!-- <strong>Member:</strong> -->
-  <%#= @pos_invoice.member.custom_object_label %>
+  <% @pos_invoice.payments_order_type_desc.each do |payment| %>
+    <% next if payment.new_record? %>
+    <%= payment.type == 'AccountEntry::Debit' ? "Cash: #{(sprintf '%.2f', payment.amount)}" : "Cash Tendered: #{(sprintf '%.2f', payment.amount)}" if payment.mode == 'Account::CashAccount' %>
+    <% if payment.mode == 'Account::BankAccount' && payment.additional_info.present? %>
+      <%= "Bank Name: #{payment.additional_info['bank_name']}" %>
+      <%= "Card last 4 digits: #{payment.additional_info['card_last_digits']}" %>
+      <%= "Expiry month/year: #{payment.additional_info['expiry_month']} / #{payment.additional_info['expiry_year']}" %>
+      <%= "Mobile Number: #{payment.additional_info['mobile_number']}" %>
+      <%= "Card Holder's Name: #{payment.additional_info['card_holder_name']}" %>
+    <% end %>
+  <% end %>
+</p>
+<p>
+  <%= "You were served by: #{@pos_invoice.created_by.name}" %>
+  <%= "Prices are inclusive of taxes" %>
 </p>
 
-<p>
-  <strong>Currency:</strong>
-  <%= @pos_invoice.currency.custom_object_label %>
-</p>
-
-<p>
-  <strong>Created by user:</strong>
-  <%= @pos_invoice.created_by.custom_object_label %>
-</p>
-
-<p>
-  <strong>Remarks:</strong>
-  <%= @pos_invoice.remarks %>
-</p>
-
-<p>
-  <strong>Amount:</strong>
-  <%= @pos_invoice.total_amount %>
-</p>
-
-<p>
-  <strong>Number:</strong>
-  <%= @pos_invoice.voucher_number %>
-</p>
-
-<%= link_to "Printable Receipt (PDF)", pos_invoice_path(@pos_invoice.id, format: "pdf"), target: :_blank, id: 'pdf_print' %> | <%= link_to 'New Invoice', new_pos_invoice_url, id: 'open_new_invoice' %> | <%= link_to 'Edit', edit_pos_invoice_path(@pos_invoice) %> | <%= link_to 'Invoices Listing', pos_invoices_path %>
+<%= link_to("Print invoice", "javascript:window.print()", id: 'print_invoice') %><br>
+<%= link_to 'New Invoice', new_pos_invoice_url, id: 'open_new_invoice' %><br>
+<%= link_to "Printable Receipt (PDF)", pos_invoice_path(@pos_invoice.id, format: "pdf"), target: :_blank, id: 'pdf_print' %><br>
+<%= link_to 'Edit', edit_pos_invoice_path(@pos_invoice) if current_power.updatable_pos_invoice?(@pos_invoice) %><br>
+<%= link_to 'Invoices Listing', pos_invoices_path %><br>
+<%= link_to 'Delete', @pos_invoice, method: :delete, data: { confirm: 'Are you sure?' } if current_power.destroyable_pos_invoice?(@pos_invoice) %><br>

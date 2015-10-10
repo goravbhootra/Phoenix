@@ -17,7 +17,7 @@
     <div class="collapse navbar-collapse" id="menu-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
-          <% if current_user.role?(['admin','power_user']) %>
+          <% if current_user.role?(['admin','power_user', 'hq_staff']) %>
             <li class="dropdown">
               <p class="navbar-text dropdown-toggle" data-toggle="dropdown">
                 Accounts <b class="caret"></b>
@@ -71,9 +71,11 @@
                 Configuration <b class="caret"></b>
               </p>
               <ul class="dropdown-menu">
-                <li><a href='/voucher-sequences'>Voucher Sequences</a></li>
                 <li><a href='/products'>Products</a></li>
-                <li><a href='/masters'>Admin Panel</a></li>
+                <% if current_user.role?(['admin','power_user']) %>
+                  <li><a href='/voucher-sequences'>Voucher Sequences</a></li>
+                  <li><a href='/masters'>Admin Panel</a></li>
+                <% end %>
               </ul>
             </li>
           <% else %>

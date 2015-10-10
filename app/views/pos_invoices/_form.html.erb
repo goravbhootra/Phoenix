@@ -16,7 +16,7 @@
             <div class="col-md-3">
               <div class='form-group text-center'>
                   <%= fh.label :business_entity_location_id, 'Entity :: Location' %>
-                  <% if @current_user.role?(['admin','power_user']) %>
+                  <% if @current_user.role?(['admin','power_user', 'hq_staff']) %>
                     <%= fh.collection_select :business_entity_location_id, BusinessEntityLocation.own_locations.includes(:business_entity).active_n_current(fh.object.business_entity_location_id).order("business_entities.alias_name"), :id, :entity_name_with_location,
                     { include_blank: true },
                     { class: 'form-control selectme', id: 'primary_location' } %>
@@ -113,7 +113,7 @@
                   <td><%= f_line_item.text_field :price, class: 'form-control text-center voucher_line_item_rate', tabindex: '-1', min: 0, readonly: true %></td>
                   <td style='padding-right:0px;'>
                     <%= f_line_item.text_field :amount, class: 'form-control text-center voucher_line_item_amount', tabindex: '-1', min: 0, readonly: true, style: 'width:80%;float:left;' %>
-                    <%= link_to "", '#', :class => "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
+                    <%= link_to "", '#', class: "voucher_line_item_remove fa fa-trash-o fa-lg fa-td", tabindex: '-1' %>
                     <%= f_line_item.hidden_field :_destroy, size: '5x5', class: 'line_item_destroy' %>
                   </td>
                 </tr>
@@ -137,12 +137,17 @@
     </div>
     <div class='col-md-3'>
       <%= render 'pos_invoices/payments/form', f: f %>
-      <div class='col-md-6'>
-        <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
-      </div>
-      <div class='col-md-6'>
-        <%#= f.submit "Save & Print", name: 'save_and_print', class: 'btn btn-primary' %>
-        <%= link_to 'List of invoices', pos_invoices_url, :class => 'btn btn-primary btn-block' %>
+      <div class='row'>
+        <div class='col-md-4' style='padding-left:10px;padding-right:5px;'>
+          <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
+        </div>
+        <div class='col-md-4' style='padding-left:0px;padding-right:0px;'>
+          <%#= f.submit "Save & Print", name: 'save_and_print', class: 'btn btn-primary' %>
+          <%= link_to 'List of invoices', pos_invoices_url, :class => 'btn btn-primary btn-block' %>
+        </div>
+        <div class='col-md-4' style='padding-left:5px;padding-right:10px;'>
+          <%= link_to 'Delete', f.object, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary btn-block' if f.object.persisted? && current_power.destroyable_pos_invoice?(f.object) %>
+        </div>
       </div>
     </div>
   </div>
