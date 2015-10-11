@@ -20,3 +20,9 @@
 *.rdb
 /app/lib/import_data/*.xls
 /config/deploy/*
+/config/celebrations_nginx.conf
+/config/phoenix_nginx.conf
+/config/deploy-unicorn
+/config/deploy.rb
+/config/database.yml
+/config/secrets.yml
