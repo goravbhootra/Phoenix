@@ -81,7 +81,6 @@
         <tbody>
           <%= f.fields_for :line_items do |f_line_item| %>
             <tr class="fields">
-              <!-- <td><%#= text_field_tag "#{f_line_item.object_name}[sku]", nil, maxlength: 4, class: 'form-control text-center voucher_line_item_sku' %></td> -->
               <td><%= select "#{f_line_item.object_name}", 'sku', @products.map { |x| [x.sku.to_i, x.id] }, {include_blank: true}, class: 'form-control selectme text-center voucher_line_item_sku' %></td>
               <td><%= f_line_item.collection_select :product_id, @products, :id, :voucher_label,
                         { include_blank: true }, { class: 'form-control selectme voucher_line_item_product' } %></td>

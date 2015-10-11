@@ -3,7 +3,6 @@ class VoucherSequence < MyActiveRecord
   has_many :inventory_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :account_txns, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
   has_many :invoices, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
-  # has_many :inventory_vouchers, inverse_of: :voucher_sequence, dependent: :restrict_with_exception
 
   validates :business_entity_id, presence: true
   validates :classification, presence: true
@@ -32,13 +31,8 @@ class VoucherSequence < MyActiveRecord
                           'Int. Tnsfr Voucher': 4
                         }
 
-  # def classification_enum
-  #   { 'PosInvoice': 1, 'InventoryOutVoucher': 2, 'InventoryInVoucher': 3, 'Int. Tnsfr Voucher': 4 }
-  # end
-
   def combination_check
     errors.add(:base, 'valid_from, business_entity, classification and number prefix combination should be unique') if VoucherSequence.where(business_entity_id: self.business_entity_id, classification: self.classification, valid_from: self.valid_from).where(number_prefix: nil).exists?
     errors.add(:base, 'valid_from, business_entity, classification and number prefix combination should be unique') if VoucherSequence.where(business_entity_id: self.business_entity_id, classification: self.classification, valid_from: self.valid_from, number_prefix: number_prefix).where.not(number_prefix: nil).exists?
-    # :valid_from, uniqueness: {scope: [:business_entity_id, :classification], message: }, unless: :
   end
 end

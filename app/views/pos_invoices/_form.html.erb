@@ -51,21 +51,12 @@
             </div>
           </div>
 
-          <!-- credit_payment_mode used for sales entry as well as cash tendered -->
-          <%# credit_payment_mode = @pos_invoice.credit_entries.payment_account_types_humanize %>
-          <%#= f.fields_for :credit_entries do |fce| %>
-            <%# if credit_payment_mode.keys.blank? || credit_payment_mode.keys.exclude?(fce.object.account_id) %>
-              <div class='col-md-2 text-center'>
-                <div class='form-group'>
-                  <%= label_tag 'Amount' %>
-                  <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
-                  <%#= fce.label :amount %>
-                  <%#= fce.hidden_field :account_id, class: 'form-control', readonly: true  %>
-                  <%#= fce.text_field :amount, id: 'voucher_amount', class: 'form-control text-center', readonly: true, tabindex: '-1' %>
-                </div>
-              </div>
-            <%# end %>
-          <%# end %>
+          <div class='col-md-2 text-center'>
+            <div class='form-group'>
+              <%= label_tag 'Amount' %>
+              <%= label_tag '0.00', nil, id: 'voucher_amount', class: 'form-control text-center', disabled: true %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -103,7 +94,6 @@
             <tbody>
               <%= f.fields_for :line_items do |f_line_item| %>
                 <tr class="fields">
-                  <!-- <td><%#= text_field_tag "#{f_line_item.object_name}[sku]", nil, maxlength: 4, class: 'form-control text-center voucher_line_item_sku' %></td> -->
                   <td><%= select "#{f_line_item.object_name}", 'sku', @products.map { |x| [x.sku.to_i, x.id] }, {include_blank: true}, class: 'form-control selectme text-center voucher_line_item_sku' %></td>
                   <td><%= f_line_item.collection_select :product_id, @products, :id, :voucher_label,
                             { include_blank: true }, { class: 'form-control selectme voucher_line_item_product' } %></td>
@@ -142,7 +132,6 @@
           <%= f.submit "Save", class: 'btn btn-primary btn-block', id: 'save_button' %>
         </div>
         <div class='col-md-4' style='padding-left:0px;padding-right:0px;'>
-          <%#= f.submit "Save & Print", name: 'save_and_print', class: 'btn btn-primary' %>
           <%= link_to 'List of invoices', pos_invoices_url, :class => 'btn btn-primary btn-block' %>
         </div>
         <div class='col-md-4' style='padding-left:5px;padding-right:10px;'>

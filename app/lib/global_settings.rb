@@ -13,4 +13,16 @@ class GlobalSettings
   def self.current_business_entitry_id
     136
   end
+
+  def self.organisation_name
+    'Spiritual Hierarchy Publication Trust'
+  end
+
+  def self.organisation_address
+    'Babuji Memorial Ashram, Manapakkam, Chennai'
+  end
+
+  def self.organisation_registration
+    'TIN # 111111111111'
+  end
 end

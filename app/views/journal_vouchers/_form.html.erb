@@ -4,7 +4,7 @@
     <div class='col-md-2'>
       <div class="form-group">
         <%= f.label :invoice_date, 'Date' %>
-        <%= f.text_field :txn_date, value: (f.object.txn_date.strftime('%d/%m/%Y') if f.object.txn_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %> <!-- readonly: true, -->
+        <%= f.text_field :txn_date, value: (f.object.txn_date.strftime('%d/%m/%Y') if f.object.txn_date), class: 'datetimepicker text-center form-control', tabindex: '-1', required: 'true', type: 'date' %>
       </div>
     </div>
     <div class='col-md-2'>

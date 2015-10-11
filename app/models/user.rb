@@ -7,7 +7,6 @@ class User < MyActiveRecord
   has_many :created_invoices, class_name: 'Invoice', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :created_inventory_txns, class_name: 'InventoryTxn', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :received_payments, class_name: 'InvoicePayment', foreign_key: 'received_by_id', inverse_of: :received_by, dependent: :restrict_with_exception
-  # has_many :created_inventory_vouchers, class_name: 'InventoryVoucher', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :account_txns, class_name: 'AccountTxn', foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :restrict_with_exception
   has_many :user_roles, autosave: true, dependent: :destroy, inverse_of: :user
   has_many :roles, through: :user_roles
@@ -77,21 +76,4 @@ class User < MyActiveRecord
       UserMailer.email_confirmation_request(self).deliver_now!
     end
   end
-
-  # ############# to be deleted after migration ##############
-  # bitmask :old_roles, as: [:user, :admin, :power_user, :pos_manager], null: false
-  # # user.roles = [:publisher, :editor]
-  # # user.roles << :admin
-  # def admin?
-  #   (self.old_roles & [:admin]).present?
-  # end
-
-  # def power_user?
-  #   (self.old_roles & [:power_user]).present?
-  # end
-
-  # def pos_manager?
-  #   (self.old_roles & [:pos_manager]).present?
-  # end
-  # ############# end to be deleted after migration ##############
 end

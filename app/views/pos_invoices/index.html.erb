@@ -1,8 +1,6 @@
 <% provide(:title, 'POS Invoice listing') %>
 <%= link_to 'New Sale invoice', new_pos_invoice_path, class: 'pull-right' %>
-<!-- <div class="table-responsive table-striped table-hover "> -->
 <div class="display responsive no-wrap voucher_line_items">
-  <!-- <table id='voucher_line_items' class='DataTable'> -->
   <table id='pos_invoice_index', data-source="<%= pos_invoices_url(format: :json) %>", class='DataTable-line-items'>
     <thead>
       <tr>

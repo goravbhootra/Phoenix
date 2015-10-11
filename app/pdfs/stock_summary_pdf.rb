@@ -1,7 +1,7 @@
 class StockSummaryPdf < Prawn::Document
   def initialize()
     super({top_margin: 25, left_margin: 20, right_margin: 15, bottom_margin: 20})
-    text "Spiritual Hierarchy Publication Trust", size: 15, style: :bold, align: :center
+    text GlobalSettings.organisation_name, size: 15, style: :bold, align: :center
     stroke_horizontal_rule
     move_down 10
     text "Generated at: #{ Time.zone.now.to_formatted_s(:long) }", size: 12

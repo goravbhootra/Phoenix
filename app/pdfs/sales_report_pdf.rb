@@ -1,7 +1,7 @@
 class SalesReportPdf < Prawn::Document
   def initialize(pos_invoice_line_items)
     super({top_margin: 25, left_margin: 20, right_margin: 15, bottom_margin: 20})
-    text "Spiritual Hierarchy Publication Trust", size: 15, style: :bold, align: :center
+    text GlobalSettings.organisation_name, size: 15, style: :bold, align: :center
     move_down 10
     text "Total Sales", size: 15, align: :center
     move_down 5

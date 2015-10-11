@@ -1,10 +1,9 @@
 class PosInvoicePdf < Prawn::Document
   def initialize(pos_invoice)
     super({top_margin: 10, left_margin: 5, right_margin: 5, bottom_margin: 100})
-    text "Spiritual Hierarchy Publication Trust", size: 30, style: :bold, align: :center
-    # text "Near IIM, Sitapur-Hardoi Bypass Road, Lucknow-226013", size: 20, align: :center
-    text "Babuji Memorial Ashram, Manapakkam, Chennai", size: 20, align: :center
-    text 'TIN# 33400845081', size: 25, align: :center
+    text GlobalSettings.organisation_name, size: 30, style: :bold, align: :center
+    text GlobalSettings.organisation_address, size: 20, align: :center
+    text GlobalSettings.organisation_registration, size: 25, align: :center
     stroke_horizontal_rule
     @pos_invoice = pos_invoice
     pos_invoice_number

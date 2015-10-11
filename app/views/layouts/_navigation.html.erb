@@ -57,12 +57,11 @@
                 Reports <b class="caret"></b>
               </p>
               <ul class="dropdown-menu">
-                <li><a href='/pos-invoices-list-with-payment.xls'>POS Invoices list with Payment - Bhandara 20150724 (Excel)</a></li>
-                <li><a href='/pos-invoices-line-items.xls'>POS Line Items extract - Bhandara 20150724 (Excel)</a></li>
-                <li><a href='/inventory-internal-transfer-vouchers-line-items.xls'>Inventory Vouchers Line Items Extract - Bhandara 20150724 (Excel)</a></li>
+                <li><a href='/pos-invoices-list-with-payment.xls'>POS Invoices list with Payment - Latest Event (Excel)</a></li>
+                <li><a href='/pos-invoices-line-items.xls'>POS Line Items extract - Latest Event (Excel)</a></li>
+                <li><a href='/inventory-internal-transfer-vouchers-line-items.xls'>Inventory Vouchers Line Items Extract - Latest Event (Excel)</a></li>
                 <li><a href='/stock-summary.xls'>Stock Summary (Excel)</a></li>
                 <li><a href='/payment-collection.pdf'>Payment Collection Summary (PDF)</a></li>
-                <!-- <li><a href='/stock-summary.pdf'>Stock Summary (PDF)</a></li> -->
                 <li><a href='/sales-report.pdf'>Sales Report (PDF)</a></li>
               </ul>
             </li>
@@ -93,7 +92,6 @@
             </li>
           <% end %>
           <li>
-            <li><%#= select 'current_business_entity', 'current_business_entity', @business_entities, {}, class: 'form-control', id: 'current_business_entity' %></li>
           </li>
           <% if current_user.cash_account_id.present? %>
             <li><a href='/my-account'>My Account</a></li>

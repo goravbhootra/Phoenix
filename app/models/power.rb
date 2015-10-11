@@ -4,7 +4,6 @@ class Power
   def initialize(user)
     @user = user
     @roles = user.roles.pluck(:name, :id).to_h if user
-    # @user_roles = user.user_roles.pluck(:role_id, )
   end
 
   def role?(roles=@roles)
@@ -26,35 +25,6 @@ class Power
     entities_and_locs = @user.user_roles.where("business_entity_id IS NOT NULL OR business_entity_location_id IS NOT NULL").pluck(:business_entity_id, :business_entity_location_id)
     BusinessEntity.where('id in (?) OR id in (?)', entities_and_locs.transpose[0].compact.uniq, BusinessEntityLocation.where(id: entities_and_locs.transpose[1].compact.uniq).pluck('DISTINCT business_entity_id')) if entities_and_locs.present?
   end
-
-  # power :documents do
-  #   owned_site_ids = Site.where(:owner_id => @user.id).collect_ids
-  #   document_ids_as_site_owner = Document.where(:site => owned_site_ids).collect_ids
-  #   document_ids_as_author = Document.where(:author_id => @user.id).collect_ids
-  #   Document.where(:id => document_ids_as_site_owner + document_ids_as_author)
-  # end
-
-  # def power_user?(roles=@roles)
-  #   roles.keys.include?('power_user')
-  # end
-
-  # power :users do
-  #   User if admin?
-  # end
-
-  # power :notes do
-  #   Note.by_author(@user)
-  # end
-
-  # power :dashboard do
-  #   true # not a scope, but a boolean power. This is useful to control access to stuff that doesn't live in the database.
-  # end
-
-  # Accessible by logged-in user
-  # power :user_runtime_selections do
-  #   return true if @user.present?
-  #   false
-  # end
 
   # Accessible by world
   power :sessions do
@@ -103,20 +73,11 @@ class Power
     false
   end
 
-
   power :view_pos_invoices do
     return PosInvoice.all if global_role?
-    # return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-    # PosInvoice.where(created_by_id: @user.id)
     PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)) if role?('business_entity_location_admin')
     PosInvoice.joins(:header).where("invoice_headers.business_entity_location_id in (?)", get_my_locations.pluck(:id)).where(created_by_id: @user.id)
   end
-
-  # power :custom_pos_invoices do
-  #   return PosInvoice.all if global_role?
-  #   return PosInvoice.joins(primary_location: :business_entity).where(business_entities: { id: @user.city_id }) if role?('business_entity_location_admin')
-  #   false
-  # end
 
   %w(inventory_out_vouchers inventory_internal_transfer_vouchers inventory_in_vouchers).each do |voucher_type|
     power :"#{voucher_type}_view" do

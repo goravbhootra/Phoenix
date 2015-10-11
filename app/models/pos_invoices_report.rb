@@ -51,7 +51,6 @@ class PosInvoicesReport < ActiveType::Object
   end
 
   def self.pos_invoice_line_items_to_csv(options = {})
-    # Chennai Business Entity - Tiruvallur Location
     account_txn_ids = InvoiceHeader.where(business_entity_location_id: GlobalSettings.current_bookstall_id).pluck(:account_txn_id)
     product_ids = InvoiceLineItem.where(account_txn_id: account_txn_ids).pluck('DISTINCT product_id')
     product_details = Product.product_details_by_ids(product_ids)

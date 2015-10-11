@@ -1,38 +1,36 @@
-<h2 class='text-center'><%= "Spiritual Hierarchy Publication Trust" %></h2>
+<h2 class='text-center'><%= GlobalSettings.organisation_name %></h2>
 <p class='text-center'>
-  <%= 'Babuji Memorial Ashram, Manapakkam, Chennai' %><br>
-  <%= 'TIN # 33400845081' %>
+  <%= GlobalSettings.organisation_address %><br>
+  <%= GlobalSettings.organisation_registration %>
 </p>
 <hr>
 
 <h3 class='text-center'><%= "POS Invoice ##{@pos_invoice.number}" %></h3>
 <p><%= "Dated: #{@pos_invoice.txn_date.strftime('%d/%m/%Y')}" %></p>
 
-<!-- <div class="display responsive no-wrap"> -->
-  <table style='width: 100%;'>
-    <thead>
+<table style='width: 100%;'>
+  <thead>
+    <tr>
+      <th class='col-md-2 text-center'>SKU</th>
+      <th class='col-md-4 text-center'>Product</th>
+      <th class='col-md-2 text-center'>Qty</th>
+      <th class='col-md-2 text-center'>Price</th>
+      <th class='col-md-2 text-center'>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pos_invoice.line_items.map do |item| %>
+      <% next if !item.persisted? %>
       <tr>
-        <th class='col-md-2 text-center'>SKU</th>
-        <th class='col-md-4 text-center'>Product</th>
-        <th class='col-md-2 text-center'>Qty</th>
-        <th class='col-md-2 text-center'>Price</th>
-        <th class='col-md-2 text-center'>Amount</th>
+        <td class='text-center'><%= item.product.sku %></td>
+        <td><%= item.voucher_print_name %></td>
+        <td class='text-center'><%= -item.quantity %></td>
+        <td class='text-center'><%= sprintf '%.0f', item.selling_price %></td>
+        <td class='text-center'><%= sprintf '%.0f', item.amount %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% @pos_invoice.line_items.map do |item| %>
-        <% next if !item.persisted? %>
-        <tr>
-          <td class='text-center'><%= item.product.sku %></td>
-          <td><%= item.voucher_print_name %></td>
-          <td class='text-center'><%= -item.quantity %></td>
-          <td class='text-center'><%= sprintf '%.0f', item.selling_price %></td>
-          <td class='text-center'><%= sprintf '%.0f', item.amount %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<!-- </div> -->
+    <% end %>
+  </tbody>
+</table>
 
 <h3><%= "Total Amount: #{(sprintf '%.2f', @pos_invoice.credit_entries.sales_total_amount)}" %><br>
 <%= "Total Quantity: #{@pos_invoice.total_quantity}" %><br>

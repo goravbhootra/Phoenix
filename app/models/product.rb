@@ -12,7 +12,6 @@ class Product < ActiveRecord::Base
   has_many :invoice_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :invoice_line_items, inverse_of: :product, dependent: :restrict_with_exception
   has_many :order_line_items, class_name: 'Order::LineItem', inverse_of: :product, dependent: :restrict_with_exception
-  # has_many :inventory_voucher_line_items, class_name: 'InventoryVoucherLineItem', inverse_of: :product, dependent: :restrict_with_exception
   has_many :business_entity_location_inventory_levels, inverse_of: :product, dependent: :restrict_with_exception
 
   validates :category, presence: true
@@ -68,7 +67,6 @@ class Product < ActiveRecord::Base
 
   def self.active_and_current_collection(current_element)
     result = Product.includes([:category, :language]).order(:sku).inject({}) {|hash,x| hash[x.id]=x.sku_name; hash}
-    # result = active.pluck(:id, :name).to_h
     unless result.keys.include? (current_element)
       current_record = find(current_element)
       result[current_record.id] = current_record.sku_name
@@ -84,6 +82,5 @@ class Product < ActiveRecord::Base
     result = Hash.new
     products.each { |p| result[p[0]] = [p[1], parent_cat[p[2]], lang_codes[p[3]].to_s] }
     result
-    # products = products.sort_by { |p| [p[3], p[3]] }
   end
 end

@@ -44,18 +44,11 @@ class PosInvoicesController < ApplicationController
 
     respond_to do |format|
       if @pos_invoice.save
-        if params[:save_and_print].present?
-          pos_invoice_url(@pos_invoice, url: pos_invoice_url, format: "pdf")
-          @pos_invoice.render_pdf_to_file(Rails.root.join('tmp','pdf',"#{@pos_invoice.id}.pdf"))
-          format.html { redirect_to @pos_invoice, url: pos_invoice_url, notice: 'POS invoice created and printed.' }
-          # format.html { redirect_to "/#{pos_invoices_url}/#{@pos_invoice.id}?save_and_print=1", notice: 'Invoice  has been saved and printed.' }
-        else
-          initialize_form
-          # Temp workaround, this needs to be changed.
-          # format.html { redirect_to pos_invoice_path(@pos_invoice.id), flash: {success: 'POS invoice was created successfully.'}}
-          format.html { redirect_to pos_invoice_path(@pos_invoice.id) }
-          format.json { render :show, status: :created, location: @pos_invoice }
-        end
+        initialize_form
+        # Temp workaround, this needs to be changed.
+        # format.html { redirect_to pos_invoice_path(@pos_invoice.id), flash: {success: 'POS invoice was created successfully.'}}
+        format.html { redirect_to pos_invoice_path(@pos_invoice.id) }
+        format.json { render :show, status: :created, location: @pos_invoice }
       else
         initialize_form
         format.html { render :new }

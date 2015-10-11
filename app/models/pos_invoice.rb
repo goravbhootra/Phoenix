@@ -1,6 +1,5 @@
 class PosInvoice < Invoice
 
-  # validates :bank_name, :card_last_digits, :expiry_month, :expiry_year, :mobile_number, :card_holder_name, presence: true
   def entries_account_types
     account_types = entries.account_types
   end

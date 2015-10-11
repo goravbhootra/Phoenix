@@ -19,3 +19,4 @@
 /import_data
 *.rdb
 /app/lib/import_data/*.xls
+/config/deploy/*

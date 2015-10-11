@@ -11,7 +11,6 @@ class UserRole < MyActiveRecord
 
   def business_entity_xor_location_xor_global
     # if [month_day, week_day, hour].compact.count =! 1 - Can handle more than two attributes
-    # errors.add(:base, "Business Entity or Location must be entered") if !(business_entity.present? ^ business_entity_location.present?)
     errors.add(:base, "Business Entity or Location or Global must be entered/checked") if !((business_entity.present? ^ business_entity_location.present?) ^ global)
   end
 end
