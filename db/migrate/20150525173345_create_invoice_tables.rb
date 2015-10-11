@@ -5,7 +5,6 @@ class CreateInvoiceTables < ActiveRecord::Migration
     create_table :invoices do |t|
       t.belongs_to :currency,                     null: false
       t.belongs_to :voucher_sequence,             null: false
-      # t.belongs_to :primary_entity,             null: false
       t.belongs_to :primary_location,             null: false
       t.belongs_to :secondary_entity,             null: false
       t.belongs_to :created_by,                   null: false

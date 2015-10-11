@@ -23,7 +23,6 @@ class CreateSaleInvoiceTables < ActiveRecord::Migration
       t.index(:member_id)
       t.index(:currency_id)
       t.index(:created_by_id)
-      # t.index(:business_entity_id)
       t.index([:number, :number_prefix, :voucher_sequence_id], unique: true, name: 'idx_sale_invoices_on_number_n_prefix_n_voucher_sequence')
       t.index(:business_entity_location_id)
     end
@@ -31,8 +30,6 @@ class CreateSaleInvoiceTables < ActiveRecord::Migration
     add_foreign_key :sale_invoices, :business_entity_users, column: :created_by_id, primary_key: :id, on_delete: :restrict
     add_foreign_key :sale_invoices, :voucher_sequences, on_delete: :restrict
     add_foreign_key :sale_invoices, :business_entity_locations, on_delete: :restrict
-    # add_foreign_key :sale_invoices, :business_entities, on_delete: :restrict
-    # execute "ALTER TABLE ONLY sale_invoices ADD CONSTRAINT positive_amount CHECK (amount >= 0);"
     remove_index :sale_invoices, :created_by_id
     remove_foreign_key :sale_invoices, :created_by
     rename_column :sale_invoices, :created_by_id, :business_entity_user_id
@@ -57,7 +54,6 @@ class CreateSaleInvoiceTables < ActiveRecord::Migration
       t.float      :rate,                         null: false, precision: 10, scale: 2
       t.index([:sale_invoice_id, :product_id], unique: true)
       t.index(:state_category_tax_rate_id)
-      # t.index(:business_entity_location_id)
     end
     add_foreign_key :sale_invoice_line_items, :sale_invoices, on_delete: :restrict
     add_foreign_key :sale_invoice_line_items, :products, on_delete: :restrict

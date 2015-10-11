@@ -18,7 +18,6 @@ class CreatePurInvoiceTables < ActiveRecord::Migration
     add_foreign_key :pur_invoices, :currencies, on_delete: :restrict
     add_foreign_key :pur_invoices, :business_entity_users, column: :created_by_id, primary_key: :id, on_delete: :restrict
     # execute "ALTER TABLE ONLY pur_invoices ADD CONSTRAINT positive_amount CHECK (amount >= 0);"
-    # ALTER TABLE the_table ADD CONSTRAINT constraint_name UNIQUE (thecolumn);
 
     create_table :pur_invoice_line_items do |t|
       t.belongs_to :pur_invoice,          required: true, null: false

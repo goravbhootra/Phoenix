@@ -48,23 +48,18 @@ namespace :state_zone_city do
   task seed_zones: :environment do
     ActiveRecord::Base.transaction do
         region = Region.create_with(currency_id: 1, active: true).where(name: 'India', code: 'IND').first_or_create
-        Zone.find_or_create_by(region: region, code: "1A", name: "Hyderabad")
-        Zone.find_or_create_by(region: region, code: "1B", name: "AP North")
-        Zone.find_or_create_by(region: region, code: "1C", name: "AP South")
-        Zone.find_or_create_by(region: region, code: "2A", name: "Chennai")
-        Zone.find_or_create_by(region: region, code: "2B", name: "Tamilnadu North")
-        Zone.find_or_create_by(region: region, code: "2C", name: "Tamilnadu South")
-        Zone.find_or_create_by(region: region, code: "3A", name: "Bangalore")
-        Zone.find_or_create_by(region: region, code: "3B", name: "Karnataka North")
-        Zone.find_or_create_by(region: region, code: "3C", name: "Karnataka South")
-        Zone.find_or_create_by(region: region, code: "4A", name: "Mumbai")
-        Zone.find_or_create_by(region: region, code: "4B", name: "Maharashtra West")
-        Zone.find_or_create_by(region: region, code: "4C", name: "Maharashtra East")
+        Zone.find_or_create_by(region: region, code: "1A", name: "AP North")
+        Zone.find_or_create_by(region: region, code: "1B", name: "AP South")
+        Zone.find_or_create_by(region: region, code: "2A", name: "Tamilnadu North")
+        Zone.find_or_create_by(region: region, code: "2B", name: "Tamilnadu South")
+        Zone.find_or_create_by(region: region, code: "3A", name: "Karnataka North")
+        Zone.find_or_create_by(region: region, code: "3B", name: "Karnataka South")
+        Zone.find_or_create_by(region: region, code: "4A", name: "Maharashtra West")
+        Zone.find_or_create_by(region: region, code: "4B", name: "Maharashtra East")
         Zone.find_or_create_by(region: region, code: "5A", name: "New Delhi")
         Zone.find_or_create_by(region: region, code: "5B", name: "NCR Rest")
-        Zone.find_or_create_by(region: region, code: "6A", name: "Kolkata")
-        Zone.find_or_create_by(region: region, code: "6B", name: "West Bengal West")
-        Zone.find_or_create_by(region: region, code: "6C", name: "West Bengal East")
+        Zone.find_or_create_by(region: region, code: "6A", name: "West Bengal West")
+        Zone.find_or_create_by(region: region, code: "6B", name: "West Bengal East")
     end
     puts "Zones data seed successful"
   end
@@ -77,57 +72,36 @@ namespace :state_zone_city do
       City.create_with(zone: Zone.find_by(code: "1A"), state: State.find_by(name: "Andhra Pradesh"), active: true, branch: true).find_or_create_by(name: "Hyderabad")
       City.create_with(zone: Zone.find_by(code: "6A"), state: State.find_by(name: "West Bengal"), active: true, branch: true).find_or_create_by(name: "Kolkata")
       City.create_with(zone: Zone.find_by(code: "4A"), state: State.find_by(name: "Maharashtra"), active: true, branch: true).find_or_create_by(name: "Mumbai")
-      City.create_with(zone: Zone.find_by(code: "2C"), state: State.find_by(name: "Tamilnadu"), active: true, branch: true).find_or_create_by(name: "Tirupur")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "BHEL")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Rajahmundry")
-      City.create_with(zone: Zone.find_by(code: "2C"), state: State.find_by(name: "Tamilnadu"), active: true).find_or_create_by(name: "Coimbatore")
+      City.create_with(zone: Zone.find_by(code: "2B"), state: State.find_by(name: "Tamilnadu"), active: true, branch: true).find_or_create_by(name: "Tirupur")
       City.create_with(zone: Zone.find_by(code: "5A"), state: State.find_by(name: "Delhi"), active: true).find_or_create_by(name: "Delhi")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Eluru")
-      City.create_with(zone: Zone.find_by(code: "2C"), state: State.find_by(name: "Tamilnadu"), active: true).find_or_create_by(name: "Erode")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Godavarikhani")
-      City.create_with(zone: Zone.find_by(code: "3B"), state: State.find_by(name: "Karnataka"), active: true).find_or_create_by(name: "Gulbarga")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Guntur")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Kakinada")
-      City.create_with(zone: Zone.find_by(code: "1A"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Karimnagar")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Kurnool")
-      City.create_with(zone: Zone.find_by(code: "2C"), state: State.find_by(name: "Tamilnadu"), active: true).find_or_create_by(name: "Madurai")
+      City.create_with(zone: Zone.find_by(code: "2B"), state: State.find_by(name: "Tamilnadu"), active: true).find_or_create_by(name: "Madurai")
       City.create_with(zone: Zone.find_by(code: "3B"), state: State.find_by(name: "Karnataka"), active: true).find_or_create_by(name: "Mysore")
-      City.create_with(zone: Zone.find_by(code: "4C"), state: State.find_by(name: "Maharashtra"), active: true).find_or_create_by(name: "Nagpur")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Nellore")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Ongole")
+      City.create_with(zone: Zone.find_by(code: "4B"), state: State.find_by(name: "Maharashtra"), active: true).find_or_create_by(name: "Nagpur")
       City.create_with(zone: Zone.find_by(code: "4B"), state: State.find_by(name: "Maharashtra"), active: true).find_or_create_by(name: "Pune")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Nandyal")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Kothagudem")
-      City.create_with(zone: Zone.find_by(code: "4B"), state: State.find_by(name: "Maharashtra"), active: true).find_or_create_by(name: "Solapur")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Tirupati")
-      City.create_with(zone: Zone.find_by(code: "2B"), state: State.find_by(name: "Tamilnadu"), active: true).find_or_create_by(name: "Trichy")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Vijayawada")
+      City.create_with(zone: Zone.find_by(code: "1A"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Vijayawada")
       City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Visakhapatnam")
-      City.create_with(zone: Zone.find_by(code: "1B"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Warangal")
-      City.create_with(zone: Zone.find_by(code: "1C"), state: State.find_by(name: "Andhra Pradesh"), active: true).find_or_create_by(name: "Kadapa")
-      City.create_with(zone: Zone.find_by(code: "3B"), state: State.find_by(name: "Karnataka"), active: true).find_or_create_by(name: "Chikhli")
     end
     puts "Cities data seed successful"
   end
 
-  desc "Business Entities with users data seeding"
-  task :seed_business_entitites_with_users => :environment do
-    BusinessEntity.create_with(alias: 'PPH, Main Branch',
-                               city_id: 1, registration_status: 1,
-                               primary_address: 'Chennai',
-                               publisher_attributes: {active: true}).where(
-                               name: 'Packed Publishing House, Chennai').first_or_create
-    BusinessEntity.create_with(alias: 'Branch, Bangalore',
-                               city: City.where(name: 'Bangalore').first,
-                               registration_status: 1,
-                               primary_address: 'Bangalore').where(
-                               name: 'Branch Office, Bangalore').first_or_create
+  # desc "Business Entities with users data seeding"
+  # task :seed_business_entitites_with_users => :environment do
+  #   BusinessEntity.create_with(alias: '',
+  #                              city_id: 1, registration_status: 1,
+  #                              primary_address: 'Chennai',
+  #                              publisher_attributes: {active: true}).where(
+  #                              name: '').first_or_create
+  #   BusinessEntity.create_with(alias: '',
+  #                              city: City.where(name: 'Bangalore').first,
+  #                              registration_status: 1,
+  #                              primary_address: 'Bangalore').where(
+  #                              name: '').first_or_create
 
-    1.upto(2) do |business_entity|
-      BusinessEntityUser.create_with(active: true).where(business_entity_id: business_entity, user_id: 1).first_or_create
-    end
-  end
+  #   1.upto(2) do |business_entity|
+  #     BusinessEntityUser.create_with(active: true).where(business_entity_id: business_entity, user_id: 1).first_or_create
+  #   end
+  # end
 
   desc "Run all tasks in this file"
-  task all: [:seed_states, :seed_zones, :seed_cities, :seed_business_entitites_with_users]
+  task all: [:seed_states, :seed_zones, :seed_cities]#, :seed_business_entitites_with_users]
 end

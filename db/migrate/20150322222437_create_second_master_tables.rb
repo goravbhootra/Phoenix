@@ -18,7 +18,6 @@ class CreateSecondMasterTables < ActiveRecord::Migration
       t.datetime   :valid_from,           null: false
       t.datetime   :valid_till
       t.text       :terms_conditions
-      # t.integer    :voucher_count,        null: false, default: 0
       t.boolean    :active,               null: false, default: true
       t.timestamps                        null: false
       t.index([:name, :business_entity_id, :classification, :valid_from], unique: true,

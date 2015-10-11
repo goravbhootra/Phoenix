@@ -1,7 +1,6 @@
 class CreateBusinessEntityTables < ActiveRecord::Migration
   def change
     enable_extension 'hstore'
-    # rails g scaffold business_entity name:string centre:belongs_to ancestry status:integer email primary_address:text shipping_address:text contact_number_primary contact_number_secondary vat_number service_tax_number pan_number cst_number ie_code
     create_table :business_entities do |t|
       t.string     :name,                     null: false, limit: 200
       t.string     :alias_name,               limit: 40, null: false

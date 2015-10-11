@@ -12,7 +12,7 @@ namespace :master_tables do
   task :seed_users => :environment do
     User.create_with(name: 'Gorav Bhootra', password: 'password', membership_number: 'INAAAA001',
       password_confirmation: 'password', active: 'true', confirmed_at: Time.zone.current,
-      contact_number_primary: '9840164646', roles: ['admin']).where(email: 'email@gorav.in').first_or_create
+      contact_number_primary: '+919840164646', roles: ['admin']).where(email: 'email@gorav.in').first_or_create
     puts 'Users data seed successful'
   end
 

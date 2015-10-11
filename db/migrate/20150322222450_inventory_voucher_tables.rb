@@ -65,10 +65,6 @@ class InventoryVoucherTables < ActiveRecord::Migration
       t.float      :rate,                     null: false, precision: 10, scale: 2
       t.index([:inventory_voucher_id, :product_id], unique: true,
               name: 'idx_stock_adj_items_on_stock_adj_id_n_product_id')
-      # t.index([:inventory_voucher_line_items, :business_entity_location_id],
-              # name: 'idx_stock_adjustment_line_items_on_business_entity_location_id')
-      # t.index([:inventory_voucher_line_items, :receiving_business_entity_location_id],
-              # name: 'idx_inv_voucher_line_items_on_receiving_bus_entity_location')
     end
     add_foreign_key :inventory_voucher_line_items, :inventory_vouchers, on_delete: :restrict
     add_foreign_key :inventory_voucher_line_items, :products, on_delete: :restrict

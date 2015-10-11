@@ -56,81 +56,10 @@ class AccountsRelated < ActiveRecord::Migration
 
     remove_column :users, :old_roles, :integer
 
-    # create_table :permissions do |t|
-    #   t.string  :name,                    null: false, limit: 100
-    #   t.text    :description
-    #   t.boolean :global,                  default: false, null: false
-    #   t.boolean :active,                  default: true, null: false
-    #   t.timestamps                        null: false
-    #   t.index(:name, unique: true)
-    # end
-
-    # create_table :security_groups do |t|
-    #   t.string     :name,                     null: false
-    #   t.string     :type,                     null: false
-    #   t.string     :context,                  null: false
-    #   t.boolean    :can_create,               default: false, null: false
-    #   t.boolean    :can_read,                 default: false, null: false
-    #   t.boolean    :can_update,               default: false, null: false
-    #   t.boolean    :can_delete,               default: false, null: false
-    #   t.boolean    :active,                   default: true, null: false
-    #   t.timestamps                            null: false
-    #   t.index(:name, unique: true)
-    # end
-
-    # create_table :policy_set do |t|
-    #   t.belongs_to :permission,               null: false
-    #   t.belongs_to :policy,                   null: false
-    #   t.integer    :order,                    null: false
-    #   t.integer    :operator,                 null: false
-    #   t.boolean    :active,                   default: true, null: false
-    #   t.timestamps                            null: false
-    # end
-
-    # create_table :role_security_groups do |t|
-    #   t.belongs_to :role,                 null: false
-    #   t.belongs_to :security_group,       null: false
-    #   t.belongs_to :business_entity
-    #   t.belongs_to :business_entity_location
-    #   t.integer    :order
-    #   t.boolean    :active,               default: true, null: false
-    #   t.timestamps                        null: false
-    #   t.index([:role_id, :security_group_id, :business_entity_id], unique: true)
-    #   t.index([:role_id, :security_group_id, :business_entity_location_id], unique: true)
-    # end
-
-    # create_table :business_entity_users do |t|
-    #   t.belongs_to :user,                     null: false
-    #   t.belongs_to :business_entity,          null: false
-    #   t.boolean    :active,                   default: true, null: false
-    #   t.timestamps                            null: false
-    # end
-
-    # create_table :user_roles_context do |t|
-    #   t.belongs_to :user,                   null: false
-    #   t.belongs_to :role,                   null: false
-
-    #   t.timestamps                        null: false
-    # end
-
-    # create_table :account_types do |t|
-    #   t.string     :name,                 limit: 40, null: false
-    #   t.string     :title,                limit: 40, null: false
-    #   t.integer    :normal_balance,       null: false
-    #   t.string     :code,                 null: false
-    #   t.string     :ancestry
-    #   t.boolean    :active,               default: true, null: false
-    #   t.timestamps                        null: false
-    #   t.index(:name, unique: true)
-    #   t.index(:ancestry, where: 'ancestry is NOT NULL')
-    # end
-
     create_table :accounts do |t|
       t.belongs_to :business_entity,            null: false
-      # t.belongs_to :account_type,             null: false
       t.string     :name,                       limit: 100
       t.string     :alias_name,                 limit: 25
-      # t.string     :code,                       limit: 6, null: false
       t.string     :type,                       null: false
       t.boolean    :contra,                     default: false, null: false
       t.boolean    :reserved,                   default: false, null: false
@@ -138,10 +67,8 @@ class AccountsRelated < ActiveRecord::Migration
       t.timestamps                              null: false
       t.index([:name, :business_entity_id], unique: true)
       t.index([:alias_name, :business_entity_id], unique: true)
-      # t.index([:code, :business_entity_id], unique: true)
     end
     add_foreign_key :accounts, :business_entities, on_delete: :restrict
-    # add_foreign_key :accounts, :account_types, on_delete: :restrict
 
     create_table :account_txns do |t|
       t.belongs_to :business_entity,            null: false
