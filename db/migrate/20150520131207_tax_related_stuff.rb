@@ -5,7 +5,6 @@ class TaxRelatedStuff < ActiveRecord::Migration
     remove_column :inventory_txn_line_items, :tax_rate, :string
     remove_column :inventory_txn_line_items, :delivered, :boolean
     add_column :inventory_txn_line_items, :tax_rate, :float, precision: 3, float: 2
-    InventoryTxnLineItem.update_all(tax_rate: 0)
     change_column_null(:inventory_txn_line_items, :tax_rate, false)
   end
 end

@@ -67,7 +67,7 @@ class CreateSaleInvoiceTables < ActiveRecord::Migration
       t.belongs_to :sale_invoice,         required: true, null: false
       t.belongs_to :payment_mode,         required: true, null: false
       t.belongs_to :received_by,          required: true, null: false
-      t.float      :amount,               null: false, precision: 9, scale: 2
+      t.decimal    :amount,               null: false, precision: 10, scale: 2
       t.timestamps                        null: false
       t.hstore     :payment_remarks
       t.index([:sale_invoice_id, :payment_mode_id], unique: true, name: 'idx_sale_inv_payments_on_sale_inv_id_and_payment_mode_id')

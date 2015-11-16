@@ -222,9 +222,9 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "status",                                                    null: false
     t.string   "ref_number",            limit: 30
     t.integer  "voucher_sequence_id",                                       null: false
-    t.text     "address"
     t.integer  "number",                                                    null: false
     t.string   "number_prefix",         limit: 8
+    t.text     "address"
     t.integer  "primary_location_id",                                       null: false
     t.integer  "created_by_id",                                             null: false
     t.integer  "primary_entity_id",                                         null: false

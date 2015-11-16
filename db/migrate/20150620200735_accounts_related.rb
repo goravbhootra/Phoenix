@@ -47,13 +47,6 @@ class AccountsRelated < ActiveRecord::Migration
     business_entity_location_admin = Role.find_by(name: 'business_entity_location_admin')
     pos_user = Role.find_by(name: 'pos_user')
 
-    User.all.each do |user|
-      UserRole.create!(user_id: user.id, role_id: admin.id, global: true) if user.admin?
-      UserRole.create!(user_id: user.id, role_id: power_user.id, global: true) if user.power_user?
-      UserRole.create!(user_id: user.id, role_id: business_entity_location_admin.id, business_entity_location_id: 150) if user.pos_manager?
-      UserRole.create!(user_id: user.id, role_id: pos_user.id, business_entity_location_id: 150) if !(user.admin? || user.power_user? || user.pos_manager?)
-    end
-
     remove_column :users, :old_roles, :integer
 
     create_table :accounts do |t|
@@ -132,7 +125,5 @@ class AccountsRelated < ActiveRecord::Migration
       t.timestamps                              null: false
     end
     add_foreign_key :account_txn_details, :account_txns, on_delete: :cascade
-
-    Rake::Task['create_inventory_out_vouchers_for_pos_invoices:create_accounts'].execute
   end
 end

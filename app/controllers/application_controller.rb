@@ -43,8 +43,9 @@ class ApplicationController < ActionController::Base
   private
 
   def current_user
+    return @current_user if @current_user.present? && @business_entities.present?
     @current_user ||= User.active.find_by(auth_token: (cookies[:auth_token])) if cookies[:auth_token]
-    if @current_user.present?
+    if @current_user.present? && @business_entities.blank?
       current_power = Power.new(@current_user)
       @business_entities ||= current_power.get_my_business_entities.pluck(:id, :alias_name).to_h.invert
     end

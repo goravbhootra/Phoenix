@@ -84,24 +84,14 @@ namespace :state_zone_city do
     puts "Cities data seed successful"
   end
 
-  # desc "Business Entities with users data seeding"
-  # task :seed_business_entitites_with_users => :environment do
-  #   BusinessEntity.create_with(alias: '',
-  #                              city_id: 1, registration_status: 1,
-  #                              primary_address: 'Chennai',
-  #                              publisher_attributes: {active: true}).where(
-  #                              name: '').first_or_create
-  #   BusinessEntity.create_with(alias: '',
-  #                              city: City.where(name: 'Bangalore').first,
-  #                              registration_status: 1,
-  #                              primary_address: 'Bangalore').where(
-  #                              name: '').first_or_create
-
-  #   1.upto(2) do |business_entity|
-  #     BusinessEntityUser.create_with(active: true).where(business_entity_id: business_entity, user_id: 1).first_or_create
-  #   end
-  # end
+  desc "Users data seeding"
+  task :seed_users => :environment do
+    User.create_with(name: 'Gorav Bhootra', password: 'password', membership_number: 'INAAAA001',
+      password_confirmation: 'password', active: 'true', confirmed_at: Time.zone.now,
+      contact_number_primary: '+919840164646', city_id: 1).where(email: 'email@gorav.in').first_or_create!
+    puts 'Users data seed successful'
+  end
 
   desc "Run all tasks in this file"
-  task all: [:seed_states, :seed_zones, :seed_cities]#, :seed_business_entitites_with_users]
+  task seed_all: [:seed_states, :seed_zones, :seed_cities, :seed_users]#, :seed_business_entitites_with_users]
 end

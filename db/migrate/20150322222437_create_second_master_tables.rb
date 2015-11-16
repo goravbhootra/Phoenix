@@ -30,9 +30,9 @@ class CreateSecondMasterTables < ActiveRecord::Migration
       t.belongs_to :category,             null: false, required: true
       t.integer    :classification,       null: false, default: 1, comment: "sales: 1, purchase: 2"
       t.string     :interstate_label,     null: false, limit: 10
-      t.float      :interstate_rate,      null: false
+      t.decimal    :interstate_rate,      null: false, precision: 5, scale: 2
       t.string     :intrastate_label,     null: false, limit: 10
-      t.float      :intrastate_rate,      null: false
+      t.decimal    :intrastate_rate,      null: false, precision: 5, scale: 2
       t.datetime   :valid_from,           null: false
       t.datetime   :valid_till
       t.boolean    :active,               default: true, null: true

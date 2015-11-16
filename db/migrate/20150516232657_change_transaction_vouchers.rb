@@ -4,13 +4,6 @@ class ChangeTransactionVouchers < ActiveRecord::Migration
     add_index :business_entities, :classification
     remove_column :business_entity_locations, :status, :integer
 
-    currency = Currency.create(name: 'Virtual', code: 'VRT', active: false)
-    region = Region.create(name: 'Virtual', code: 'VRT', active: false, currency: currency)
-    state = State.create(name: 'Virtual', code: 'VRT', active: false, region: region)
-    zone = Zone.create(name: 'Virtual', code: 'VRT', active: false, region: region)
-    centre = Centre.create(name: 'Virtual', state: state, zone: zone, active: false)
-    be_pos = BusinessEntity.create!(name: 'POS_Sales', alias_name: 'POS_Sales', centre: centre, active: false, registration_status: 10, classification: 10, primary_address: 'Virtual')
-
     rename_table :sale_invoices, :inventory_txns
     remove_index :sale_invoice_line_items, ([:sale_invoice_id, :product_id])
     rename_table :sale_invoice_line_items, :inventory_txn_line_items
@@ -29,15 +22,9 @@ class ChangeTransactionVouchers < ActiveRecord::Migration
     add_index :inventory_txns, :secondary_location_id
     add_foreign_key :inventory_txns, :business_entities, column: :secondary_location_id, on_delete: :restrict
     add_column :inventory_txns, :type, :string
-    InventoryTxn.update_all(type: 'PosSaleInvoice')
     change_column_null(:inventory_txns, :type, false)
 
     rename_column :sale_invoice_payments, :sale_invoice_id, :inventory_txn_id
-
-    InventoryTxn.find_each do |txn|
-      txn.update_columns(customer_membership_number: txn.member.id_number) if txn.member_id != 6
-      txn.update_columns(primary_entity_id: txn.primary_location.business_entity_id, secondary_entity_id: be_pos.id)
-    end
 
     change_column_null(:inventory_txns, :primary_entity_id, false)
     execute "alter table inventory_txns ADD CONSTRAINT secondary_account_xor_location check(
@@ -45,9 +32,7 @@ class ChangeTransactionVouchers < ActiveRecord::Migration
       (secondary_location_id  IS NOT null)::integer = 1
     );"
 
-    add_column :users, :membership_number, :string, limit: 9
-    User.all.each { |user| user.update_columns(membership_number: user.member.id_number) }
-    change_column_null(:users, :membership_number, false)
+    add_column :users, :membership_number, :string, limit: 9, null: false
     add_index :users, :membership_number, unique: true
 
     rename_column :sale_invoice_payments, :payment_mode_id, :mode_id

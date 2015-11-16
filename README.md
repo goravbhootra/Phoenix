@@ -8,11 +8,13 @@
 * Move admin panel to core app and get rid of Rails Admin and CanCanCan gems. Rails Admin is good to use during initial phases of the App.
 * Remove hard-coded values in code which were used for interim use during live events. Once multi-location operations is enabled, user authorisation should define access.
 
-# Contributing
+## Contributing
 
-We encourage you to contribute to Phoenix ERP!
-Help us with extending features, improve quality of code by raising PRs.
-Help us with testing and creating bug reports as necessary.
+1. Fork it ( http://github.com/goravbhootra/Phoenix/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 # Credits
 

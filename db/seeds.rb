@@ -8,4 +8,3 @@
 Rake::Task['master_tables:seed_all'].invoke
 Rake::Task['state_zone_city:seed_all'].invoke
 Rake::Task['language_city:seed_all'].invoke
-Rake::Task['publication_product_groups:seed_all'].invoke

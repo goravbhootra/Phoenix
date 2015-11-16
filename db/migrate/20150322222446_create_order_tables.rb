@@ -4,8 +4,8 @@ class CreateOrderTables < ActiveRecord::Migration
       t.belongs_to :member,               required: true, null: false
       t.belongs_to :currency,             required: true, null: false
       t.belongs_to :booked_by,            required: true, null: false
-      t.text :remarks
-      t.float :amount,                    null: false, precision: 9, scale: 2
+      t.text       :remarks
+      t.decimal    :total_amount,         null: false, precision: 10, scale: 2
       t.string :number,                   null: false, limit: 10
       t.boolean :active,                  null: false, default: true
       t.timestamps                        null: false
@@ -26,7 +26,7 @@ class CreateOrderTables < ActiveRecord::Migration
       t.belongs_to :order,                required: true, null: false
       t.belongs_to :product,              required: true, null: false
       t.integer    :quantity,             null: false
-      t.float      :amount,               null: false, precision: 8, scale: 2
+      t.decimal    :amount,               null: false, precision: 10, scale: 2
       t.timestamps                        null: false
       t.index([:order_id, :product_id], unique: true)
     end

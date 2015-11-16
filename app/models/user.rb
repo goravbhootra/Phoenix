@@ -51,7 +51,7 @@ class User < MyActiveRecord
   end
 
   def set_password
-    if self.new_record?
+    if self.password.blank? && self.new_record?
       self.password = 'changeME'
       self.password_confirmation = 'changeME'
     end

@@ -34,8 +34,8 @@ class CreateProductTables < ActiveRecord::Migration
       t.text       :summary
       t.text       :synopsis
       t.date       :publication_date
-      t.float      :mrp,                  precision: 6, scale: 2
-      t.float      :selling_price,        precision: 6, scale: 2
+      t.decimal    :mrp,                  null: false, precision: 8, scale: 2
+      t.decimal    :selling_price,        null: false, precision: 8, scale: 2
       t.string     :isbn
       t.text       :notes
       t.hstore     :details

@@ -8,7 +8,7 @@ class InventoryVoucherTables < ActiveRecord::Migration
       t.belongs_to :created_by,                     required: true, null: false
       t.belongs_to :currency,                       required: true, null: false
       t.integer    :classification,                 null: false, comment: 'opening_stock: 1, surplus_stock: 2, stock_shortfall: 3, sale_reversal: 4, purchase_reversal: 5, adjustment_with_reason: 6'
-      t.float      :total_amount,                   null: false, precision: 10, scale: 2
+      t.decimal    :total_amount,                   null: false, precision: 10, scale: 2
       t.datetime   :voucher_date,                   null: false
       t.integer    :number,                         null: false
       t.string     :number_prefix,                  limit: 8
@@ -59,10 +59,10 @@ class InventoryVoucherTables < ActiveRecord::Migration
       t.belongs_to :inventory_voucher,        required: true, null: false
       t.belongs_to :product,                  required: true, null: false
       t.integer    :quantity,                 null: false
-      t.float      :amount,                   null: false, precision: 10, scale: 2
+      t.decimal    :amount,                   null: false, precision: 10, scale: 2
       t.timestamps                            null: false
       t.integer    :received_quantity
-      t.float      :rate,                     null: false, precision: 10, scale: 2
+      t.decimal    :price,                    null: false, precision: 8, scale: 2
       t.index([:inventory_voucher_id, :product_id], unique: true,
               name: 'idx_stock_adj_items_on_stock_adj_id_n_product_id')
     end
