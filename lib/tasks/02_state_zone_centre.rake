@@ -88,7 +88,8 @@ namespace :state_zone_city do
   task :seed_users => :environment do
     User.create_with(name: 'Gorav Bhootra', password: 'password', membership_number: 'INAAAA001',
       password_confirmation: 'password', active: 'true', confirmed_at: Time.zone.now,
-      contact_number_primary: '+919840164646', city_id: 1).where(email: 'email@gorav.in').first_or_create!
+      contact_number_primary: '+919840164646', city_id: 1).where(email: 'gorav@solutionize.in').first_or_create!
+    User.first.user_roles.where(role_id: 1, global: true).first_or_create!
     puts 'Users data seed successful'
   end
 

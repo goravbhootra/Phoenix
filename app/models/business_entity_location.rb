@@ -25,7 +25,7 @@ class BusinessEntityLocation < MyActiveRecord
   end
 
   def self.create_default_location
-    { name: 'Main Location', default: true, active: true, position: 1 }
+    { name: 'Main Location', active: true, position: 1 }
   end
 
   def entity_name_with_location
