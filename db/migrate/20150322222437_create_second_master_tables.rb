@@ -9,22 +9,6 @@ class CreateSecondMasterTables < ActiveRecord::Migration
       t.index(:name, unique: true)
     end
 
-    create_table :voucher_sequences do |t|
-      t.belongs_to :business_entity,      null: false
-      t.string     :name,                 null: false, limit: 15
-      t.integer    :classification,       null: false, default: 1, comment: "sale_invoice: 1, order: 2"
-      t.string     :number_prefix,        limit: 8
-      t.integer    :starting_number,      null: false, default: 1
-      t.datetime   :valid_from,           null: false
-      t.datetime   :valid_till
-      t.text       :terms_conditions
-      t.boolean    :active,               null: false, default: true
-      t.timestamps                        null: false
-      t.index([:name, :business_entity_id, :classification, :valid_from], unique: true,
-              name: 'idx_voucher_seq_on_name_n_bus_entity_n_clasfction_n_valid_from')
-    end
-    add_foreign_key :voucher_sequences, :business_entities, on_delete: :restrict
-
     create_table :state_category_tax_rates do |t|
       t.belongs_to :state,                null: false, required: true
       t.belongs_to :category,             null: false, required: true

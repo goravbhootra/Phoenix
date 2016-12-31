@@ -4,6 +4,7 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.string     :name,                 limit: 100, null: false
       t.string     :code,                 null: false, limit: 3
       t.boolean    :active,               default: true, null: false
+      t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
       t.index(:name, unique: true)
@@ -15,6 +16,7 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.string     :code,                 null: false, limit: 3
       t.belongs_to :currency,             required: true, null: false
       t.boolean    :active,               default: true, null: false
+      t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
       t.index(:name, unique: true)
@@ -28,6 +30,7 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.belongs_to :region,               required: true, null: false
       t.string     :code,                 null: false, limit: 3
       t.boolean    :active,               default: true, null: false
+      t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
       t.index([:name, :region_id], unique: true)
@@ -40,6 +43,7 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.belongs_to :region,               required: true, null: false
       t.string     :code,                 null: false, limit: 3
       t.boolean    :active,               default: true, null: false
+      t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
       t.index([:name, :region_id], unique: true)
@@ -47,17 +51,18 @@ class CreatePlaceTables < ActiveRecord::Migration
     end
     add_foreign_key :zones, :regions, on_delete: :restrict
 
-    create_table :centres do |t|
-      t.string      :name,                null: false, limit: 50
-      t.belongs_to  :state,               null: false, required: true
-      t.belongs_to  :zone,                null: false, required: true
-      t.boolean     :active,              default: true, null: false
-      t.integer     :position
+    create_table :cities do |t|
+      t.string     :name,                 null: false, limit: 50
+      t.belongs_to :state,                null: false, required: true
+      t.belongs_to :zone,                 null: false, required: true
+      t.boolean    :active,               default: true, null: false
+      t.boolean    :reserved,             null: false, default: false
+      t.integer    :position
       t.timestamps                        null: false
       t.index([:name, :state_id], unique: true)
       t.index([:name, :zone_id], unique: true)
     end
-    add_foreign_key :centres, :states, on_delete: :restrict
-    add_foreign_key :centres, :zones, on_delete: :restrict
+    add_foreign_key :cities, :states, on_delete: :restrict
+    add_foreign_key :cities, :zones, on_delete: :restrict
   end
 end

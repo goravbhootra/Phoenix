@@ -1,7 +1,5 @@
 class CreateInvoiceTables < ActiveRecord::Migration
   def change
-    InventoryTxn.where(type: 'PosInvoice').update_all(type: 'PosVoucher')
-
     create_table :invoices do |t|
       t.belongs_to :currency,                     null: false
       t.belongs_to :voucher_sequence,             null: false
@@ -34,26 +32,6 @@ class CreateInvoiceTables < ActiveRecord::Migration
     add_foreign_key :invoices, :business_entity_locations, column: :primary_location_id, on_delete: :restrict
     add_foreign_key :invoices, :business_entities, column: :secondary_entity_id, on_delete: :restrict
     add_foreign_key :invoices, :users, column: :created_by_id, on_delete: :restrict
-
-    create_table :invoice_line_items do |t|
-      t.belongs_to :invoice,            null: false
-      t.belongs_to :product,            null: false
-      t.integer  :quantity
-      t.decimal  :goods_value,          precision: 10, scale: 2, null: false
-      t.decimal  :tax_amount,           precision: 10, scale: 2, null: false
-      t.decimal  :amount,               precision: 10, scale: 2, null: false
-      t.decimal  :price,                precision: 8,  scale: 2, null: false
-      t.decimal  :tax_rate,             precision: 5,  scale: 2, null: false
-      t.timestamps                      null: false
-    end
-    add_foreign_key :invoice_line_items, :invoices, on_delete: :restrict
-    add_foreign_key :invoice_line_items, :products, on_delete: :restrict
-
-    remove_foreign_key :inventory_txns, :currencies
-    remove_column :inventory_txns, :currency_id, :integer
-    add_column :inventory_txns, :invoice_id, :integer
-    add_index :inventory_txns, :invoice_id, order: { invoice_id: "DESC NULLS LAST" }
-    add_foreign_key :inventory_txns, :invoices, on_delete: :restrict
 
     create_table :invoice_payments do |t|
       t.belongs_to  :invoice,           null: false

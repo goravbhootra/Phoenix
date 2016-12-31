@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804093936) do
+ActiveRecord::Schema.define(version: 20150712035833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,11 +22,11 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "account_id",                               null: false
     t.string   "type",                                     null: false
     t.decimal  "amount",          precision: 10, scale: 2, null: false
+    t.string   "mode",                                     null: false
     t.text     "remarks"
+    t.hstore   "additional_info"
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
-    t.hstore   "additional_info"
-    t.string   "mode",                                     null: false
   end
 
   add_index "account_entries", ["account_txn_id", "account_id"], name: "index_account_entries_on_account_txn_id_and_account_id", using: :btree
@@ -96,14 +96,14 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.string   "email",                    limit: 150
     t.text     "primary_address",                                      null: false
     t.text     "shipping_address"
+    t.boolean  "reserved",                             default: false, null: false
     t.string   "contact_number_primary",   limit: 15
     t.string   "contact_number_secondary", limit: 15
     t.hstore   "legal_details"
     t.integer  "position"
+    t.integer  "classification",                       default: 1,     null: false
     t.datetime "created_at",                                           null: false
     t.datetime "updated_at",                                           null: false
-    t.integer  "classification",                       default: 1,     null: false
-    t.boolean  "reserved",                             default: false, null: false
   end
 
   add_index "business_entities", ["alias_name"], name: "index_business_entities_on_alias_name", unique: true, using: :btree
@@ -112,14 +112,14 @@ ActiveRecord::Schema.define(version: 20150804093936) do
 
   create_table "business_entity_locations", force: :cascade do |t|
     t.integer  "business_entity_id",                null: false
+    t.integer  "cash_account_id"
+    t.integer  "bank_account_id"
+    t.integer  "sales_account_id"
     t.string   "name",                              null: false
     t.boolean  "active",             default: true, null: false
     t.integer  "position"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
-    t.integer  "cash_account_id"
-    t.integer  "bank_account_id"
-    t.integer  "sales_account_id"
   end
 
   add_index "business_entity_locations", ["bank_account_id"], name: "index_business_entity_locations_on_bank_account_id", using: :btree
@@ -130,11 +130,11 @@ ActiveRecord::Schema.define(version: 20150804093936) do
   create_table "categories", force: :cascade do |t|
     t.string   "name",       limit: 100,                null: false
     t.string   "ancestry"
+    t.string   "code",       limit: 3,                  null: false
     t.boolean  "active",                 default: true, null: false
     t.integer  "position"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.string   "code",       limit: 3,                  null: false
   end
 
   add_index "categories", ["ancestry"], name: "index_categories_on_ancestry", using: :btree
@@ -146,10 +146,10 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "state_id",                              null: false
     t.integer  "zone_id",                               null: false
     t.boolean  "active",                default: true,  null: false
+    t.boolean  "reserved",              default: false, null: false
     t.integer  "position"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.boolean  "reserved",              default: false, null: false
   end
 
   add_index "cities", ["name", "state_id"], name: "index_cities_on_name_and_state_id", unique: true, using: :btree
@@ -169,10 +169,10 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.string   "name",       limit: 100,                 null: false
     t.string   "code",       limit: 3,                   null: false
     t.boolean  "active",                 default: true,  null: false
+    t.boolean  "reserved",               default: false, null: false
     t.integer  "position"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
-    t.boolean  "reserved",               default: false, null: false
   end
 
   add_index "currencies", ["code"], name: "index_currencies_on_code", unique: true, using: :btree
@@ -201,42 +201,43 @@ ActiveRecord::Schema.define(version: 20150804093936) do
   create_table "inventory_txn_line_items", force: :cascade do |t|
     t.integer  "inventory_txn_id",                          null: false
     t.integer  "product_id",                                null: false
+    t.integer  "quantity_in"
     t.integer  "quantity_out"
     t.decimal  "amount",           precision: 10, scale: 2, null: false
     t.decimal  "tax_amount",       precision: 10, scale: 2, null: false
+    t.decimal  "tax_rate",         precision: 5,  scale: 2, null: false
+    t.decimal  "price",            precision: 8,  scale: 2, null: false
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
-    t.decimal  "price",            precision: 8,  scale: 2, null: false
-    t.decimal  "tax_rate",         precision: 5,  scale: 2, null: false
-    t.integer  "quantity_in"
   end
 
   add_index "inventory_txn_line_items", ["inventory_txn_id", "product_id"], name: "idx_inventory_txn_line_items_on_sale_invoice_id_and_product_id", unique: true, using: :btree
 
   create_table "inventory_txns", force: :cascade do |t|
+    t.integer  "created_by_id",                                             null: false
+    t.integer  "primary_entity_id",                                         null: false
+    t.integer  "primary_location_id",                                       null: false
+    t.integer  "secondary_entity_id",                                       null: false
+    t.integer  "secondary_location_id",                                     null: false
+    t.integer  "invoice_id"
     t.text     "remarks"
     t.decimal  "total_amount",                     precision: 10, scale: 2, null: false
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
     t.datetime "voucher_date",                                              null: false
     t.integer  "status",                                                    null: false
     t.string   "ref_number",            limit: 30
     t.integer  "voucher_sequence_id",                                       null: false
     t.integer  "number",                                                    null: false
     t.string   "number_prefix",         limit: 8
+    t.decimal  "additional_charges",               precision: 10, scale: 2, null: false
     t.text     "address"
-    t.integer  "primary_location_id",                                       null: false
-    t.integer  "created_by_id",                                             null: false
-    t.integer  "primary_entity_id",                                         null: false
-    t.integer  "secondary_entity_id"
-    t.integer  "secondary_location_id"
     t.string   "type",                                                      null: false
-    t.integer  "invoice_id"
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
   end
 
   add_index "inventory_txns", ["created_by_id"], name: "index_inventory_txns_on_created_by_id", using: :btree
   add_index "inventory_txns", ["invoice_id"], name: "index_inventory_txns_on_invoice_id", order: {"invoice_id"=>:desc}, using: :btree
-  add_index "inventory_txns", ["number", "number_prefix", "voucher_sequence_id"], name: "idx_sale_invoices_on_number_n_prefix_n_voucher_sequence", unique: true, using: :btree
+  add_index "inventory_txns", ["number", "number_prefix", "voucher_sequence_id"], name: "idx_inventory_txns_on_number_n_prefix_n_voucher_sequence", unique: true, using: :btree
   add_index "inventory_txns", ["primary_entity_id"], name: "index_inventory_txns_on_primary_entity_id", using: :btree
   add_index "inventory_txns", ["primary_location_id"], name: "index_inventory_txns_on_primary_location_id", using: :btree
   add_index "inventory_txns", ["secondary_entity_id"], name: "index_inventory_txns_on_secondary_entity_id", using: :btree
@@ -244,12 +245,12 @@ ActiveRecord::Schema.define(version: 20150804093936) do
 
   create_table "invoice_headers", force: :cascade do |t|
     t.integer  "account_txn_id",                        null: false
+    t.integer  "business_entity_location_id",           null: false
     t.text     "address"
     t.hstore   "legal_details"
     t.string   "customer_membership_number",  limit: 9
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.integer  "business_entity_location_id",           null: false
   end
 
   add_index "invoice_headers", ["account_txn_id"], name: "index_invoice_headers_on_account_txn_id", unique: true, using: :btree
@@ -258,6 +259,7 @@ ActiveRecord::Schema.define(version: 20150804093936) do
   create_table "invoice_line_items", force: :cascade do |t|
     t.integer  "account_txn_id",                                      null: false
     t.integer  "product_id",                                          null: false
+    t.integer  "state_category_tax_rate_id"
     t.integer  "quantity",                                            null: false
     t.decimal  "price",                      precision: 10, scale: 2, null: false
     t.decimal  "goods_value",                precision: 12, scale: 2, null: false
@@ -266,7 +268,6 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.decimal  "amount",                     precision: 12, scale: 2, null: false
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
-    t.integer  "state_category_tax_rate_id"
   end
 
   add_index "invoice_line_items", ["account_txn_id", "product_id"], name: "index_invoice_line_items_on_account_txn_id_and_product_id", unique: true, using: :btree
@@ -320,11 +321,11 @@ ActiveRecord::Schema.define(version: 20150804093936) do
   create_table "languages", force: :cascade do |t|
     t.string   "name",       limit: 100,                null: false
     t.string   "ancestry"
+    t.string   "code",       limit: 3,                  null: false
     t.boolean  "active",                 default: true, null: false
     t.integer  "position"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.string   "code",       limit: 3,                  null: false
   end
 
   add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
@@ -428,10 +429,10 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.string   "code",        limit: 3,                  null: false
     t.integer  "currency_id",                            null: false
     t.boolean  "active",                 default: true,  null: false
+    t.boolean  "reserved",               default: false, null: false
     t.integer  "position"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
-    t.boolean  "reserved",               default: false, null: false
   end
 
   add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
@@ -472,10 +473,10 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "region_id",                             null: false
     t.string   "code",       limit: 3,                  null: false
     t.boolean  "active",                default: true,  null: false
+    t.boolean  "reserved",              default: false, null: false
     t.integer  "position"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.boolean  "reserved",              default: false, null: false
   end
 
   add_index "states", ["code"], name: "index_states_on_code", unique: true, using: :btree
@@ -510,11 +511,13 @@ ActiveRecord::Schema.define(version: 20150804093936) do
 
   create_table "users", force: :cascade do |t|
     t.string   "name",                       limit: 100,                 null: false
+    t.string   "membership_number",          limit: 9,                   null: false
     t.integer  "city_id",                                                null: false
     t.string   "email",                      limit: 100,                 null: false
     t.string   "password_digest",                                        null: false
     t.string   "contact_number_primary",     limit: 15
     t.string   "contact_number_secondary",   limit: 15
+    t.boolean  "reserved",                               default: false, null: false
     t.text     "address"
     t.boolean  "active",                                 default: false
     t.inet     "current_sign_in_ip"
@@ -531,8 +534,6 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "position"
     t.datetime "created_at",                                             null: false
     t.datetime "updated_at",                                             null: false
-    t.string   "membership_number",          limit: 9,                   null: false
-    t.boolean  "reserved",                               default: false, null: false
     t.integer  "cash_account_id"
   end
 
@@ -563,10 +564,10 @@ ActiveRecord::Schema.define(version: 20150804093936) do
     t.integer  "region_id",                             null: false
     t.string   "code",       limit: 3,                  null: false
     t.boolean  "active",                default: true,  null: false
+    t.boolean  "reserved",              default: false, null: false
     t.integer  "position"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.boolean  "reserved",              default: false, null: false
   end
 
   add_index "zones", ["code"], name: "index_zones_on_code", unique: true, using: :btree
