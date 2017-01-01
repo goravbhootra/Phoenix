@@ -7,9 +7,9 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
-      t.index(:name, unique: true)
-      t.index(:code, unique: true)
     end
+    execute 'CREATE UNIQUE INDEX name_unique_idx on currencies (LOWER(name));'
+    execute 'CREATE UNIQUE INDEX code_unique_idx on currencies (UPPER(code));'
 
     create_table :regions do |t|
       t.string     :name,                 limit: 50, null: false
@@ -19,10 +19,10 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
-      t.index(:name, unique: true)
-      t.index(:code, unique: true)
       t.index(:currency_id)
     end
+    execute 'CREATE UNIQUE INDEX name_unique_idx_on_regions on regions (LOWER(name));'
+    execute 'CREATE UNIQUE INDEX code_unique_idx_on_regions on regions (UPPER(code));'
     add_foreign_key :regions, :currencies, on_delete: :restrict
 
     create_table :states do |t|
@@ -33,9 +33,9 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
-      t.index([:name, :region_id], unique: true)
-      t.index(:code, unique: true)
     end
+    execute 'CREATE UNIQUE INDEX name_n_region_unique_idx_on_states on states (LOWER(name), region_id);'
+    execute 'CREATE UNIQUE INDEX code_unique_idx_on_states on states (UPPER(code));'
     add_foreign_key :states, :regions, on_delete: :restrict
 
     create_table :zones do |t|
@@ -46,9 +46,9 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
-      t.index([:name, :region_id], unique: true)
-      t.index(:code, unique: true)
     end
+    execute 'CREATE UNIQUE INDEX name_n_region_unique_idx_on_zones on zones (LOWER(name), region_id);'
+    execute 'CREATE UNIQUE INDEX code_unique_idx_on_zones on zones (UPPER(code));'
     add_foreign_key :zones, :regions, on_delete: :restrict
 
     create_table :cities do |t|
@@ -59,9 +59,9 @@ class CreatePlaceTables < ActiveRecord::Migration
       t.boolean    :reserved,             null: false, default: false
       t.integer    :position
       t.timestamps                        null: false
-      t.index([:name, :state_id], unique: true)
-      t.index([:name, :zone_id], unique: true)
     end
+    execute 'CREATE UNIQUE INDEX name_n_zone_unique_idx_on_cities on cities (LOWER(name), zone_id);'
+    execute 'CREATE UNIQUE INDEX name_n_state_unique_idx_on_cities on cities (LOWER(name), state_id);'
     add_foreign_key :cities, :states, on_delete: :restrict
     add_foreign_key :cities, :zones, on_delete: :restrict
   end

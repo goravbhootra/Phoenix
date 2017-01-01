@@ -175,9 +175,6 @@ ActiveRecord::Schema.define(version: 20150712035833) do
     t.datetime "updated_at",                             null: false
   end
 
-  add_index "currencies", ["code"], name: "index_currencies_on_code", unique: true, using: :btree
-  add_index "currencies", ["name"], name: "index_currencies_on_name", unique: true, using: :btree
-
   create_table "distribution_types", force: :cascade do |t|
     t.string   "name",       limit: 100,                null: false
     t.boolean  "active",                 default: true, null: false
@@ -435,9 +432,7 @@ ActiveRecord::Schema.define(version: 20150712035833) do
     t.datetime "updated_at",                             null: false
   end
 
-  add_index "regions", ["code"], name: "index_regions_on_code", unique: true, using: :btree
   add_index "regions", ["currency_id"], name: "index_regions_on_currency_id", using: :btree
-  add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name",         limit: 40,                 null: false
@@ -481,6 +476,7 @@ ActiveRecord::Schema.define(version: 20150712035833) do
 
   add_index "states", ["code"], name: "index_states_on_code", unique: true, using: :btree
   add_index "states", ["name", "region_id"], name: "index_states_on_name_and_region_id", unique: true, using: :btree
+  add_index "states", ["region_id"], name: "name_unique_idx_on_states", unique: true, using: :btree
 
   create_table "uoms", force: :cascade do |t|
     t.string   "name",       limit: 50,                null: false

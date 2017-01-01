@@ -6,8 +6,8 @@ class CreateSecondMasterTables < ActiveRecord::Migration
       t.integer    :position
       t.timestamps                        null: false
       t.boolean    :show_on_invoice,      null: false, default: true
-      t.index(:name, unique: true)
     end
+    execute 'CREATE UNIQUE INDEX name_unique_idx_on_payment_modes on payment_modes (LOWER(name));'
 
     create_table :state_category_tax_rates do |t|
       t.belongs_to :state,                null: false, required: true
